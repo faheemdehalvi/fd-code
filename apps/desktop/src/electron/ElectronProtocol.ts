@@ -140,6 +140,39 @@ function registerDesktopSchemePrivilegesSync(): void {
   ]);
 }
 
+let schemePrivilegesGuardInstalled = false;
+
+/**
+ * Register the desktop URL schemes as privileged synchronously, at the very top
+ * of the main process, before Electron emits `ready`.
+ *
+ * Electron rejects `registerSchemesAsPrivileged` once the app is ready. The
+ * Clerk bridge registers the same renderer scheme (see `getDesktopScheme`) from
+ * inside the async application runtime; in a production build that work can lose
+ * the race with `ready` and crash startup with "should be called before app is
+ * ready". Registering here guarantees the scheme is privileged in time, and the
+ * installed per-scheme guard turns the later Clerk (and layer) registrations of
+ * an already-registered scheme into safe no-ops. The app's privileges are a
+ * superset of Clerk's, so nothing is lost by skipping the duplicate call.
+ */
+export function ensureDesktopSchemePrivilegesRegistered(): void {
+  if (!schemePrivilegesGuardInstalled) {
+    schemePrivilegesGuardInstalled = true;
+    const protocol = Electron.protocol;
+    const register = protocol.registerSchemesAsPrivileged.bind(protocol);
+    const registered = new Set<string>();
+    (
+      protocol as { registerSchemesAsPrivileged: (schemes: Electron.CustomScheme[]) => void }
+    ).registerSchemesAsPrivileged = (schemes) => {
+      const fresh = schemes.filter((custom) => !registered.has(custom.scheme));
+      if (fresh.length === 0) return;
+      for (const custom of fresh) registered.add(custom.scheme);
+      register(fresh);
+    };
+  }
+  registerDesktopSchemePrivilegesSync();
+}
+
 const registerDesktopSchemePrivileges = Effect.sync(registerDesktopSchemePrivilegesSync).pipe(
   Effect.withSpan("desktop.electron.protocol.registerSchemePrivileges"),
 );

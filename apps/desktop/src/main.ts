@@ -242,4 +242,10 @@ const layerDesktopRuntime = layerDesktopClerk.pipe(
   Layer.provideMerge(DesktopPreReadyPlatform.layer),
 );
 
+// Register the privileged URL schemes synchronously here, before Electron can
+// emit `ready`. The Clerk bridge below registers the same scheme from inside the
+// async runtime and can otherwise lose the race with `ready`; this guarantees it
+// is registered in time and makes the later duplicate registration a no-op.
+ElectronProtocol.ensureDesktopSchemePrivilegesRegistered();
+
 DesktopApp.program.pipe(Effect.provide(layerDesktopRuntime), NodeRuntime.runMain);
