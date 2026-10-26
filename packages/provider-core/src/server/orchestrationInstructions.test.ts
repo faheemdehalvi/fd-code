@@ -31,17 +31,17 @@ describe("T3 orchestration provider instructions", () => {
     const injected = t3OrchestrationPromptForFirstRun({
       prompt,
       runOrdinal: 1,
-      hasT3Mcp: true,
+      hasFDCodeMcp: true,
     });
 
     assert.include(injected, "<t3_code_orchestration_instructions>");
     assert.include(injected, `<user_request>\n${prompt}\n</user_request>`);
     assert.equal(
-      t3OrchestrationPromptForFirstRun({ prompt, runOrdinal: 2, hasT3Mcp: true }),
+      t3OrchestrationPromptForFirstRun({ prompt, runOrdinal: 2, hasFDCodeMcp: true }),
       prompt,
     );
     assert.equal(
-      t3OrchestrationPromptForFirstRun({ prompt, runOrdinal: 1, hasT3Mcp: false }),
+      t3OrchestrationPromptForFirstRun({ prompt, runOrdinal: 1, hasFDCodeMcp: false }),
       prompt,
     );
   });
@@ -54,7 +54,7 @@ describe("T3 orchestration provider instructions", () => {
   it("gives ACP sessions provider-neutral mode, browser, and orchestration guidance", () => {
     const injected = t3AcpPromptWithInstructions({
       prompt: "Inspect the repository.",
-      state: { interactionMode: "default", hasT3Mcp: true },
+      state: { interactionMode: "default", hasFDCodeMcp: true },
     });
 
     assert.include(injected, "FD CODE interaction mode: Default");
@@ -65,7 +65,7 @@ describe("T3 orchestration provider instructions", () => {
 
   it("reinjects ACP guidance only when mode or tool availability changes", () => {
     const prompt = "Continue.";
-    const defaultState = { interactionMode: "default", hasT3Mcp: true } as const;
+    const defaultState = { interactionMode: "default", hasFDCodeMcp: true } as const;
 
     assert.equal(
       t3AcpPromptWithInstructions({ prompt, state: defaultState, previousState: defaultState }),
@@ -81,7 +81,7 @@ describe("T3 orchestration provider instructions", () => {
     );
     const withoutMcp = t3AcpPromptWithInstructions({
       prompt,
-      state: { interactionMode: "default", hasT3Mcp: false },
+      state: { interactionMode: "default", hasFDCodeMcp: false },
     });
     assert.include(withoutMcp, "FD CODE interaction mode: Default");
     assert.notInclude(withoutMcp, "FD CODE collaborative browser");

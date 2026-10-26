@@ -62,12 +62,12 @@ function makeProject(
     locator: {
       source: "git-remote",
       remoteName: "origin",
-      remoteUrl: "git@github.com:T3Tools/T3Code.git",
+      remoteUrl: "git@github.com:T3Tools/FDCode.git",
     },
     provider: "github",
-    displayName: "T3Tools/T3Code",
+    displayName: "T3Tools/FDCode",
     owner: "T3Tools",
-    name: "T3Code",
+    name: "FDCode",
   },
 ): OrchestrationProjectShell {
   return {
@@ -243,13 +243,13 @@ describe("pull request toolkit handlers", () => {
     Effect.gen(function* () {
       const harness = yield* makeHarness();
       const result = yield* harness.call("link_pull_request", {
-        url: "https://github.com/T3Tools/T3Code/pull/123/files",
+        url: "https://github.com/T3Tools/FDCode/pull/123/files",
       });
       expect(result).toEqual({
         host: "github.com",
         repository: "t3tools/t3code",
         number: 123,
-        url: "https://github.com/T3Tools/T3Code/pull/123/files",
+        url: "https://github.com/T3Tools/FDCode/pull/123/files",
         alreadyLinked: false,
       });
       expect(yield* Ref.get(harness.commands)).toMatchObject([

@@ -26,7 +26,7 @@ describe("findPromptLinkProject", () => {
         repositoryIdentity: identity("github.com/pingdotgg/t3code", "github.com/me/t3code"),
       },
       { id: "none", repositoryIdentity: null },
-      { id: "recent", repositoryIdentity: identity("github.com/PingDotGG/T3Code") },
+      { id: "recent", repositoryIdentity: identity("github.com/PingDotGG/FDCode") },
       { id: "older", repositoryIdentity: identity("github.com/pingdotgg/t3code") },
     ];
     expect(findPromptLinkProject(projects, { owner: "pingdotgg", name: "t3code" })?.id).toBe(

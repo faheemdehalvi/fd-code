@@ -1,6 +1,6 @@
-import type { T3McpToolSummaryAction } from "@fdcode/shared/t3McpToolPresentation";
+import type { FDCodeMcpToolSummaryAction } from "@fdcode/shared/t3McpToolPresentation";
 
-export interface T3ToolSummaryCall {
+export interface FDCodeToolSummaryCall {
   readonly input: unknown;
   readonly output: unknown;
   readonly outcome: "completed" | "failed" | "unfinished";
@@ -79,9 +79,9 @@ function quantity(count: number, noun: string, plural = `${noun}s`): string {
   return `${count} ${count === 1 ? noun : plural}`;
 }
 
-export function summarizeT3ToolCalls(
-  action: T3McpToolSummaryAction,
-  calls: ReadonlyArray<T3ToolSummaryCall>,
+export function summarizeFDCodeToolCalls(
+  action: FDCodeMcpToolSummaryAction,
+  calls: ReadonlyArray<FDCodeToolSummaryCall>,
 ): { label: string; failedCount: number } {
   const results = calls.map((call) => {
     const result = readResult(call.output);

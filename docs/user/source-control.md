@@ -81,10 +81,10 @@ If no credentials are saved, FD CODE falls back to these variables in the server
 Restart the server after changing them:
 
 ```bash
-export T3CODE_BITBUCKET_ACCESS_TOKEN="your-access-token"
+export FDCODE_BITBUCKET_ACCESS_TOKEN="your-access-token"
 # or
-export T3CODE_BITBUCKET_EMAIL="you@example.com"
-export T3CODE_BITBUCKET_API_TOKEN="your-token"
+export FDCODE_BITBUCKET_EMAIL="you@example.com"
+export FDCODE_BITBUCKET_API_TOKEN="your-token"
 ```
 
 ### Azure DevOps

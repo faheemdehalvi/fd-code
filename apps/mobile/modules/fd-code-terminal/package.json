@@ -5,12 +5,12 @@
   "expo-module": {
     "ios": {
       "modules": [
-        "T3TerminalModule"
+        "FDCodeTerminalModule"
       ]
     },
     "android": {
       "modules": [
-        "expo.modules.t3terminal.T3TerminalModule"
+        "expo.modules.fdcodeterminal.FDCodeTerminalModule"
       ]
     }
   }

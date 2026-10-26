@@ -18,22 +18,22 @@ import {
 
 describe("normalizeGitRemoteUrl", () => {
   it("canonicalizes equivalent GitHub remotes across protocol variants", () => {
-    expect(normalizeGitRemoteUrl("git@github.com:T3Tools/T3Code.git")).toBe(
+    expect(normalizeGitRemoteUrl("git@github.com:T3Tools/FDCode.git")).toBe(
       "github.com/t3tools/t3code",
     );
-    expect(normalizeGitRemoteUrl("https://github.com/T3Tools/T3Code.git")).toBe(
+    expect(normalizeGitRemoteUrl("https://github.com/T3Tools/FDCode.git")).toBe(
       "github.com/t3tools/t3code",
     );
-    expect(normalizeGitRemoteUrl("ssh://git@github.com/T3Tools/T3Code")).toBe(
+    expect(normalizeGitRemoteUrl("ssh://git@github.com/T3Tools/FDCode")).toBe(
       "github.com/t3tools/t3code",
     );
   });
 
   it("preserves nested group paths for providers like GitLab", () => {
-    expect(normalizeGitRemoteUrl("git@gitlab.com:T3Tools/platform/T3Code.git")).toBe(
+    expect(normalizeGitRemoteUrl("git@gitlab.com:T3Tools/platform/FDCode.git")).toBe(
       "gitlab.com/t3tools/platform/t3code",
     );
-    expect(normalizeGitRemoteUrl("https://gitlab.com/T3Tools/platform/T3Code.git")).toBe(
+    expect(normalizeGitRemoteUrl("https://gitlab.com/T3Tools/platform/FDCode.git")).toBe(
       "gitlab.com/t3tools/platform/t3code",
     );
   });
@@ -57,31 +57,31 @@ describe("normalizeGitRemoteUrl", () => {
   });
 
   it("gives an Azure DevOps repository the same key over SSH as over HTTPS", () => {
-    expect(normalizeGitRemoteUrl("git@ssh.dev.azure.com:v3/T3Tools/Platform/T3Code")).toBe(
+    expect(normalizeGitRemoteUrl("git@ssh.dev.azure.com:v3/T3Tools/Platform/FDCode")).toBe(
       "dev.azure.com/t3tools/platform/_git/t3code",
     );
-    expect(normalizeGitRemoteUrl("ssh://git@ssh.dev.azure.com:22/v3/T3Tools/Platform/T3Code")).toBe(
+    expect(normalizeGitRemoteUrl("ssh://git@ssh.dev.azure.com:22/v3/T3Tools/Platform/FDCode")).toBe(
       "dev.azure.com/t3tools/platform/_git/t3code",
     );
     expect(
-      normalizeGitRemoteUrl("https://T3Tools@dev.azure.com/T3Tools/Platform/_git/T3Code"),
+      normalizeGitRemoteUrl("https://T3Tools@dev.azure.com/T3Tools/Platform/_git/FDCode"),
     ).toBe("dev.azure.com/t3tools/platform/_git/t3code");
   });
 
   it("puts the organization back in the host on the name dev.azure.com replaced", () => {
     expect(
-      normalizeGitRemoteUrl("T3Tools@vs-ssh.visualstudio.com:v3/T3Tools/Platform/T3Code"),
+      normalizeGitRemoteUrl("T3Tools@vs-ssh.visualstudio.com:v3/T3Tools/Platform/FDCode"),
     ).toBe("t3tools.visualstudio.com/platform/_git/t3code");
-    expect(normalizeGitRemoteUrl("https://T3Tools.visualstudio.com/Platform/_git/T3Code")).toBe(
+    expect(normalizeGitRemoteUrl("https://T3Tools.visualstudio.com/Platform/_git/FDCode")).toBe(
       "t3tools.visualstudio.com/platform/_git/t3code",
     );
   });
 
   it("leaves an Azure SSH host it cannot read as the path it was given", () => {
-    expect(normalizeGitRemoteUrl("git@ssh.dev.azure.com:v4/T3Tools/Platform/T3Code")).toBe(
+    expect(normalizeGitRemoteUrl("git@ssh.dev.azure.com:v4/T3Tools/Platform/FDCode")).toBe(
       "ssh.dev.azure.com/v4/t3tools/platform/t3code",
     );
-    expect(normalizeGitRemoteUrl("git@ssh.dev.azure.com:v3/T3Tools/T3Code")).toBe(
+    expect(normalizeGitRemoteUrl("git@ssh.dev.azure.com:v3/T3Tools/FDCode")).toBe(
       "ssh.dev.azure.com/v3/t3tools/t3code",
     );
   });
@@ -155,14 +155,14 @@ describe("parseOriginUrlFromGitConfig", () => {
 describe("parseGitHubRepositoryNameWithOwnerFromRemoteUrl", () => {
   it("extracts the owner and repository from common GitHub remote shapes", () => {
     expect(
-      parseGitHubRepositoryNameWithOwnerFromRemoteUrl("git@github.com:T3Tools/T3Code.git"),
-    ).toBe("T3Tools/T3Code");
+      parseGitHubRepositoryNameWithOwnerFromRemoteUrl("git@github.com:T3Tools/FDCode.git"),
+    ).toBe("T3Tools/FDCode");
     expect(
-      parseGitHubRepositoryNameWithOwnerFromRemoteUrl("https://github.com/T3Tools/T3Code.git"),
-    ).toBe("T3Tools/T3Code");
+      parseGitHubRepositoryNameWithOwnerFromRemoteUrl("https://github.com/T3Tools/FDCode.git"),
+    ).toBe("T3Tools/FDCode");
     expect(
-      parseGitHubRepositoryNameWithOwnerFromRemoteUrl("ssh://github.com/T3Tools/T3Code.git"),
-    ).toBe("T3Tools/T3Code");
+      parseGitHubRepositoryNameWithOwnerFromRemoteUrl("ssh://github.com/T3Tools/FDCode.git"),
+    ).toBe("T3Tools/FDCode");
   });
 });
 

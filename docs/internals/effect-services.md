@@ -39,7 +39,7 @@ with per-call context, such as a thread id, adds it with `Effect.annotateCurrent
 
 One module per service, in this order: imports, errors and schemas, the `Context.Service` tag with
 its interface inline, `make`, then `layer`. [`WorkspacePaths.ts`](../../apps/server/src/workspace/WorkspacePaths.ts)
-and [`T3ProjectFileLoader.ts`](../../apps/server/src/project/T3ProjectFileLoader.ts) are good
+and [`FDCodeProjectFileLoader.ts`](../../apps/server/src/project/FDCodeProjectFileLoader.ts) are good
 references.
 
 ```ts

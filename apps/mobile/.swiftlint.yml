@@ -1,9 +1,9 @@
 included:
-  - ios/T3Code
-  - modules/t3-composer-editor/ios
-  - modules/t3-native-controls/ios
+  - ios/FDCodeCode
+  - modules/fd-code-composer-editor/ios
+  - modules/fd-code-native-controls/ios
   - modules/fd-code-terminal/ios
-  - modules/t3-review-diff/ios
+  - modules/fd-code-review-diff/ios
 
 excluded:
   - ios/Pods

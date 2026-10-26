@@ -77,9 +77,9 @@ const declaredFailure = (result: McpSchema.CallToolResult) => {
 import { PullRequestsToolkit } from "./pullRequests/tools.ts";
 import { HtmlToolkit } from "./html/tools.ts";
 import {
-  resolveT3McpToolDefinition,
-  resolveT3McpToolPresentation,
-  resolveT3McpToolSummaryAction,
+  resolveFDCodeMcpToolDefinition,
+  resolveFDCodeMcpToolPresentation,
+  resolveFDCodeMcpToolSummaryAction,
 } from "@fdcode/shared/t3McpToolPresentation";
 import { htmlRenderFromToolItem } from "@fdcode/shared/toolOutput";
 
@@ -112,15 +112,15 @@ it("publishes unique tool names with reference-free object-root inputs", () => {
       const schema = Tool.getJsonSchema(tool);
       expect(schema).toMatchObject({ type: "object" });
       expect(JSON.stringify(schema), tool.name).not.toContain('"$ref"');
-      const definition = resolveT3McpToolDefinition(tool.name);
+      const definition = resolveFDCodeMcpToolDefinition(tool.name);
       expect(definition, tool.name).not.toBeNull();
       expect(
         definition?.labels.every((label) => label.trim().length > 0),
         tool.name,
       ).toBe(true);
       for (const name of [tool.name, `mcp__t3-code__${tool.name}`, `T3-code.${tool.name}`]) {
-        expect(resolveT3McpToolPresentation(name)?.logo, name).toBe("t3-code");
-        expect(resolveT3McpToolSummaryAction(name), name).not.toBeNull();
+        expect(resolveFDCodeMcpToolPresentation(name)?.logo, name).toBe("t3-code");
+        expect(resolveFDCodeMcpToolSummaryAction(name), name).not.toBeNull();
       }
     }
   }

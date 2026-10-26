@@ -156,7 +156,7 @@ export function AgentActivity(
   const deepLinkRow = attentionRow ?? row0;
   const deepLink =
     deepLinkRow && deepLinkRow.deepLink.startsWith("/") && !deepLinkRow.deepLink.startsWith("//")
-      ? `t3code://${deepLinkRow.deepLink.slice(1)}`
+      ? `fd-code://${deepLinkRow.deepLink.slice(1)}`
       : null;
 
   type SFName = NonNullable<ComponentProps<typeof Image>["systemName"]>;
@@ -225,7 +225,7 @@ export function AgentActivity(
   // inherits.
   const renderLogo = (height: number, color: Foreground) => (
     <HStack modifiers={[frame({ width: height * 1.5, height }), foregroundStyle(color)]}>
-      <Image assetName="T3Mark" modifiers={[resizable()]} />
+      <Image assetName="FDCodeMark" modifiers={[resizable()]} />
     </HStack>
   );
 

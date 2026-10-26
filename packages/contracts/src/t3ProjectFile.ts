@@ -23,7 +23,7 @@ const trimmedNonEmpty = (annotations: { readonly description: string }, maxLengt
   return encoded.pipe(Schema.decodeTo(encoded, SchemaTransformation.trim()));
 };
 
-export const T3ProjectFileScript = Schema.Struct({
+export const FDCodeProjectFileScript = Schema.Struct({
   name: trimmedNonEmpty({
     description: "Display name for the script, shown in the FD CODE scripts menu.",
   }),
@@ -68,9 +68,9 @@ export const T3ProjectFileScript = Schema.Struct({
 }).annotate({
   description: "A project script that team members can import into FD CODE.",
 });
-export type T3ProjectFileScript = typeof T3ProjectFileScript.Type;
+export type FDCodeProjectFileScript = typeof FDCodeProjectFileScript.Type;
 
-export const T3ProjectFile = Schema.Struct({
+export const FDCodeProjectFile = Schema.Struct({
   $schema: Schema.optionalKey(
     Schema.String.annotate({
       description: `URL of the JSON Schema for this file, typically "${T3_PROJECT_FILE_SCHEMA_URL}".`,
@@ -98,7 +98,7 @@ export const T3ProjectFile = Schema.Struct({
     }),
   ),
   scripts: Schema.optionalKey(
-    Schema.Array(T3ProjectFileScript)
+    Schema.Array(FDCodeProjectFileScript)
       .annotate({
         description: "Project scripts shared with everyone who opens this repository in FD CODE.",
       })
@@ -109,7 +109,7 @@ export const T3ProjectFile = Schema.Struct({
   description:
     "Checked-in project configuration for FD CODE (t3.json at the repository root). See https://t3.codes for documentation.",
 });
-export type T3ProjectFile = typeof T3ProjectFile.Type;
+export type FDCodeProjectFile = typeof FDCodeProjectFile.Type;
 
 /**
  * A key here must be nullable on `ServerSettings` (null means inherit) so both
@@ -126,12 +126,12 @@ export const PROJECT_FILE_BACKED_SETTINGS = {
   // in settings.ts), so it cannot be file-backed and is excluded here.
   readonly [K in ProjectScopedServerSettingKey & keyof ServerSettings]?: {
     readonly field: {
-      readonly [F in keyof T3ProjectFile]: T3ProjectFile[F] extends
+      readonly [F in keyof FDCodeProjectFile]: FDCodeProjectFile[F] extends
         | Exclude<ServerSettings[K], null>
         | undefined
         ? F
         : never;
-    }[keyof T3ProjectFile];
+    }[keyof FDCodeProjectFile];
     readonly builtIn: Exclude<ServerSettings[K], null>;
   };
 };

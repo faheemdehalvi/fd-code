@@ -98,7 +98,7 @@ describe("diagnoseLaunchFailure", () => {
       });
       expect(error?._tag).toBe("PreviewBrowserRootError");
       expect(error?.message).toContain("`User=`");
-      expect(error?.message).toContain("`T3CODE_SERVER_BROWSER_SANDBOX=0`");
+      expect(error?.message).toContain("`FDCODE_SERVER_BROWSER_SANDBOX=0`");
       expect(error?.message).not.toMatch(/AppArmor|browser setup/);
       expect(commands).toEqual([]);
     }),

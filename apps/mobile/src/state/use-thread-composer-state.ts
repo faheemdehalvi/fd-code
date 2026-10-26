@@ -1,7 +1,7 @@
 import * as Dialog from "../components/ui/Dialog";
 import { AuthOrchestrationOperateScope } from "@fdcode/contracts";
 import { readEnvironmentScope } from "./session";
-import type { ComposerTextPaste } from "../native/T3ComposerEditor.types";
+import type { ComposerTextPaste } from "../native/FDCodeComposerEditor.types";
 import { useAtomValue } from "@effect/atom-react";
 import { threadRuntimeIsActive } from "@fdcode/client-runtime/state/shell";
 import { resolvePendingHandoff } from "@fdcode/client-runtime/handoff";

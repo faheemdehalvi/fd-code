@@ -155,7 +155,7 @@ it.effect("reports implemented tools separately from locally available executabl
             account: Option.none(),
             host: Option.some("bitbucket.org"),
             detail: Option.some(
-              "Add a Bitbucket token in Settings → Source Control, or set the T3CODE_BITBUCKET_* environment variables on the server.",
+              "Add a Bitbucket token in Settings → Source Control, or set the FDCODE_BITBUCKET_* environment variables on the server.",
             ),
           }),
         },

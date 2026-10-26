@@ -9,7 +9,7 @@ The JavaScript contract is intentionally small:
 - remote PTY output is delivered by the existing `WsRpcClient.terminal` RPC stream
 
 The iOS implementation uses the vendored `GhosttyKit.xcframework` built from VVTerm's Ghostty
-custom-I/O and live-padding branch. `T3TerminalView` owns a `libghostty` surface and uses that
+custom-I/O and live-padding branch. `FDCodeTerminalView` owns a `libghostty` surface and uses that
 callback I/O model:
 
 1. initialize libghostty once for the process

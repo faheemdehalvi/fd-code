@@ -1,21 +1,21 @@
 import * as Exit from "effect/Exit";
 import * as Schema from "effect/Schema";
 
-import { T3ProjectFile, T3_PROJECT_FILE_SCHEMA_URL } from "@fdcode/contracts";
+import { FDCodeProjectFile, T3_PROJECT_FILE_SCHEMA_URL } from "@fdcode/contracts";
 
 import { fromLenientJson } from "./schemaJson.ts";
 
-export const T3ProjectFileFromJson = fromLenientJson(T3ProjectFile);
+export const FDCodeProjectFileFromJson = fromLenientJson(FDCodeProjectFile);
 
-const decodeT3ProjectFile = Schema.decodeExit(T3ProjectFileFromJson);
+const decodeFDCodeProjectFile = Schema.decodeExit(FDCodeProjectFileFromJson);
 
-export function parseT3ProjectFile(contents: string): T3ProjectFile | null {
-  const decoded = decodeT3ProjectFile(contents);
+export function parseFDCodeProjectFile(contents: string): FDCodeProjectFile | null {
+  const decoded = decodeFDCodeProjectFile(contents);
   return Exit.isSuccess(decoded) ? decoded.value : null;
 }
 
-export function buildT3ProjectFileJsonSchema(): Record<string, unknown> {
-  const document = Schema.toJsonSchemaDocument(T3ProjectFile, { onExcessProperty: "error" });
+export function buildFDCodeProjectFileJsonSchema(): Record<string, unknown> {
+  const document = Schema.toJsonSchemaDocument(FDCodeProjectFile, { onExcessProperty: "error" });
   const jsonSchema: Record<string, unknown> = {
     $schema: "https://json-schema.org/draft/2020-12/schema",
     $id: T3_PROJECT_FILE_SCHEMA_URL,

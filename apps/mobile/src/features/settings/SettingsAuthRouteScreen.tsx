@@ -9,14 +9,14 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { View } from "react-native";
 
 import { hasCloudPublicConfig } from "../cloud/publicConfig";
-import { T3ConnectProfilePage } from "../cloud/T3ConnectProfilePage";
+import { FDCodeConnectProfilePage } from "../cloud/FDCodeConnectProfilePage";
 
 const USER_PROFILE_CUSTOM_PAGES = [
   {
     path: "t3-connect",
     label: "T3 Connect",
     icon: "globe",
-    content: <T3ConnectProfilePage />,
+    content: <FDCodeConnectProfilePage />,
   },
 ] satisfies UserProfileCustomPage[];
 

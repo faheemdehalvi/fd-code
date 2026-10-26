@@ -599,7 +599,7 @@ const layerTelemetry = Layer.unwrap(
       serviceName: "t3code-desktop",
       serviceVersion: environment.appVersion,
       attributes: {
-        "service.namespace": "t3code",
+        "service.namespace": "fd-code",
         "service.runtime": "desktop",
         "service.mode": environment.isDevelopment ? "development" : "packaged",
         "host.name": endpoints.resourceAttributes["host.name"] || (yield* HostProcess.Hostname),

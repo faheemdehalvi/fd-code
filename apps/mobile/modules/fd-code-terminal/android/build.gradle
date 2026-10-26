@@ -5,7 +5,7 @@ group = 'com.t3tools.terminal'
 version = '0.0.0'
 
 android {
-  namespace 'expo.modules.t3terminal'
+  namespace 'expo.modules.fdcodeterminal'
   ndkVersion rootProject.ext.ndkVersion
   compileSdk rootProject.ext.compileSdkVersion
 

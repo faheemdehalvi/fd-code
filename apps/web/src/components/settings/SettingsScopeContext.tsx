@@ -1,5 +1,9 @@
-import { type EnvironmentId, T3_PROJECT_FILE_NAME, type T3ProjectFile } from "@fdcode/contracts";
-import { parseT3ProjectFile } from "@fdcode/shared/t3ProjectFile";
+import {
+  type EnvironmentId,
+  T3_PROJECT_FILE_NAME,
+  type FDCodeProjectFile,
+} from "@fdcode/contracts";
+import { parseFDCodeProjectFile } from "@fdcode/shared/t3ProjectFile";
 import { useAtomValue } from "@effect/atom-react";
 import * as Option from "effect/Option";
 import { AsyncResult, Atom } from "effect/reactivity";
@@ -22,7 +26,7 @@ type ProjectFileMember = readonly [
 const memberProjectFilesAtom = Atom.family((membersKey: string) => {
   const members = JSON.parse(membersKey) as ReadonlyArray<ProjectFileMember>;
   return Atom.make((get) => {
-    const files = new Map<string, T3ProjectFile | null>();
+    const files = new Map<string, FDCodeProjectFile | null>();
     for (const [environmentId, workspaceRoot, physicalProjectKey] of members) {
       const result = get(
         getProjectFileQueryAtom(environmentId, workspaceRoot, T3_PROJECT_FILE_NAME),
@@ -33,7 +37,7 @@ const memberProjectFilesAtom = Atom.family((membersKey: string) => {
         Option.getOrNull(AsyncResult.value(result));
       files.set(
         physicalProjectKey,
-        data === null || data.truncated ? null : parseT3ProjectFile(data.contents),
+        data === null || data.truncated ? null : parseFDCodeProjectFile(data.contents),
       );
     }
     return files;

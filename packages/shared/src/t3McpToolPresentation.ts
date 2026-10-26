@@ -1,11 +1,11 @@
-export type T3McpToolLogo = "t3-code";
+export type FDCodeMcpToolLogo = "t3-code";
 
-export interface T3McpToolPresentation {
+export interface FDCodeMcpToolPresentation {
   readonly displayName: string;
-  readonly logo: T3McpToolLogo;
+  readonly logo: FDCodeMcpToolLogo;
 }
 
-export type T3McpToolSummaryAction =
+export type FDCodeMcpToolSummaryAction =
   | "capabilities"
   | "delegate"
   | "task-status"
@@ -66,25 +66,25 @@ export type T3McpToolSummaryAction =
   | "html-preview"
   | "html-render";
 
-export interface T3McpToolDefinition {
+export interface FDCodeMcpToolDefinition {
   readonly displayName: string;
   readonly labels: readonly [action: string, running: string, completed: string, detail: string];
   readonly icon: "t3-code" | "browser" | "device" | "pull-request";
-  readonly summaryAction: T3McpToolSummaryAction;
+  readonly summaryAction: FDCodeMcpToolSummaryAction;
 }
 
 function tool(
-  labels: T3McpToolDefinition["labels"],
-  summaryAction: T3McpToolSummaryAction,
-  icon: T3McpToolDefinition["icon"] = "t3-code",
+  labels: FDCodeMcpToolDefinition["labels"],
+  summaryAction: FDCodeMcpToolSummaryAction,
+  icon: FDCodeMcpToolDefinition["icon"] = "t3-code",
   displayName = `${labels[0]} ${labels[3]}`,
-): T3McpToolDefinition {
+): FDCodeMcpToolDefinition {
   return { displayName, labels, icon, summaryAction };
 }
 
 const T3_MCP_SERVER_ALIASES = new Set(["t3-code", "t3_code", "t3code"]);
 
-const T3_MCP_TOOLS: Readonly<Record<string, T3McpToolDefinition>> = {
+const T3_MCP_TOOLS: Readonly<Record<string, FDCodeMcpToolDefinition>> = {
   link_pull_request: tool(
     ["Link", "Linking", "Linked", "a pull request"],
     "link-pr",
@@ -335,7 +335,7 @@ const T3_MCP_TOOLS: Readonly<Record<string, T3McpToolDefinition>> = {
 
 export const T3_MCP_TOOL_NAMES: ReadonlySet<string> = new Set(Object.keys(T3_MCP_TOOLS));
 
-function normalizeT3McpToolLabel(value: string): string {
+function normalizeFDCodeMcpToolLabel(value: string): string {
   return value.replace(/\s+(?:complete|completed)\s*$/i, "").trim();
 }
 
@@ -346,8 +346,8 @@ function normalizeT3McpToolLabel(value: string): string {
  * agents. The prefix match is deliberately loose because the display-name
  * inventory is the real gate; unknown tools stay on the generic renderer.
  */
-function resolveT3McpToolName(value: string): string | null {
-  const label = normalizeT3McpToolLabel(value);
+function resolveFDCodeMcpToolName(value: string): string | null {
+  const label = normalizeFDCodeMcpToolLabel(value);
   const mcpMatch = /^mcp__(?<server>.+?)__(?<tool>.+)$/i.exec(label);
   if (mcpMatch?.groups) {
     const { server, tool } = mcpMatch.groups;
@@ -379,27 +379,27 @@ function resolveT3McpToolName(value: string): string | null {
   return longest;
 }
 
-export function resolveT3McpToolId(toolName: string | null | undefined): string | null {
-  const name = toolName == null ? null : resolveT3McpToolName(toolName);
+export function resolveFDCodeMcpToolId(toolName: string | null | undefined): string | null {
+  const name = toolName == null ? null : resolveFDCodeMcpToolName(toolName);
   return name !== null && Object.hasOwn(T3_MCP_TOOLS, name) ? name : null;
 }
 
-export function resolveT3McpToolDefinition(
+export function resolveFDCodeMcpToolDefinition(
   toolName: string | null | undefined,
-): T3McpToolDefinition | null {
-  const name = toolName == null ? null : resolveT3McpToolName(toolName);
+): FDCodeMcpToolDefinition | null {
+  const name = toolName == null ? null : resolveFDCodeMcpToolName(toolName);
   return name !== null && Object.hasOwn(T3_MCP_TOOLS, name) ? T3_MCP_TOOLS[name]! : null;
 }
 
-export function resolveT3McpToolPresentation(
+export function resolveFDCodeMcpToolPresentation(
   toolName: string | null | undefined,
-): T3McpToolPresentation | null {
-  const definition = resolveT3McpToolDefinition(toolName);
+): FDCodeMcpToolPresentation | null {
+  const definition = resolveFDCodeMcpToolDefinition(toolName);
   return definition === null ? null : { displayName: definition.displayName, logo: "t3-code" };
 }
 
-export function resolveT3McpToolSummaryAction(
+export function resolveFDCodeMcpToolSummaryAction(
   toolName: string | null | undefined,
-): T3McpToolSummaryAction | null {
-  return resolveT3McpToolDefinition(toolName)?.summaryAction ?? null;
+): FDCodeMcpToolSummaryAction | null {
+  return resolveFDCodeMcpToolDefinition(toolName)?.summaryAction ?? null;
 }

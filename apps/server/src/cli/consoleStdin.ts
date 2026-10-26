@@ -23,7 +23,7 @@ export function needsConsoleStdin(input: {
   return (
     input.platform === "win32" &&
     // Set only by the launcher (DesktopCliShim), never for the desktop backend.
-    input.env.T3CODE_DESKTOP_CLI_LAUNCHER === "1" &&
+    input.env.FDCODE_DESKTOP_CLI_LAUNCHER === "1" &&
     !input.stdinOpen &&
     input.stdoutIsConsole
   );
@@ -53,7 +53,7 @@ export function attachConsoleStdin(): number | undefined {
   });
   // The marker describes this process's own start; a server started here
   // must not pass it on to the shells and `t3` runs it spawns.
-  delete process.env.T3CODE_DESKTOP_CLI_LAUNCHER;
+  delete process.env.FDCODE_DESKTOP_CLI_LAUNCHER;
   if (!needed) return undefined;
   let fd: number;
   try {

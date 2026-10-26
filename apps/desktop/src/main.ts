@@ -19,7 +19,7 @@ import * as Electron from "electron";
 
 import * as NetService from "@fdcode/shared/Net";
 import * as HostProcess from "@fdcode/shared/HostProcess";
-import type { RemoteT3RunnerOptions } from "@fdcode/ssh/tunnel";
+import type { RemoteFDCodeRunnerOptions } from "@fdcode/ssh/tunnel";
 import serverPackageJson from "../../server/package.json" with { type: "json" };
 
 import * as DesktopIpc from "./ipc/DesktopIpc.ts";
@@ -105,8 +105,8 @@ const layerDesktopEnvironment = Layer.unwrap(
 
 const resolveDesktopSshCliRunner = (
   environment: DesktopEnvironment.DesktopEnvironment["Service"],
-): RemoteT3RunnerOptions => {
-  const devRemoteEntryPath = Option.getOrUndefined(environment.devRemoteT3ServerEntryPath);
+): RemoteFDCodeRunnerOptions => {
+  const devRemoteEntryPath = Option.getOrUndefined(environment.devRemoteFDCodeServerEntryPath);
   if (environment.isDevelopment && devRemoteEntryPath !== undefined) {
     return {
       nodeScriptPath: devRemoteEntryPath,

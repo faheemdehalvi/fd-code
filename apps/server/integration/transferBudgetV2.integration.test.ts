@@ -349,8 +349,8 @@ it.live(
       const fs = yield* FileSystem.FileSystem;
       const report = formatTransferBudgetReport(runs);
       for (const [path, contents] of [
-        [process.env.T3CODE_TRANSFER_BUDGET_REPORT_PATH, report],
-        [process.env.T3CODE_TRANSFER_BUDGET_RESULT_PATH, formatTransferBudgetResult(runs)],
+        [process.env.FDCODE_TRANSFER_BUDGET_REPORT_PATH, report],
+        [process.env.FDCODE_TRANSFER_BUDGET_RESULT_PATH, formatTransferBudgetResult(runs)],
       ])
         if (path && contents) yield* fs.writeFileString(path, contents);
       yield* Effect.log(report);

@@ -58,7 +58,7 @@ it.runIf(hasDbus)("captures through real D-Bus marshalling on a private bus", as
     server = sessionBus({ busAddress: String(address) });
     server.on("error", () => undefined);
     await server.requestName("org.freedesktop.portal.Desktop", NameFlag.DO_NOT_QUEUE);
-    await server.requestName("org.gnome.Shell.Extensions.T3SnapShot", NameFlag.DO_NOT_QUEUE);
+    await server.requestName("org.gnome.Shell.Extensions.FDCodeSnapShot", NameFlag.DO_NOT_QUEUE);
     await server.requestName("org.gnome.Shell", NameFlag.DO_NOT_QUEUE);
     await server.requestName("org.kde.KWin.ScreenShot2", NameFlag.DO_NOT_QUEUE);
     const png = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10, 0]);
@@ -164,13 +164,13 @@ it.runIf(hasDbus)("captures through real D-Bus marshalling on a private bus", as
       setup.close();
     }
     const portal = connect();
-    expect(await portal.backend("com.t3tools.T3Code")).toBe("screenshot-portal");
+    expect(await portal.backend("com.t3tools.FDCode")).toBe("screenshot-portal");
     expect(await portal.capturePortal()).toEqual({ png });
     expect(target).toBe(8);
     portalVersion = 2;
     const extension = connect();
-    expect(await extension.backend("com.t3tools.T3Code")).toBe("gnome-extension");
-    expect(await extension.captureExtension("com.t3tools.T3Code")).toMatchObject({
+    expect(await extension.backend("com.t3tools.FDCode")).toBe("gnome-extension");
+    expect(await extension.captureExtension("com.t3tools.FDCode")).toMatchObject({
       png,
       window: { processId: 42 },
     });
@@ -181,15 +181,15 @@ it.runIf(hasDbus)("captures through real D-Bus marshalling on a private bus", as
         interface: "org.freedesktop.DBus",
         member: "GetNameOwner",
         signature: "s",
-        body: ["com.t3tools.T3Code.SnapShot"],
+        body: ["com.t3tools.FDCode.SnapShot"],
       }),
     );
     expect(owner?.body[0]).toBe(clientName);
     extension.close();
     extensionVersion = 2;
     const updated = connect();
-    expect(await updated.backend("com.t3tools.T3Code")).toBe("gnome-extension");
-    const snapshot = await updated.captureExtension("com.t3tools.T3Code", {
+    expect(await updated.backend("com.t3tools.FDCode")).toBe("gnome-extension");
+    const snapshot = await updated.captureExtension("com.t3tools.FDCode", {
       flash: true,
       animate: true,
     });
@@ -202,14 +202,14 @@ it.runIf(hasDbus)("captures through real D-Bus marshalling on a private bus", as
     expect(animateFrame).toEqual([0.1, 0.8, 0.2, 0.1]);
     vi.stubEnv("XDG_CURRENT_DESKTOP", "KDE");
     const kde = connect();
-    expect(await kde.backend("com.t3tools.T3Code")).toBe("kde");
+    expect(await kde.backend("com.t3tools.FDCode")).toBe("kde");
     expect(kde.feedbackAvailable).toBe(false);
     kde.close();
     const triggered = vi.fn();
     const failed = vi.fn();
     const niriBus = sessionBus({ busAddress: String(address) });
     stopNiriShortcut = await startNiriCaptureShortcut(
-      "com.t3tools.T3Code.NiriTest",
+      "com.t3tools.FDCode.NiriTest",
       triggered,
       failed,
       niriBus,
@@ -218,7 +218,7 @@ it.runIf(hasDbus)("captures through real D-Bus marshalling on a private bus", as
       "call",
       "--session",
       "--dest",
-      "com.t3tools.T3Code.NiriTest.SnapShot",
+      "com.t3tools.FDCode.NiriTest.SnapShot",
       "--object-path",
       "/com/t3tools/SnapShot",
       "--method",
@@ -239,7 +239,7 @@ it.runIf(hasDbus)("captures through real D-Bus marshalling on a private bus", as
     expect(failed).not.toHaveBeenCalled();
     const invalid = server.call(
       new Message({
-        destination: "com.t3tools.T3Code.NiriTest.SnapShot",
+        destination: "com.t3tools.FDCode.NiriTest.SnapShot",
         path: "/com/t3tools/SnapShot",
         interface: "com.t3tools.SnapShot",
         member: "Capture",
@@ -251,7 +251,7 @@ it.runIf(hasDbus)("captures through real D-Bus marshalling on a private bus", as
     expect(triggered).toHaveBeenCalledOnce();
     await expect(
       startNiriCaptureShortcut(
-        "com.t3tools.T3Code.NiriTest",
+        "com.t3tools.FDCode.NiriTest",
         triggered,
         failed,
         sessionBus({ busAddress: String(address) }),
@@ -259,7 +259,7 @@ it.runIf(hasDbus)("captures through real D-Bus marshalling on a private bus", as
     ).rejects.toThrow("already owns");
     stopNiriShortcut();
     const restarted = await startNiriCaptureShortcut(
-      "com.t3tools.T3Code.NiriTest",
+      "com.t3tools.FDCode.NiriTest",
       triggered,
       failed,
       sessionBus({ busAddress: String(address) }),

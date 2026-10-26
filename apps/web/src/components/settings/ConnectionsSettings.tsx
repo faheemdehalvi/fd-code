@@ -159,7 +159,7 @@ import {
   supportsServerUpdateThreadContinuation,
 } from "~/versionSkew";
 import { hasCloudPublicConfig } from "~/cloud/publicConfig";
-import { RemoveT3ConnectEnvironmentDialog } from "../clerk/RemoveT3ConnectEnvironmentDialog";
+import { RemoveFDCodeConnectEnvironmentDialog } from "../clerk/RemoveFDCodeConnectEnvironmentDialog";
 import { useCloudLinkController } from "~/cloud/useCloudLinkController";
 import { authEnvironment } from "~/state/auth";
 import { environmentCatalog } from "~/connection/catalog";
@@ -2681,11 +2681,11 @@ export function ConnectionsSettings() {
 
   // T3 Connect environments get their own dialog: removing one here leaves its
   // account registration, so it points to where that can be deregistered.
-  const [pendingT3ConnectRemoval, setPendingT3ConnectRemoval] =
+  const [pendingFDCodeConnectRemoval, setPendingFDCodeConnectRemoval] =
     useState<EnvironmentPresentation | null>(null);
   const handleRemoveSavedBackend = async (environment: EnvironmentPresentation) => {
     if (environment.relayManaged && hasCloudPublicConfig()) {
-      setPendingT3ConnectRemoval(environment);
+      setPendingFDCodeConnectRemoval(environment);
       return;
     }
     const confirmed = await requestConfirmDialog(
@@ -3932,13 +3932,13 @@ export function ConnectionsSettings() {
         />
       </SettingsSection>
       {hasCloudPublicConfig() ? (
-        <RemoveT3ConnectEnvironmentDialog
-          environmentLabel={pendingT3ConnectRemoval?.label ?? null}
-          onCancel={() => setPendingT3ConnectRemoval(null)}
+        <RemoveFDCodeConnectEnvironmentDialog
+          environmentLabel={pendingFDCodeConnectRemoval?.label ?? null}
+          onCancel={() => setPendingFDCodeConnectRemoval(null)}
           onConfirm={() => {
-            if (!pendingT3ConnectRemoval) return;
-            setPendingT3ConnectRemoval(null);
-            void removeSavedBackend(pendingT3ConnectRemoval);
+            if (!pendingFDCodeConnectRemoval) return;
+            setPendingFDCodeConnectRemoval(null);
+            void removeSavedBackend(pendingFDCodeConnectRemoval);
           }}
         />
       ) : null}

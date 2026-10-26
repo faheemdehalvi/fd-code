@@ -18,11 +18,11 @@ export const BrainDirectory = Context.Reference<string | undefined>(
   },
 );
 
-/** `T3CODE_BRAIN_DIR` points a scratch or staging server at its own Brain. */
+/** `FDCODE_BRAIN_DIR` points a scratch or staging server at its own Brain. */
 export const layerShared = Layer.effect(
   BrainDirectory,
   Effect.gen(function* () {
-    const override = (yield* HostProcess.Environment).T3CODE_BRAIN_DIR?.trim();
+    const override = (yield* HostProcess.Environment).FDCODE_BRAIN_DIR?.trim();
     return override
       ? NodePath.resolve(override)
       : NodePath.join(yield* HostProcess.HomeDirectory, ".faheems-brain");

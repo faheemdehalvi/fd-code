@@ -33,7 +33,7 @@ import * as HostProcess from "@fdcode/shared/HostProcess";
 import { compactTraceAttributes } from "@fdcode/shared/observability";
 import { decodeJsonResult } from "@fdcode/shared/schemaJson";
 import { resolveSpawnCommand } from "@fdcode/shared/shell";
-import { parseT3ProjectFile } from "@fdcode/shared/t3ProjectFile";
+import { parseFDCodeProjectFile } from "@fdcode/shared/t3ProjectFile";
 import { resolveProjectFileBackedSetting } from "@fdcode/shared/projectSettings";
 import { gitCommandDuration, gitCommandsTotal, withMetrics } from "../observability/Metrics.ts";
 import * as GitVcsDriver from "./GitVcsDriver.ts";
@@ -3543,7 +3543,7 @@ export const makeGitVcsDriverCore = Effect.fn("makeGitVcsDriverCore")(function* 
             ? null
             : yield* fileSystem.readFileString(path.join(worktreePath, T3_PROJECT_FILE_NAME)).pipe(
                 Effect.flatMap((contents) => {
-                  const file = parseT3ProjectFile(contents);
+                  const file = parseFDCodeProjectFile(contents);
                   return file === null
                     ? Effect.logWarning("t3.json is invalid; initializing submodules recursively", {
                         worktreePath,

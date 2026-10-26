@@ -358,7 +358,7 @@ describe("Alpha native Brain continuity", () => {
           Effect.provide(
             fixture(home, [message(1, "scratch text")], "scratch").pipe(
               Layer.provide(BrainDirectory.layerShared),
-              Layer.provide(Layer.succeed(HostProcess.Environment, { T3CODE_BRAIN_DIR: scratch })),
+              Layer.provide(Layer.succeed(HostProcess.Environment, { FDCODE_BRAIN_DIR: scratch })),
             ),
           ),
           Effect.scoped,

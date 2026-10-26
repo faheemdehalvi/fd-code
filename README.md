@@ -62,7 +62,7 @@ Install the latest version of the desktop app from [GitHub Releases](https://git
 #### Windows (`winget`)
 
 ```bash
-winget install T3Tools.T3Code
+winget install T3Tools.FDCode
 ```
 
 #### Windows (`scoop`)
@@ -90,13 +90,13 @@ sudo apt install ./T3-Code-*.deb
 Stable:
 
 ```bash
-yay -S t3code-bin
+yay -S fd-code-bin
 ```
 
 Nightly:
 
 ```bash
-yay -S t3code-nightly-bin
+yay -S fd-code-nightly-bin
 ```
 
 The AUR packaging is maintained in this repository under [`packaging/aur`](./packaging/aur).

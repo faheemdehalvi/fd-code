@@ -82,7 +82,7 @@ describe("BrowserImport.importCookies", () => {
             sourceProfileDirectory: "../../../../secrets",
             targetProfileId: "default",
           },
-          scope: "persist:t3code-preview-test",
+          scope: "persist:fd-code-preview-test",
           persistent: true,
         })
         .pipe(Effect.flip);
@@ -109,7 +109,7 @@ describe("BrowserImport.importCookies", () => {
               sourceProfileDirectory: "Default",
               targetProfileId: "default",
             },
-            scope: "persist:t3code-preview-test",
+            scope: "persist:fd-code-preview-test",
             persistent: true,
           })
           .pipe(Effect.flip);

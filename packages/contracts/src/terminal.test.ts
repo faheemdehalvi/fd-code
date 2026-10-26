@@ -112,13 +112,13 @@ describe("TerminalOpenInput", () => {
       cols: 100,
       rows: 24,
       env: {
-        T3CODE_PROJECT_ROOT: "/tmp/project",
+        FDCODE_PROJECT_ROOT: "/tmp/project",
         CUSTOM_FLAG: "1",
       },
       providerInstanceId: "codex_work",
     });
     expect(parsed.env).toMatchObject({
-      T3CODE_PROJECT_ROOT: "/tmp/project",
+      FDCODE_PROJECT_ROOT: "/tmp/project",
       CUSTOM_FLAG: "1",
     });
     expect(parsed.worktreePath).toBe("/tmp/project/.fd-code/worktrees/feature-a");

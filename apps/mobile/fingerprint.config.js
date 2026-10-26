@@ -9,8 +9,8 @@ const path = require("node:path");
 // users only once its store build is promoted.
 const appConfig = fs.readFileSync(path.join(__dirname, "app.config.ts"), "utf8");
 const version =
-  process.env.T3CODE_MOBILE_VERSION ??
-  appConfig.match(/^ {2}version: repoEnv\.T3CODE_MOBILE_VERSION \?\? "([^"]+)"/m)?.[1];
+  process.env.FDCODE_MOBILE_VERSION ??
+  appConfig.match(/^ {2}version: repoEnv\.FDCODE_MOBILE_VERSION \?\? "([^"]+)"/m)?.[1];
 const majorVersion = version?.match(/^(\d+)\./)?.[1];
 if (!majorVersion) {
   throw new Error("fingerprint.config.js could not read the app version from app.config.ts");

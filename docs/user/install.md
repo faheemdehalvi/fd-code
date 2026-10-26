@@ -22,8 +22,8 @@ irm https://t3.codes/install.ps1 | iex
 
 This installs the `t3` binary to `~/.local/bin`. If your shell reports `command not found`
 afterwards, that directory is not on your `PATH` yet; the installer prints the
-line to add. Set `T3CODE_CHANNEL=nightly` to install the nightly train, or
-`T3CODE_VERSION` to pin an exact version.
+line to add. Set `FDCODE_CHANNEL=nightly` to install the nightly train, or
+`FDCODE_VERSION` to pin an exact version.
 
 | Task                                             | Command                                                                 |
 | ------------------------------------------------ | ----------------------------------------------------------------------- |
@@ -67,11 +67,11 @@ or use a package manager:
 
 | Platform           | Install                            |
 | ------------------ | ---------------------------------- |
-| Windows            | `winget install T3Tools.T3Code`    |
+| Windows            | `winget install T3Tools.FDCode`    |
 | macOS              | `brew install --cask t3-code`      |
 | Debian, Ubuntu     | `sudo apt install ./T3-Code-*.deb` |
-| Arch Linux         | `yay -S t3code-bin`                |
-| Arch Linux nightly | `yay -S t3code-nightly-bin`        |
+| Arch Linux         | `yay -S fd-code-bin`               |
+| Arch Linux nightly | `yay -S fd-code-nightly-bin`       |
 
 The `.deb` updates itself like the other desktop builds. It asks for your
 password to install each update. If your desktop has no password prompt, the

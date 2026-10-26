@@ -180,7 +180,7 @@ export const layer = Layer.effect(
         electronDialog
           .showErrorBox(
             "This T3 home is unavailable",
-            "Another FD CODE server, such as the background service, is using this data directory. Stop that server and reopen FD CODE, or set a separate T3CODE_HOME and pair with the running server.",
+            "Another FD CODE server, such as the background service, is using this data directory. Stop that server and reopen FD CODE, or set a separate FDCODE_HOME and pair with the running server.",
           )
           .pipe(Effect.andThen(electronApp.quit)),
     });

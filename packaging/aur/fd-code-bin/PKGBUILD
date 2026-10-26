@@ -1,0 +1,113 @@
+# Maintainer: fd-code maintainers
+#
+# NOTE (fork): This recipe is a fork of the upstream t3code-bin AUR package,
+# rebranded for https://github.com/faheemdehalvi/fd-code. It is BUILD-INERT
+# until the fork publishes its own AppImage releases:
+#   - source= URLs point at fork releases that do not exist yet.
+#   - sha256sums are SKIP; regenerate real sums against the published AppImage.
+#   - verify the AppImage filename, bundled icon basename, StartupWMClass, and
+#     the x-scheme-handler value match what the fork's desktop build actually
+#     produces before publishing to the AUR.
+
+pkgname=fd-code-bin
+pkgver=0.0.33
+pkgrel=1
+pkgdesc='Desktop control surface for local coding agents'
+arch=('x86_64')
+url='https://github.com/faheemdehalvi/fd-code'
+license=('MIT')
+depends=(
+  'alsa-lib'
+  'at-spi2-core'
+  'cairo'
+  'dbus'
+  'expat'
+  'gdk-pixbuf2'
+  'glib2'
+  'glibc'
+  'gtk3'
+  'hicolor-icon-theme'
+  'libcups'
+  'libdrm'
+  'libgcc'
+  'libstdc++'
+  'libx11'
+  'libxcb'
+  'libxcomposite'
+  'libxdamage'
+  'libxext'
+  'libxfixes'
+  'libxkbcommon'
+  'libxrandr'
+  'mesa'
+  'nspr'
+  'nss'
+  'pango'
+  'systemd-libs'
+  'xdg-utils'
+  'zlib'
+)
+optdepends=('openai-codex: use the system-installed Codex CLI')
+provides=("fd-code=$pkgver")
+conflicts=('fd-code')
+options=('!debug' '!strip')
+
+_appimage="FD-Code-${pkgver}-x86_64.AppImage"
+source=(
+  "$_appimage::https://github.com/faheemdehalvi/fd-code/releases/download/v${pkgver}/$_appimage"
+  "${pkgname}-${pkgver}-LICENSE::https://raw.githubusercontent.com/faheemdehalvi/fd-code/v${pkgver}/LICENSE"
+)
+sha256sums=(
+  'SKIP' # AppImage: regenerate against the published fork release
+  'SKIP' # license
+)
+
+prepare() {
+  chmod +x "$srcdir/$_appimage"
+  rm -rf "$srcdir/squashfs-root"
+  "$srcdir/$_appimage" --appimage-extract >/dev/null
+
+  if [[ ! -x "$srcdir/squashfs-root/AppRun" ||
+        ! -f "$srcdir/squashfs-root/chrome-sandbox" ]]; then
+    echo 'The AppImage payload is missing its launcher or Chromium sandbox.' >&2
+    return 1
+  fi
+}
+
+package() {
+  install -d "$pkgdir/opt/$pkgname"
+  cp -a --no-preserve=ownership "$srcdir/squashfs-root/." "$pkgdir/opt/$pkgname/"
+  chmod -R u=rwX,go=rX "$pkgdir/opt/$pkgname"
+  chmod 4755 "$pkgdir/opt/$pkgname/chrome-sandbox"
+
+  install -Dm755 /dev/stdin "$pkgdir/usr/bin/fd-code" <<'EOF'
+#!/bin/sh
+exec /opt/fd-code-bin/AppRun "$@"
+EOF
+  ln -s fd-code "$pkgdir/usr/bin/fd-code-desktop"
+
+  # Icon lookup only sees sizes registered in hicolor's index.theme (max 512x512).
+  local icon size_dir
+  for icon in "$srcdir"/squashfs-root/usr/share/icons/hicolor/*/apps/fd-code.png; do
+    size_dir="${icon%/apps/fd-code.png}"
+    install -Dm644 "$icon" \
+      "$pkgdir/usr/share/icons/hicolor/${size_dir##*/}/apps/fd-code.png"
+  done
+
+  install -Dm644 /dev/stdin "$pkgdir/usr/share/applications/fd-code.desktop" <<'EOF'
+[Desktop Entry]
+Name=FD CODE
+Comment=Desktop control surface for local coding agents
+Exec=fd-code %U
+TryExec=fd-code
+Terminal=false
+Type=Application
+Icon=fd-code
+StartupWMClass=fd-code
+Categories=Development;
+MimeType=x-scheme-handler/fd-code;
+EOF
+
+  install -Dm644 "$srcdir/${pkgname}-${pkgver}-LICENSE" \
+    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

@@ -23,7 +23,7 @@
   "containerEnv": {
     // Keep all runtime state inside the (gitignored) workspace .fd-code, matching
     // the worktree default. An explicit --home-dir still wins.
-    "T3CODE_HOME": "${containerWorkspaceFolder}/.fd-code"
+    "FDCODE_HOME": "${containerWorkspaceFolder}/.fd-code"
   },
   "mounts": [
     // vp keeps the pnpm content-addressable store and metadata cache under

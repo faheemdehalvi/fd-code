@@ -9,7 +9,7 @@ import {
 
 describe("parseChangeRequestUrl", () => {
   it("reads a GitHub pull request, lower-casing the repository", () => {
-    expect(parseChangeRequestUrl("https://github.com/T3Tools/T3Code/pull/123")).toEqual({
+    expect(parseChangeRequestUrl("https://github.com/T3Tools/FDCode/pull/123")).toEqual({
       host: "github.com",
       repository: "t3tools/t3code",
       number: 123,

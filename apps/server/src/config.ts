@@ -102,7 +102,7 @@ export const otlpResource = (
   serviceName: "t3code-server",
   serviceVersion: packageJson.version,
   attributes: {
-    "service.namespace": "t3code",
+    "service.namespace": "fd-code",
     "service.runtime": "t3-server",
     "service.mode": config.mode,
     "host.name": config.otelEnvironment.resourceAttributes["host.name"] || hostName,

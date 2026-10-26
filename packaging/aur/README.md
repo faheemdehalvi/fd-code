@@ -1,7 +1,7 @@
 # AUR packaging
 
-This directory maintains the [`t3code-bin`](https://aur.archlinux.org/packages/t3code-bin) and
-[`t3code-nightly-bin`](https://aur.archlinux.org/packages/t3code-nightly-bin) packages. Both
+This directory maintains the [`fd-code-bin`](https://aur.archlinux.org/packages/fd-code-bin) and
+[`fd-code-nightly-bin`](https://aur.archlinux.org/packages/fd-code-nightly-bin) packages. Both
 repackage the official x86_64 AppImage from GitHub Releases.
 
 ## Publishing

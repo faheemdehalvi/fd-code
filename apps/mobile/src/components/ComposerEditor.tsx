@@ -8,8 +8,8 @@ import { useEffect, useRef, useState } from "react";
 import type { EnvironmentId } from "@fdcode/contracts";
 import { encodeComposerContextFragment } from "@fdcode/shared/composerContextClipboard";
 import { collectComposerContextReferences } from "@fdcode/shared/composerContextReferences";
-import { ComposerEditor as NativeComposerEditor } from "../native/T3ComposerEditor";
-import type { ComposerEditorProps as NativeComposerEditorProps } from "../native/T3ComposerEditor";
+import { ComposerEditor as NativeComposerEditor } from "../native/FDCodeComposerEditor";
+import type { ComposerEditorProps as NativeComposerEditorProps } from "../native/FDCodeComposerEditor";
 import {
   appendComposerDraftAttachments,
   createComposerDraftContextHistory,
@@ -254,4 +254,4 @@ export type {
   ComposerEditorHandle,
   ComposerEditorSelection,
   ComposerTextPaste,
-} from "../native/T3ComposerEditor";
+} from "../native/FDCodeComposerEditor";

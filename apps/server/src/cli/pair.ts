@@ -4,7 +4,7 @@ import {
   ExecutionEnvironmentDescriptor,
   PortSchema,
 } from "@fdcode/contracts";
-import { resolveWorktreeT3Home } from "@fdcode/shared/devHome";
+import { resolveWorktreeFDCodeHome } from "@fdcode/shared/devHome";
 import { DEFAULT_SIGNAL_EXPORT } from "@fdcode/shared/observability";
 import * as OtelEnvironment from "@fdcode/shared/otelEnvironment";
 import {
@@ -221,11 +221,11 @@ const discoverPairTarget = Effect.fn("pair.discoverPairTarget")(function* (
     // Same precedence as dev-runner: inside a linked worktree its own `.fd-code`
     // outranks the shared home, so `t3 pair` in a worktree pairs with the dev
     // server under test rather than the daily-driver install.
-    const worktreeHome = yield* resolveWorktreeT3Home(process.cwd());
+    const worktreeHome = yield* resolveWorktreeFDCodeHome(process.cwd());
     if (worktreeHome !== undefined) {
       bases.push(worktreeHome);
     }
-    const envHome = yield* Config.String("T3CODE_HOME").pipe(Config.option);
+    const envHome = yield* Config.String("FDCODE_HOME").pipe(Config.option);
     bases.push(yield* resolveBaseDir(Option.getOrUndefined(envHome)));
   }
 

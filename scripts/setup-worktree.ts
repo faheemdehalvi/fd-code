@@ -5,9 +5,9 @@ import * as NodePath from "node:path";
 
 const ENV_FILES = [".env", NodePath.join("infra", "relay", ".env")];
 
-const projectRoot = process.env.T3CODE_PROJECT_ROOT;
+const projectRoot = process.env.FDCODE_PROJECT_ROOT;
 if (!projectRoot) {
-  throw new Error("T3CODE_PROJECT_ROOT is not set. Run this through the t3.json setup action.");
+  throw new Error("FDCODE_PROJECT_ROOT is not set. Run this through the t3.json setup action.");
 }
 const worktree = NodePath.dirname(import.meta.dirname);
 

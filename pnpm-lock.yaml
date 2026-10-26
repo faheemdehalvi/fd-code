@@ -345,11 +345,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/contracts
       '@fdcode/mobile-review-diff-native':
-        specifier: file:./modules/t3-review-diff
-        version: file:apps/mobile/modules/t3-review-diff
+        specifier: file:./modules/fd-code-review-diff
+        version: file:apps/mobile/modules/fd-code-review-diff
       '@fdcode/mobile-source-text':
-        specifier: file:./modules/t3-source-text
-        version: file:apps/mobile/modules/t3-source-text(react-native@0.88.0(@babel/core@7.29.7)(@react-native/metro-config@0.88.0(@babel/core@7.29.7)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(@types/react@19.3.0)(bufferutil@4.1.0)(react@19.3.0)(utf-8-validate@6.0.6))(react@19.3.0)
+        specifier: file:./modules/fd-code-source-text
+        version: file:apps/mobile/modules/fd-code-source-text(react-native@0.88.0(@babel/core@7.29.7)(@react-native/metro-config@0.88.0(@babel/core@7.29.7)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(@types/react@19.3.0)(bufferutil@4.1.0)(react@19.3.0)(utf-8-validate@6.0.6))(react@19.3.0)
       '@fdcode/mobile-terminal-native':
         specifier: file:./modules/fd-code-terminal
         version: file:apps/mobile/modules/fd-code-terminal
@@ -1087,7 +1087,7 @@ importers:
         specifier: 1.0.0
         version: 1.0.0(@types/node@24.12.4)(@vitest/browser-playwright@5.0.1)(@vitest/ui@5.0.1(vitest@5.0.1))(bufferutil@4.1.0)(esbuild@0.28.2)(jiti@2.7.0)(jsdom@30.1.0(@noble/hashes@1.8.0))(msw@2.12.11(@types/node@24.12.4)(typescript@7.0.2))(terser@5.48.0)(typescript@7.0.2)(unrun@0.2.39)(utf-8-validate@6.0.6)(yaml@2.9.0)
 
-  oxlint-plugin-t3code:
+  oxlint-plugin-fd-code:
     dependencies:
       '@effect/platform-node':
         specifier: 4.0.5
@@ -3887,11 +3887,11 @@ packages:
     resolution: {integrity: sha512-EbxYllZ7/ozONVZd425cm4XnolfW+AmSFT5aP7Jdno6oc3WrYQcHz2CO20z/2rwWwYgztmV2PXvYH+BQ8YFjqg==}
     hasBin: true
 
-  '@fdcode/mobile-review-diff-native@file:apps/mobile/modules/t3-review-diff':
-    resolution: {directory: apps/mobile/modules/t3-review-diff, type: directory}
+  '@fdcode/mobile-review-diff-native@file:apps/mobile/modules/fd-code-review-diff':
+    resolution: {directory: apps/mobile/modules/fd-code-review-diff, type: directory}
 
-  '@fdcode/mobile-source-text@file:apps/mobile/modules/t3-source-text':
-    resolution: {directory: apps/mobile/modules/t3-source-text, type: directory}
+  '@fdcode/mobile-source-text@file:apps/mobile/modules/fd-code-source-text':
+    resolution: {directory: apps/mobile/modules/fd-code-source-text, type: directory}
     peerDependencies:
       react: '*'
       react-native: '*'
@@ -15012,9 +15012,9 @@ snapshots:
       chalk: 4.1.2
       js-yaml: 4.3.2
 
-  '@fdcode/mobile-review-diff-native@file:apps/mobile/modules/t3-review-diff': {}
+  '@fdcode/mobile-review-diff-native@file:apps/mobile/modules/fd-code-review-diff': {}
 
-  '@fdcode/mobile-source-text@file:apps/mobile/modules/t3-source-text(react-native@0.88.0(@babel/core@7.29.7)(@react-native/metro-config@0.88.0(@babel/core@7.29.7)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(@types/react@19.3.0)(bufferutil@4.1.0)(react@19.3.0)(utf-8-validate@6.0.6))(react@19.3.0)':
+  '@fdcode/mobile-source-text@file:apps/mobile/modules/fd-code-source-text(react-native@0.88.0(@babel/core@7.29.7)(@react-native/metro-config@0.88.0(@babel/core@7.29.7)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(@types/react@19.3.0)(bufferutil@4.1.0)(react@19.3.0)(utf-8-validate@6.0.6))(react@19.3.0)':
     dependencies:
       react: 19.3.0
       react-native: 0.88.0(@babel/core@7.29.7)(@react-native/metro-config@0.88.0(@babel/core@7.29.7)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(@types/react@19.3.0)(bufferutil@4.1.0)(react@19.3.0)(utf-8-validate@6.0.6)

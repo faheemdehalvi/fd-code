@@ -4,7 +4,7 @@ import { needsConsoleStdin } from "./consoleStdin.ts";
 
 const launcher = {
   platform: "win32" as const,
-  env: { T3CODE_DESKTOP_CLI_LAUNCHER: "1" },
+  env: { FDCODE_DESKTOP_CLI_LAUNCHER: "1" },
   stdinOpen: false,
   stdoutIsConsole: true,
 };
@@ -21,7 +21,7 @@ describe("needsConsoleStdin", () => {
       // Output to a pipe or file: the desktop backend, scripts, CI.
       { ...launcher, stdoutIsConsole: false },
       // The desktop backend runs the same executable but is not the launcher.
-      { ...launcher, env: { ELECTRON_RUN_AS_NODE: "1", T3CODE_CLI_PATH: "C:\\t3.cmd" } },
+      { ...launcher, env: { ELECTRON_RUN_AS_NODE: "1", FDCODE_CLI_PATH: "C:\\t3.cmd" } },
       // npm, the install scripts, and plain Node runs.
       { ...launcher, env: {} },
       { ...launcher, platform: "linux" as const },

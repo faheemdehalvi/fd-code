@@ -1,0 +1,10 @@
+{
+  "platforms": ["apple", "android"],
+  "apple": {
+    "modules": ["FDCodeReviewDiffModule"],
+    "podspecPath": "FDCodeReviewDiffNative.podspec"
+  },
+  "android": {
+    "modules": ["expo.modules.fdcodereviewdiff.FDCodeReviewDiffModule"]
+  }
+}

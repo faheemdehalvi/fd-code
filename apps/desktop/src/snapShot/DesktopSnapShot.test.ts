@@ -500,7 +500,7 @@ const layerTest = (
             platform,
             displayName: "FD CODE (Dev)",
             stateDir: "/state",
-            linuxDesktopEntryName: "com.t3tools.T3Code.desktop",
+            linuxDesktopEntryName: "com.t3tools.FDCode.desktop",
             appRoot: "/repo",
             linuxApplicationsDir: "/test-data/applications",
           } as DesktopEnvironment.DesktopEnvironment["Service"]),
@@ -1001,7 +1001,7 @@ it.effect.each(["win32", "darwin", "linux"] as const)(
     const t3 = {
       id: 42,
       title: "FD CODE",
-      appIdentifier: "com.t3tools.T3Code.desktop",
+      appIdentifier: "com.t3tools.FDCode.desktop",
       owner: { name: "FD CODE", processId: 123 },
       bounds,
       png: Buffer.from([1, 2, 3]),

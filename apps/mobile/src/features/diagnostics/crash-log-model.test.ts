@@ -3,7 +3,7 @@ import { describe, expect, it } from "vite-plus/test";
 import { formatStartupCrashReport, parseStartupCrashRecords } from "./crash-log-model";
 
 const BUNDLE =
-  "/Users/expo/workingdir/build/apps/mobile/ios/build/Build/Intermediates.noindex/ArchiveIntermediates/T3Code/BuildProductsPath/Release-iphoneos/main.jsbundle";
+  "/Users/expo/workingdir/build/apps/mobile/ios/build/Build/Intermediates.noindex/ArchiveIntermediates/FDCodeCode/BuildProductsPath/Release-iphoneos/main.jsbundle";
 const FATAL = {
   timestamp: 1789277752000,
   level: "error",

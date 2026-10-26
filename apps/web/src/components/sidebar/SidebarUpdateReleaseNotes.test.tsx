@@ -79,7 +79,7 @@ describe("SidebarUpdateReleaseNotes", () => {
   });
 
   it("uses the configured repository for release links", () => {
-    vi.stubEnv("T3CODE_DESKTOP_UPDATE_REPOSITORY", "JustYannicc/t3code");
+    vi.stubEnv("FDCODE_DESKTOP_UPDATE_REPOSITORY", "JustYannicc/t3code");
     const anchors = collectAnchors(
       renderNotes({
         ...baseState,

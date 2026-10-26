@@ -29,7 +29,7 @@ export const CLOUDFLARED_VERSION = "2026.10.0";
 // (`--output` arrived in 2025.6.1). Override, PATH, and older managed binaries
 // below it are skipped, since they exit immediately on the unknown flag.
 export const CLOUDFLARED_MIN_VERSION = "2025.6.1";
-const CLOUDFLARED_PATH_ENV_NAME = "T3CODE_CLOUDFLARED_PATH";
+const CLOUDFLARED_PATH_ENV_NAME = "FDCODE_CLOUDFLARED_PATH";
 
 const CLOUDFLARED_DOWNLOAD_TIMEOUT = "10 minutes";
 

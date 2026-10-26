@@ -1,5 +1,9 @@
-import { T3_PROJECT_FILE_NAME, type EnvironmentId, type T3ProjectFile } from "@fdcode/contracts";
-import { parseT3ProjectFile } from "@fdcode/shared/t3ProjectFile";
+import {
+  T3_PROJECT_FILE_NAME,
+  type EnvironmentId,
+  type FDCodeProjectFile,
+} from "@fdcode/contracts";
+import { parseFDCodeProjectFile } from "@fdcode/shared/t3ProjectFile";
 import { executeAtomQuery } from "@fdcode/client-runtime/state/runtime";
 
 import {
@@ -8,10 +12,10 @@ import {
 } from "~/components/files/projectFilesQueryState";
 import { appAtomRegistry } from "~/rpc/atomRegistry";
 
-export async function readT3ProjectFile(
+export async function readFDCodeProjectFile(
   environmentId: EnvironmentId,
   workspaceRoot: string,
-): Promise<T3ProjectFile | null> {
+): Promise<FDCodeProjectFile | null> {
   const result = await executeAtomQuery(
     appAtomRegistry,
     getProjectFileQueryAtom(environmentId, workspaceRoot, T3_PROJECT_FILE_NAME),
@@ -24,5 +28,5 @@ export async function readT3ProjectFile(
     result._tag === "Success" ? result.value : null,
   );
   if (data === null || data.truncated) return null;
-  return parseT3ProjectFile(data.contents);
+  return parseFDCodeProjectFile(data.contents);
 }

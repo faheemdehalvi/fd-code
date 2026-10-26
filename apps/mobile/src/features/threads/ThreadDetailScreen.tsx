@@ -6,7 +6,7 @@ import { useChildThreadInputs, useThreadReportedModelSelection } from "../../sta
 import { UsageLimitRecoveryCard } from "./UsageLimitRecoveryCard";
 import { useNavigation } from "@react-navigation/native";
 import type { WorktreeSetupCardProps } from "./worktree-setup-card";
-import type { ComposerTextPaste } from "../../native/T3ComposerEditor.types";
+import type { ComposerTextPaste } from "../../native/FDCodeComposerEditor.types";
 import { type EnvironmentConnectionPhase } from "@fdcode/client-runtime/connection";
 import type { EnvironmentThreadShell } from "@fdcode/client-runtime/state/shell";
 import type { HandoffEndpoints } from "@fdcode/client-runtime/handoff";
@@ -30,7 +30,7 @@ import type {
   RuntimeMode,
   RuntimeRequestId,
   ScopedThreadRef,
-  ServerConfig as T3ServerConfig,
+  ServerConfig as FDCodeServerConfig,
   ThreadId,
   UsageLimitsReport,
 } from "@fdcode/contracts";
@@ -205,7 +205,7 @@ export interface ThreadDetailScreenProps {
   readonly selectedThreadQueueCount: number;
   readonly queuedMessages: ReadonlyArray<QueuedThreadMessage>;
   readonly dispatchingMessageId: MessageId | null;
-  readonly serverConfig: T3ServerConfig | null;
+  readonly serverConfig: FDCodeServerConfig | null;
   readonly layoutVariant?: LayoutVariant;
   readonly usesAutomaticContentInsets?: boolean;
   readonly onHeaderMaterialVisibilityChange?: (visible: boolean) => void;

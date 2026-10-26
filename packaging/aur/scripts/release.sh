@@ -2,14 +2,14 @@
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
-repo='pingdotgg/t3code'
+repo='faheemdehalvi/fd-code'
 tag="${RELEASE_TAG:?RELEASE_TAG is required}"
 pkgrel="${PKGREL:-1}"
 
 if [[ "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-  pkgname='t3code-bin'
+  pkgname='fd-code-bin'
 elif [[ "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-nightly\.[0-9]{8}\.[0-9]+$ ]]; then
-  pkgname='t3code-nightly-bin'
+  pkgname='fd-code-nightly-bin'
 else
   echo "Release $tag does not publish an AUR package."
   exit 0
@@ -77,9 +77,9 @@ export GIT_SSH_COMMAND="ssh -i $key_file -o IdentitiesOnly=yes -o UserKnownHosts
 git clone "ssh://aur@aur.archlinux.org/$pkgname.git" "$aur_dir"
 cp PKGBUILD .SRCINFO "$aur_dir/"
 cd "$aur_dir"
-git rm --ignore-unmatch LICENSE .upstream-commit t3code-icon.png
-git config user.name 't3code-ci'
-git config user.email 't3code-ci@users.noreply.github.com'
+git rm --ignore-unmatch LICENSE .upstream-commit fd-code-icon.png
+git config user.name 'fd-code-ci'
+git config user.email 'fd-code-ci@users.noreply.github.com'
 git add -A
 
 if git diff --cached --quiet; then

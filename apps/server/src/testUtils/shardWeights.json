@@ -287,7 +287,7 @@
   "src/project/ProjectService.test.ts": 1.5,
   "src/project/ProjectSetupScriptRunner.test.ts": 1.1,
   "src/project/RepositoryIdentityResolver.test.ts": 0.5,
-  "src/project/T3ProjectFileLoader.test.ts": 0.3,
+  "src/project/FDCodeProjectFileLoader.test.ts": 0.3,
   "src/project/WorktreeSetupTracker.test.ts": 0.6,
   "src/project/http.test.ts": 1.5,
   "src/provider/AcpRegistryProbe.test.ts": 1.4,

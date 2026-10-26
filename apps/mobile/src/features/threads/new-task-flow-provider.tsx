@@ -25,7 +25,7 @@ import {
 } from "@fdcode/contracts";
 import { sanitizeNewRefName } from "@fdcode/shared/git";
 import { resolveNewThreadEnvMode, resolveProjectSettings } from "@fdcode/shared/projectSettings";
-import { parseT3ProjectFile } from "@fdcode/shared/t3ProjectFile";
+import { parseFDCodeProjectFile } from "@fdcode/shared/t3ProjectFile";
 import * as Arr from "effect/Array";
 import { pipe } from "effect/Function";
 
@@ -461,7 +461,7 @@ export function NewTaskFlowProvider(props: React.PropsWithChildren) {
   const t3ProjectFile =
     t3ProjectFileData === null || t3ProjectFileData.truncated
       ? null
-      : parseT3ProjectFile(t3ProjectFileData.contents);
+      : parseFDCodeProjectFile(t3ProjectFileData.contents);
   const projectSettings = resolveProjectSettings(
     selectedEnvironmentServerConfig?.settings ?? DEFAULT_SERVER_SETTINGS,
     selectedProject?.id ?? null,

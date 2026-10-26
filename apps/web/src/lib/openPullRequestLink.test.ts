@@ -166,7 +166,7 @@ describe("matchesLinkedPullRequestUrl", () => {
     expect(
       matchesLinkedPullRequestUrl(
         linkedPullRequest,
-        "https://github.com/PingDotGG/T3Code/pull/42/files",
+        "https://github.com/PingDotGG/FDCode/pull/42/files",
       ),
     ).toBe(true);
   });
@@ -405,7 +405,7 @@ describe("findProjectForChangeRequest", () => {
     // Azure alone addresses one repository under two names: `ssh.dev.azure.com` and `v3/...` over
     // SSH against `dev.azure.com` and `.../_git/...` everywhere a person sees it. The identity is
     // recorded in the spelling a link arrives in, so both halves of this comparison line up.
-    const canonicalKey = normalizeGitRemoteUrl("git@ssh.dev.azure.com:v3/T3Tools/Platform/T3Code");
+    const canonicalKey = normalizeGitRemoteUrl("git@ssh.dev.azure.com:v3/T3Tools/Platform/FDCode");
     const projects = [
       project({
         canonicalKey,

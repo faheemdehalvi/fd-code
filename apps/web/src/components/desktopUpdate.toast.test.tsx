@@ -69,7 +69,7 @@ describe("showDesktopUpdateDownloadedToast", () => {
   });
 
   it("opens release notes from the configured repository", async () => {
-    vi.stubEnv("T3CODE_DESKTOP_UPDATE_REPOSITORY", "JustYannicc/t3code");
+    vi.stubEnv("FDCODE_DESKTOP_UPDATE_REPOSITORY", "JustYannicc/t3code");
     const openExternal = vi.fn().mockResolvedValue(true);
 
     showDesktopUpdateDownloadedToast({ openExternal }, downloadedState());

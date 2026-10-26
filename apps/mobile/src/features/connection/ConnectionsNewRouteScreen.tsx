@@ -263,7 +263,7 @@ export function ConnectionsNewRouteScreen({
             </Text>
           </View>
 
-          {hasCloudPublicConfig() ? <T3ConnectSection /> : null}
+          {hasCloudPublicConfig() ? <FDCodeConnectSection /> : null}
         </View>
       </ScrollView>
     </SettingsScreen>
@@ -362,7 +362,7 @@ function PairingScanCard(props: {
   );
 }
 
-function T3ConnectSection() {
+function FDCodeConnectSection() {
   const { isLoaded, isSignedIn } = useAuth({ treatPendingAsSignedOut: false });
   const navigation = useNavigation();
   const { connectedEnvironments, onSetEnvironmentEnabled, onRemoveEnvironmentPress } =
