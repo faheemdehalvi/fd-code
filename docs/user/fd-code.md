@@ -14,7 +14,7 @@ Download [FD-CODE-Windows-x64.exe](https://github.com/faheemdehalvi/fd-code/rele
 
 ## Add-ons
 
-Laya, the RAG and Graphify skills, and individual ARTsie editors install separately. The [README](../../README.md#add-ons) has one command for each.
+Laya, the RAG and Graphify skills, individual ArtCraft apps and the ARTsie hub install separately. The [README](../../README.md#add-ons) has one command for each.
 
 ## General chat and Laya
 

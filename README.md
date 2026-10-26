@@ -20,13 +20,14 @@ The app runs without any of these. Install only the ones you want.
 | Laya | Local routing for General chat | `curl -fsSL https://raw.githubusercontent.com/faheemdehalvi/fd-code/t3-beta/scripts/laya-setup.mjs -o laya-setup.mjs && node laya-setup.mjs` | `iwr https://raw.githubusercontent.com/faheemdehalvi/fd-code/t3-beta/scripts/laya-setup.mjs -OutFile laya-setup.mjs; node laya-setup.mjs --python python` |
 | RAG skill | Agents search your document knowledge bases | `git clone https://github.com/faheemdehalvi/rag-skill.git ~/.claude/skills/rag && ~/.claude/skills/rag/scripts/setup.sh` | Use WSL and the macOS / Linux command |
 | Graphify skill | Agents query a repository as a knowledge graph | `uv tool install graphifyy && graphify install` | `uv tool install graphifyy; graphify install` |
-| ARTsie editors | ArtCraft creative apps with a shared MCP gateway (macOS only) | `git clone https://github.com/faheemdehalvi/artsie.git ARTsie && cd ARTsie && ./setup.sh --apps soundcraft` | Not available |
+| ArtCraft apps | Creative apps from [getartcraft.com/apps](https://getartcraft.com/apps), one at a time | `curl -fsSL https://raw.githubusercontent.com/faheemdehalvi/fd-code/t3-beta/scripts/artcraft-install.sh \| sh -s -- soundcraft` | `& ([scriptblock]::Create((irm https://raw.githubusercontent.com/faheemdehalvi/fd-code/t3-beta/scripts/artcraft-install.ps1))) soundcraft` |
+| ARTsie hub | One MCP gateway so agents can drive the ArtCraft apps (macOS only) | `git clone https://github.com/faheemdehalvi/artsie.git ARTsie && cd ARTsie && ./setup.sh --apps soundcraft` | Not available |
 
 Laya needs Node and Python 3.11. Graphify needs [uv](https://docs.astral.sh/uv/).
 
-**ARTsie: choose your editors.** Replace `soundcraft` with any of the ids below, as many as you want. `./setup.sh --apps photocraft effectcraft` installs those two and nothing else; `--all` installs the full suite (about 6 GB). Run it again later with more ids to add editors.
+**ArtCraft: choose your apps.** Replace `soundcraft` with any ids below, as many as you want: `... sh -s -- photocraft effectcraft` installs those two and nothing else. Each app comes from its latest official release on [github.com/storytold](https://github.com/storytold) and is checked against the published SHA-256 before it is installed. macOS gets the universal app in `/Applications`; Windows gets the MSI for your processor (x64, arm64 or x86). The ARTsie hub takes the same ids.
 
-| Editor | id | Editor | id |
+| App | id | App | id |
 | --- | --- | --- | --- |
 | PhotoCraft | `photocraft` | SoundCraft (audio) | `soundcraft` |
 | EffectCraft | `effectcraft` | FilmCraft | `filmcraft` |
