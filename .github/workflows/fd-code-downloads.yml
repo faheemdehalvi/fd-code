@@ -1,0 +1,52 @@
+name: FD CODE downloadable installers
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing draft release tag (starts with v)
+        required: true
+        type: string
+permissions:
+  contents: write
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 50
+    env:
+      FD_RELEASE_TAG: ${{ inputs.tag }}
+      GH_TOKEN: ${{ github.token }}
+      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: voidzero-dev/setup-vp@250f29ce396baf5e8f24498e17c0dfdebabc26eb
+        with:
+          node-version-file: package.json
+          run-install: false
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install dependencies
+        run: vp install --frozen-lockfile --filter=@fdcode/desktop... --filter=fd-code... --filter=@fdcode/scripts...
+      - name: Build app
+        run: vp run build:desktop
+      - name: Package native Windows installer
+        shell: pwsh
+        run: |
+          if ($env:FD_RELEASE_TAG -notmatch '^v[0-9]+\.[0-9]+\.[0-9]+[-.a-zA-Z0-9]*$') { throw 'Invalid release tag' }
+          $version = $env:FD_RELEASE_TAG.Substring(1)
+          node scripts/build-desktop-artifact.ts --platform win --target nsis --arch x64 --build-version $version --skip-build --output-dir release
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Upload verified installer and checksum
+        shell: pwsh
+        run: |
+          $files = @(Get-ChildItem release -File -Filter '*.exe')
+          if ($files.Count -ne 1) { throw 'Expected exactly one Windows installer' }
+          Copy-Item $files[0].FullName release/FD-CODE-Windows-x64.exe
+          $hash = (Get-FileHash release/FD-CODE-Windows-x64.exe -Algorithm SHA256).Hash.ToLowerInvariant()
+          [System.IO.File]::WriteAllText("$pwd/release/FD-CODE-Windows-x64.exe.sha256", "$hash  FD-CODE-Windows-x64.exe`n")
+          gh release upload $env:FD_RELEASE_TAG release/FD-CODE-Windows-x64.exe release/FD-CODE-Windows-x64.exe.sha256 --clobber --repo $env:GITHUB_REPOSITORY
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-installer
+          path: release/*
+          if-no-files-found: ignore
