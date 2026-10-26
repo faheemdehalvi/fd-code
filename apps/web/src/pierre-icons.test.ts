@@ -4,7 +4,7 @@ import {
   hasSpecificPierreIconForFileName,
   resolvePierreIconForEntry,
   syntheticFileNameForLanguageId,
-  T3_PIERRE_ICONS,
+  FDCODE_PIERRE_ICONS,
 } from "./pierre-icons";
 
 describe("Pierre file icons", () => {
@@ -43,7 +43,7 @@ describe("Pierre file icons", () => {
     );
   });
 
-  it("extends Pierre with T3-specific exact filename icons", () => {
+  it("extends Pierre with FD CODE-specific exact filename icons", () => {
     assert.equal(resolvePierreIconForEntry("AGENTS.md", "file")?.name, "t3-file-icon-agents");
     assert.equal(resolvePierreIconForEntry("pnpm-lock.yaml", "file")?.name, "t3-file-icon-pnpm");
     assert.equal(
@@ -55,12 +55,12 @@ describe("Pierre file icons", () => {
   it("ships every custom icon referenced by the extended resolver", () => {
     const customIconNames = new Set(
       [
-        ...Object.values(T3_PIERRE_ICONS.byFileName),
-        ...Object.values(T3_PIERRE_ICONS.byFileExtension),
+        ...Object.values(FDCODE_PIERRE_ICONS.byFileName),
+        ...Object.values(FDCODE_PIERRE_ICONS.byFileExtension),
       ].filter((name) => name.startsWith("t3-")),
     );
     for (const iconName of customIconNames) {
-      assert.include(T3_PIERRE_ICONS.spriteSheet, `id="${iconName}"`);
+      assert.include(FDCODE_PIERRE_ICONS.spriteSheet, `id="${iconName}"`);
     }
   });
 

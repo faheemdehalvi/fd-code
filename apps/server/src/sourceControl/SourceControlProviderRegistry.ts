@@ -75,7 +75,7 @@ function unsupportedProvider(
   return SourceControlProvider.SourceControlProvider.of({
     kind,
     // A remote on a host no provider recognizes (or no remote at all) has no change
-    // requests T3 could know about. Answering with none keeps the status poller from
+    // requests FD CODE could know about. Answering with none keeps the status poller from
     // failing, and warning, on every refresh of such a repository.
     listChangeRequests: (input) =>
       kind === "unknown"

@@ -525,7 +525,7 @@ export const make = Effect.fn("EnvironmentSupervisor.make")(function* (
       // out, so a long background resume replaces the session at once.
       return "reset" as const;
     }
-    // Only a session over T3 Connect holds the old account's credential.
+    // Only a session over FD CODE Connect holds the old account's credential.
     if (next.reason === "credentials-changed" && isRelayLease(lease)) {
       yield* logManagedRelayAccountChange;
       return "end" as const;

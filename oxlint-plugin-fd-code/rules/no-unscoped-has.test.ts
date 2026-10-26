@@ -1,13 +1,13 @@
-/* oxlint-disable t3code/no-unscoped-has -- the fixtures are invalid on purpose */
+/* oxlint-disable fd-code/no-unscoped-has -- the fixtures are invalid on purpose */
 import { assert, describe } from "@effect/vitest";
 
 import { createOxlintRuleHarness } from "../test/utils.ts";
 
-const rule = createOxlintRuleHarness("t3code/no-unscoped-has", {
+const rule = createOxlintRuleHarness("fd-code/no-unscoped-has", {
   filename: "fixture.tsx",
 });
 
-describe("t3code/no-unscoped-has", () => {
+describe("fd-code/no-unscoped-has", () => {
   rule.valid(
     "allows :has() on the element itself",
     `const className = "[&:has([data-slot=icon])]:ps-2";`,
@@ -123,11 +123,11 @@ describe("t3code/no-unscoped-has", () => {
   );
 });
 
-const indicators = createOxlintRuleHarness("t3code/no-outset-state-indicators", {
+const indicators = createOxlintRuleHarness("fd-code/no-outset-state-indicators", {
   filename: "fixture.tsx",
 });
 
-describe("t3code/no-outset-state-indicators", () => {
+describe("fd-code/no-outset-state-indicators", () => {
   describe.each(
     Object.entries({
       "inset state rings": `const el = <button className="focus-visible:ring-2 focus-visible:ring-inset ring-1 ring-border" />;`,

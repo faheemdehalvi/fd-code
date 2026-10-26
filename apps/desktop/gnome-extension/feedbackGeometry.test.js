@@ -11,7 +11,7 @@ it("activates only a window of the process authenticated by D-Bus", () => {
 });
 
 it("does not guess between ambiguous windows from the same process", () => {
-  expect(findCaptureDestination([window(42, "T3"), window(42, "T3")], 42, "T3")).toBeUndefined();
+  expect(findCaptureDestination([window(42, "FD CODE"), window(42, "FD CODE")], 42, "FD CODE")).toBeUndefined();
   expect(findCaptureDestination([window(42, "A"), window(42, "B")], 42, "C")).toBeUndefined();
 });
 

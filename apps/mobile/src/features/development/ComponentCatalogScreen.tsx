@@ -101,7 +101,7 @@ export function ComponentCatalogScreen() {
         {page === "controls" ? (
           <>
             <View className="gap-3">
-              <AppText className="text-lg font-t3-semibold">Lists and selection</AppText>
+              <AppText className="text-lg font-fd-code-semibold">Lists and selection</AppText>
               <ListSection>
                 <ListRow icon="folder" label="Projects" detail="4" onPress={() => setSheet(true)} />
                 <ListToggleRow
@@ -138,7 +138,7 @@ export function ComponentCatalogScreen() {
             </View>
             <View className="gap-3">
               <NativeAppBarExample />
-              <AppText className="text-lg font-t3-semibold">Buttons</AppText>
+              <AppText className="text-lg font-fd-code-semibold">Buttons</AppText>
               <View className="flex-row flex-wrap gap-2">
                 <Button label="Primary" tone="primary" onPress={announceAction} />
                 <Button label="Secondary" onPress={announceAction} />
@@ -159,7 +159,7 @@ export function ComponentCatalogScreen() {
         ) : null}
         {page === "forms" ? (
           <View className="gap-3">
-            <AppText className="text-lg font-t3-semibold">Forms</AppText>
+            <AppText className="text-lg font-fd-code-semibold">Forms</AppText>
             <AppTextInput
               accessibilityLabel="Example name"
               placeholder="Name"
@@ -203,7 +203,7 @@ export function ComponentCatalogScreen() {
         ) : null}
         {page === "feedback" ? (
           <View className="gap-3">
-            <AppText className="text-lg font-t3-semibold">Feedback and presentation</AppText>
+            <AppText className="text-lg font-fd-code-semibold">Feedback and presentation</AppText>
             <Notice message="This action could not finish. Try again." tone="danger" />
             {notice ? (
               <Toast

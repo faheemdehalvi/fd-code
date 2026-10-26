@@ -246,7 +246,7 @@ function AutoSettleSettingsRows() {
               onPress={() => writeToAll(autoSettlePatch)}
               className="self-start rounded-full bg-subtle px-4 py-2 active:opacity-70"
             >
-              <Text className="text-sm font-t3-medium text-foreground">
+              <Text className="text-sm font-fd-code-medium text-foreground">
                 Apply auto-settle defaults
               </Text>
             </Pressable>

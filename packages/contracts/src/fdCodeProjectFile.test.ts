@@ -4,7 +4,7 @@ import { describe, expect, it } from "vite-plus/test";
 import {
   FDCodeProjectFile,
   type FDCodeProjectFile as FDCodeProjectFileType,
-} from "./t3ProjectFile.ts";
+} from "./fdCodeProjectFile.ts";
 
 const decode = Schema.decodeUnknownSync(FDCodeProjectFile as never) as (
   input: unknown,

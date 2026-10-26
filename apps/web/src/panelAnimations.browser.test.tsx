@@ -65,7 +65,7 @@ describe("usePanelPresence", () => {
     const surfaces = ["terminal"];
     const presented: (typeof surfaces | null)[] = [];
     function PresenceProbe({ open, scopeKey }: { open: boolean; scopeKey: string }) {
-      // oxlint-disable-next-line t3code/no-manual-memo -- The probe must rebuild its inputs on every render like an uncompiled caller; compiled, the cache hides the loop this test guards.
+      // oxlint-disable-next-line fd-code/no-manual-memo -- The probe must rebuild its inputs on every render like an uncompiled caller; compiled, the cache hides the loop this test guards.
       "use no memo";
       // ChatView builds this wrapper fresh each render around stable store values.
       const presence = usePanelPresence(open, { surfaces }, true, scopeKey, 150);

@@ -6,7 +6,7 @@ import * as NodePath from "node:path";
 import * as NodeURL from "node:url";
 import { afterAll, beforeAll, describe, expect, it } from "vite-plus/test";
 
-// oxlint-disable-next-line t3code/no-global-process-runtime -- This native integration test uses the host Swift compiler.
+// oxlint-disable-next-line fd-code/no-global-process-runtime -- This native integration test uses the host Swift compiler.
 describe.skipIf(NodeOS.platform() !== "darwin")(
   "NotificationCenterManager native concurrency",
   () => {

@@ -57,7 +57,7 @@ let handlersLayer: <Tools extends Record<string, Tool.Any>, EX, RX>(
 
 /**
  * Effect's own registration functions accept any handler, so the
- * `t3code/no-raw-mcp-registration` lint rule keeps Effect's `McpServer` inside
+ * `fd-code/no-raw-mcp-registration` lint rule keeps Effect's `McpServer` inside
  * McpHttpServer.
  */
 export class Declaration<out Handler> {

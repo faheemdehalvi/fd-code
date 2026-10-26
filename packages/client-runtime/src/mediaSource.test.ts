@@ -129,7 +129,7 @@ describe("resolveMediaSource", () => {
     );
   });
 
-  it("serves T3 attachment files in place like any other host path", () => {
+  it("serves FD CODE attachment files in place like any other host path", () => {
     const path = `/home/demo/.fd-code/userdata/attachments/${attachmentId}.mp4`;
     expect(resolveMediaSource(path, { threadId, workspaceRoot: "/repo" })).toMatchObject({
       kind: "video",

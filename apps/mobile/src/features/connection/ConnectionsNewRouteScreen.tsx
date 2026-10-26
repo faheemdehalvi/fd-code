@@ -224,7 +224,7 @@ export function ConnectionsNewRouteScreen({
           />
 
           <View collapsable={false} className="gap-2">
-            <Text className="px-4 text-sm font-t3-medium text-foreground-muted">Or enter it</Text>
+            <Text className="px-4 text-sm font-fd-code-medium text-foreground-muted">Or enter it</Text>
             <View
               collapsable={false}
               className={cn(
@@ -347,7 +347,7 @@ function PairingScanCard(props: {
                 weight="light"
               />
               <Text
-                className={cn("font-t3-medium text-sm", light ? "text-black/70" : "text-white/80")}
+                className={cn("font-fd-code-medium text-sm", light ? "text-black/70" : "text-white/80")}
               >
                 Tap to scan
               </Text>
@@ -374,7 +374,7 @@ function FDCodeConnectSection() {
 
   return (
     <View collapsable={false} className="gap-2">
-      <Text className="px-4 text-sm font-t3-medium text-foreground-muted">
+      <Text className="px-4 text-sm font-fd-code-medium text-foreground-muted">
         Or use the managed relay
       </Text>
       {isSignedIn ? (
@@ -392,7 +392,7 @@ function FDCodeConnectSection() {
           className="min-h-13 flex-row items-center gap-3 rounded-[26px] border-continuous bg-grouped-card px-4 active:opacity-70"
         >
           <View className="min-w-0 flex-1 py-3">
-            <Text className="text-base text-foreground">Sign in to T3 Connect</Text>
+            <Text className="text-base text-foreground">Sign in to FD CODE Connect</Text>
             <Text className="text-sm text-foreground-muted">
               Reach your machines from anywhere, no network setup.
             </Text>

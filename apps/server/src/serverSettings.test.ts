@@ -45,7 +45,7 @@ const layerServerSettings = () =>
     Layer.provideMerge(
       Layer.fresh(
         ServerConfig.layerTest(process.cwd(), {
-          prefix: "t3code-server-settings-test-",
+          prefix: "fd-code-server-settings-test-",
         }),
       ),
     ),
@@ -58,7 +58,7 @@ const layerServerSettingsWithSecrets = () =>
     Layer.provideMerge(
       Layer.fresh(
         ServerConfig.layerTest(process.cwd(), {
-          prefix: "t3code-server-settings-test-",
+          prefix: "fd-code-server-settings-test-",
         }),
       ),
     ),
@@ -338,7 +338,7 @@ it.layer(NodeServices.layer)("server settings", (it) => {
     });
     const layerConfig = Layer.fresh(
       ServerConfig.layerTest(process.cwd(), {
-        prefix: "t3code-server-settings-secret-failure-test-",
+        prefix: "fd-code-server-settings-secret-failure-test-",
       }),
     );
     const layerSettings = ServerSettingsModule.layer.pipe(
@@ -1809,7 +1809,7 @@ it.layer(NodeServices.layer)("server settings", (it) => {
       Layer.provideMerge(
         Layer.fresh(
           ServerConfig.layerTest(process.cwd(), {
-            prefix: "t3code-server-settings-legacy-failure-test-",
+            prefix: "fd-code-server-settings-legacy-failure-test-",
           }),
         ),
       ),
@@ -2063,7 +2063,7 @@ it.layer(NodeServices.layer)("server settings", (it) => {
         Layer.provideMerge(
           Layer.fresh(
             ServerConfig.layerTest(process.cwd(), {
-              prefix: "t3code-server-settings-materialization-failure-test-",
+              prefix: "fd-code-server-settings-materialization-failure-test-",
             }),
           ),
         ),

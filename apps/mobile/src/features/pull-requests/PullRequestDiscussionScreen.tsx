@@ -195,7 +195,7 @@ function Discussion({ params }: { params: PullRequestParams & { readonly discuss
               <View key={comment.id} className="gap-3 border-b border-border-subtle py-4">
                 <View className="flex-row items-center gap-2">
                   <PullRequestAvatar actor={comment.author} size={28} />
-                  <Text className="min-w-0 flex-1 text-sm font-t3-medium">
+                  <Text className="min-w-0 flex-1 text-sm font-fd-code-medium">
                     {comment.author?.login ?? "Unknown author"}
                   </Text>
                   <Text className="text-2xs text-foreground-muted">

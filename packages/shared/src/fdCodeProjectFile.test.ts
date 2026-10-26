@@ -5,7 +5,7 @@ import {
   buildFDCodeProjectFileJsonSchema,
   parseFDCodeProjectFile,
   FDCodeProjectFileFromJson,
-} from "./t3ProjectFile.ts";
+} from "./fdCodeProjectFile.ts";
 
 const decodeJson = Schema.decodeUnknownSync(FDCodeProjectFileFromJson);
 

@@ -327,7 +327,7 @@ function GitOverviewSheetContent(props: GitOverviewSheetProps) {
 
       {linkedPrLines.length > 0 ? (
         <View className="gap-2">
-          <Text className="px-1 text-xs font-t3-bold text-foreground-muted">
+          <Text className="px-1 text-xs font-fd-code-bold text-foreground-muted">
             Linked pull requests
           </Text>
           <View className="overflow-hidden bg-card android:rounded-[20px] ios:rounded-2xl ios:border ios:border-border">
@@ -486,10 +486,10 @@ function GitOverviewSheetContent(props: GitOverviewSheetProps) {
               />
             </Pressable>
           )}
-          <Text className="text-xs font-t3-bold tracking-[1px] uppercase text-foreground-muted">
+          <Text className="text-xs font-fd-code-bold tracking-[1px] uppercase text-foreground-muted">
             Repository
           </Text>
-          <Text className="pr-10 text-xl font-t3-bold">{currentBranchLabel}</Text>
+          <Text className="pr-10 text-xl font-fd-code-bold">{currentBranchLabel}</Text>
           <Text className="text-foreground-secondary text-sm font-medium leading-normal">
             {currentStatusSummary}
           </Text>

@@ -16,7 +16,7 @@ const makeProbeRuntime = makeGrokAcpRuntime({
   clientInfo: { name: "t3-grok-probe", version: "0.0.0" },
 });
 
-describe.runIf(process.env.T3_GROK_ACP_PROBE === "1")("Grok ACP CLI probe", () => {
+describe.runIf(process.env.FDCODE_GROK_ACP_PROBE === "1")("Grok ACP CLI probe", () => {
   it.effect("initialize and authenticate against real grok agent stdio", () =>
     Effect.gen(function* () {
       const runtime = yield* makeProbeRuntime;
@@ -57,7 +57,7 @@ describe.runIf(process.env.T3_GROK_ACP_PROBE === "1")("Grok ACP CLI probe", () =
     }).pipe(Effect.scoped, Effect.provide(NodeServices.layer)),
   );
 
-  it.effect.skipIf(process.env.T3_GROK_LIVE_TURN !== "1")(
+  it.effect.skipIf(process.env.FDCODE_GROK_LIVE_TURN !== "1")(
     "finishes a real Grok turn and streams its answer",
     () =>
       Effect.gen(function* () {

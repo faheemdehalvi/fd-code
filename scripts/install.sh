@@ -8,7 +8,7 @@
 #   FDCODE_CHANNEL           release train to follow: stable, nightly, or preview
 #                            (default: stable; preview is a maintainers' test train)
 #   FDCODE_VERSION           exact version to install (overrides FDCODE_CHANNEL)
-#   FDCODE_HOME              T3 home directory (default: ~/.fd-code)
+#   FDCODE_HOME              FD CODE home directory (default: ~/.fd-code)
 #   FDCODE_INSTALL_BIN_DIR   where the `t3` symlink goes (default: ~/.local/bin)
 #   FDCODE_RELEASE_BASE_URL  mirror for releases/download (default: GitHub)
 #

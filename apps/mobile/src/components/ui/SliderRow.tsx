@@ -39,7 +39,7 @@ export function SliderRow(props: SliderRowProps) {
       <View className="flex-row items-center gap-4">
         <SymbolView name={props.icon} size={22} tintColorClassName="accent-icon" />
         <AppText className="flex-1 text-lg text-foreground">{props.label}</AppText>
-        <AppText className="text-base font-t3-medium text-foreground-muted">
+        <AppText className="text-base font-fd-code-medium text-foreground-muted">
           {props.valueLabel}
         </AppText>
       </View>

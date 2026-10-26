@@ -442,7 +442,7 @@ export const layer: Layer.Layer<
     /**
      * Retire the runs that fell off its active branch with the same run,
      * root-node, and checkpoint updates CheckpointRollbackService writes for a
-     * T3 revert. The run reporting the rewind performed it and stays, so it
+     * FD CODE revert. The run reporting the rewind performed it and stays, so it
      * keeps lastRunOrdinal.
      */
     const rollBackRewoundRuns = Effect.fn("ProviderEventIngestor.rollBackRewoundRuns")(function* (

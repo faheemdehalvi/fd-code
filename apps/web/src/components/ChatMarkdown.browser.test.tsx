@@ -791,7 +791,7 @@ describe("ChatMarkdown thread find", () => {
     },
     { text: '```ts title="src/needle.ts"\nconst a = 1;\n```', query: "needle", count: 0 },
     { text: "```weirdlang\nconst a = 1;\n```", query: "weirdlang", count: 0 },
-    { text: "Use $test-t3-app now", query: "T3 App Testing", count: 1 },
+    { text: "Use $test-t3-app now", query: "FD CODE App Testing", count: 1 },
     { text: "`/tmp/file.ts:42`", query: "file.ts · L42", count: 1, user: true, lineBreaks: true },
     { text: "> [!NOTE]\n> Searchable alert", query: "Searchable alert", count: 1 },
     {
@@ -811,7 +811,7 @@ describe("ChatMarkdown thread find", () => {
   ])(
     "highlights the indexed occurrences of $query in $text",
     async ({ text, query, count, lineBreaks, user, withTemplate }) => {
-      const skills = [{ name: "test-t3-app", displayName: "T3 App Testing" }];
+      const skills = [{ name: "test-t3-app", displayName: "FD CODE App Testing" }];
       const container = document.body.appendChild(document.createElement("div"));
       const root = createRoot(container);
       roots.push(root);

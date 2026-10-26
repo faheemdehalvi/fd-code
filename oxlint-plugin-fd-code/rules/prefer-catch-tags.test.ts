@@ -2,9 +2,9 @@ import { assert, describe } from "@effect/vitest";
 
 import { createOxlintRuleHarness } from "../test/utils.ts";
 
-const rule = createOxlintRuleHarness("t3code/prefer-catch-tags");
+const rule = createOxlintRuleHarness("fd-code/prefer-catch-tags");
 
-describe("t3code/prefer-catch-tags", () => {
+describe("fd-code/prefer-catch-tags", () => {
   rule.valid(
     "allows Effect.catchTags",
     `

@@ -48,7 +48,7 @@ describe("parseChangeRequestUrl", () => {
 
   it("reads a GitLab merge request on any host, nested groups and all", () => {
     expect(
-      parseChangeRequestUrl("https://gitlab.com/t3tools/platform/t3code/-/merge_requests/42"),
+      parseChangeRequestUrl("https://gitlab.com/t3tools/platform/fd-code/-/merge_requests/42"),
     ).toEqual({ host: "gitlab.com", repository: "t3tools/platform/t3code", number: 42 });
     expect(parseChangeRequestUrl("https://code.acme.test/team/project/-/merge_requests/9")).toEqual(
       { host: "code.acme.test", repository: "team/project", number: 9 },
@@ -62,10 +62,10 @@ describe("parseChangeRequestUrl", () => {
       number: 5,
     });
     expect(
-      parseChangeRequestUrl("https://dev.azure.com/acme/platform/_git/t3code/pullrequest/17"),
+      parseChangeRequestUrl("https://dev.azure.com/acme/platform/_git/fd-code/pullrequest/17"),
     ).toEqual({ host: "dev.azure.com", repository: "acme/platform/_git/t3code", number: 17 });
     expect(
-      parseChangeRequestUrl("https://acme.visualstudio.com/platform/_git/t3code/pullrequest/17"),
+      parseChangeRequestUrl("https://acme.visualstudio.com/platform/_git/fd-code/pullrequest/17"),
     ).toEqual({ host: "acme.visualstudio.com", repository: "platform/_git/t3code", number: 17 });
   });
 

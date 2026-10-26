@@ -12,7 +12,7 @@ function shortHash(value: string): string {
 }
 
 /**
- * The state directory is hashed so custom T3 homes cannot exceed Unix socket
+ * The state directory is hashed so custom FD CODE homes cannot exceed Unix socket
  * path limits.
  */
 export function resolveDesktopAppControlAddress(input: {

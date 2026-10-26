@@ -2,9 +2,9 @@ import { describe, expect, it } from "vite-plus/test";
 import {
   BUILT_IN_THEME_IDS,
   BUILT_IN_THEMES,
-  T3_CHAT_THEME,
-  T3_CODE_LIGHT_THEME_COLORS,
-  T3_CODE_DARK_THEME_COLORS,
+  FDCODE_CHAT_THEME,
+  FDCODE_LIGHT_THEME_COLORS,
+  FDCODE_DARK_THEME_COLORS,
   MOBILE_THEME_IDS,
   getThemeColorsForAppearance,
 } from "@fdcode/shared/themePalettes";
@@ -62,7 +62,7 @@ function compositeOver(overlay: string, background: string): string {
 
 describe("mobile themes", () => {
   it("declares every runtime theme variable in the static stylesheet", () => {
-    const generatedVariables = createMobileThemeVariables(T3_CHAT_THEME.colors, "light");
+    const generatedVariables = createMobileThemeVariables(FDCODE_CHAT_THEME.colors, "light");
     expect(Object.keys(readDefaultMobileThemeVariables("light")).sort()).toEqual(
       Object.keys(generatedVariables).sort(),
     );
@@ -85,8 +85,8 @@ describe("mobile themes", () => {
       const colors = theme
         ? getThemeColorsForAppearance(theme, appearance)!
         : appearance === "dark"
-          ? T3_CODE_DARK_THEME_COLORS
-          : T3_CODE_LIGHT_THEME_COLORS;
+          ? FDCODE_DARK_THEME_COLORS
+          : FDCODE_LIGHT_THEME_COLORS;
       const variables =
         themeId === DEFAULT_MOBILE_THEME_ID
           ? readDefaultMobileThemeVariables(appearance)
@@ -255,7 +255,7 @@ describe("mobile themes", () => {
     },
   );
 
-  it("keeps T3 Chat light grouped cards distinct from the sheet", () => {
+  it("keeps FD CODE Chat light grouped cards distinct from the sheet", () => {
     const variables = getMobileThemeVariables("t3-chat", "light");
     const group = variables["--color-grouped-card"];
     expect(contrastRatio(group, variables["--color-sheet-solid"])).toBeGreaterThanOrEqual(1.1);
@@ -320,7 +320,7 @@ describe("mobile themes", () => {
     (appearance) => {
       const variables = getMobileThemeVariables("t3-code", appearance);
       const desktop =
-        appearance === "dark" ? T3_CODE_DARK_THEME_COLORS : T3_CODE_LIGHT_THEME_COLORS;
+        appearance === "dark" ? FDCODE_DARK_THEME_COLORS : FDCODE_LIGHT_THEME_COLORS;
       const bubbleContrast = contrastRatio(
         variables["--color-user-bubble"],
         variables["--color-screen"],
@@ -410,15 +410,15 @@ describe("mobile themes", () => {
   });
 
   it("maps semantic palette roles onto every mobile color variable", () => {
-    const variables = createMobileThemeVariables(T3_CHAT_THEME.colors, "light");
+    const variables = createMobileThemeVariables(FDCODE_CHAT_THEME.colors, "light");
     expect(variables["--color-sheet-solid"]).toBe(
-      themeColorToNativeColor(T3_CHAT_THEME.colors.chrome),
+      themeColorToNativeColor(FDCODE_CHAT_THEME.colors.chrome),
     );
     expect(variables["--color-warning"]).toBe(
-      themeColorToNativeColor(T3_CHAT_THEME.colors.warningSurface),
+      themeColorToNativeColor(FDCODE_CHAT_THEME.colors.warningSurface),
     );
     expect(variables["--color-warning-foreground"]).toBe(
-      themeColorToNativeColor(T3_CHAT_THEME.colors.warningForeground),
+      themeColorToNativeColor(FDCODE_CHAT_THEME.colors.warningForeground),
     );
     expect(variables["--color-primary"]).not.toBe(variables["--color-screen"]);
     expect(variables["--color-primary-shadow"]).toBe("#000000");

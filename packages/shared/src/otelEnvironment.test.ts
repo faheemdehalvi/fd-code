@@ -11,7 +11,7 @@ const load = (env: Record<string, string>) =>
 
 const SPEC_OFF =
   "OTEL_SDK_DISABLED is set, so no telemetry is exported, whatever configured it; set FDCODE_OTEL_SDK_DISABLED=false to export anyway";
-const T3_OFF =
+const FDCODE_OFF =
   "FDCODE_OTEL_SDK_DISABLED is set, so no telemetry is exported, whatever configured it";
 const specIgnored = (value: string) =>
   `OTEL_SDK_DISABLED=${value} was read as false; the OpenTelemetry specification recognizes only the string true, so use OTEL_SDK_DISABLED=true or FDCODE_OTEL_SDK_DISABLED to say it any other way`;
@@ -40,12 +40,12 @@ describe("OtelEnvironment", () => {
       disabled: false,
       warnings: [specIgnored("yes")],
     },
-    { name: "t3 1", env: { FDCODE_OTEL_SDK_DISABLED: "1" }, disabled: true, warnings: [T3_OFF] },
+    { name: "t3 1", env: { FDCODE_OTEL_SDK_DISABLED: "1" }, disabled: true, warnings: [FDCODE_OFF] },
     {
       name: "t3 TRUE",
       env: { FDCODE_OTEL_SDK_DISABLED: "TRUE" },
       disabled: true,
-      warnings: [T3_OFF],
+      warnings: [FDCODE_OFF],
     },
     { name: "t3 n", env: { FDCODE_OTEL_SDK_DISABLED: "n" }, disabled: false, warnings: [] },
     {
@@ -200,7 +200,7 @@ describe("OtelEnvironment", () => {
         traces: "Unset",
         metrics: "Unset",
         logs: "Unset",
-        warnings: [T3_OFF],
+        warnings: [FDCODE_OFF],
       },
       {
         name: "an exporter of none turns off only its signal",

@@ -27,7 +27,7 @@ export class BrainMemoryError extends Schema.TaggedError<BrainMemoryError>()("Br
   cause: Schema.Defect(),
 }) {
   override get message() {
-    return "Brain memory could not be synchronized. The conversation remains saved in T3; retry before switching models.";
+    return "Brain memory could not be synchronized. The conversation remains saved in FD CODE; retry before switching models.";
   }
 }
 
@@ -57,7 +57,7 @@ const attempt = <A>(run: () => A) =>
 const clip = (text: string, limit: number) =>
   text.length <= limit ? text : `${text.slice(0, limit)} [clipped; retrieve with t3_brain_memory]`;
 
-// Provider resume references stay in T3's private provider-thread/session records.
+// Provider resume references stay in FD CODE's private provider-thread/session records.
 // Only public conversation artifacts cross into the shared, model-readable Brain log.
 function publicEvent(stored: OrchestrationV2StoredEvent): string | null {
   const event = stored.event;
@@ -374,7 +374,7 @@ export const layer = Layer.effect(
       };
     });
 
-    // Replay closes the subscription race. T3's durable event log is the retry outbox;
+    // Replay closes the subscription race. FD CODE's durable event log is the retry outbox;
     // a background mirror failure never changes the acknowledgement of a saved turn.
     const afterSequence = yield* events
       .latestSequence()

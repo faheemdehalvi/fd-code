@@ -77,7 +77,7 @@ function isOpenCodeNativeCommandPath(commandPath: string): boolean {
 
 /**
  * OpenCode 1.x ships as `opencode-ai` and 2.x as `@opencode/cli`. An install is
- * only ever updated within its own package: T3 never moves a 1.x install onto
+ * only ever updated within its own package: FD CODE never moves a 1.x install onto
  * 2.x or back, since 2.x converts the shared database in place.
  */
 export const openCodeUpdateFor = (generation: ProbedOpenCode["generation"]) =>

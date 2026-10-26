@@ -89,8 +89,8 @@ describe("SidebarUpdateReleaseNotes", () => {
     );
 
     expect(anchors.map(({ props }) => props.href)).toEqual([
-      "https://github.com/JustYannicc/t3code/releases/tag/v0.0.36-nightly.3",
-      "https://github.com/JustYannicc/t3code/releases",
+      "https://github.com/JustYannicc/fd-code/releases/tag/v0.0.36-nightly.3",
+      "https://github.com/JustYannicc/fd-code/releases",
     ]);
   });
 

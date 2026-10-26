@@ -3,7 +3,7 @@ import { LogInIcon } from "lucide-react";
 
 import { hasCloudPublicConfig } from "../../cloud/publicConfig";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
-import { T3_CONNECT_ACCOUNT_PAGES } from "./FDCodeConnectAccountPages";
+import { FDCODE_CONNECT_ACCOUNT_PAGES } from "./FDCodeConnectAccountPages";
 import { useFDCodeConnectAuthPrompt } from "./useFDCodeConnectAuthPrompt";
 
 export function FDCodeConnectSidebarSignIn() {
@@ -32,7 +32,7 @@ function ConfiguredFDCodeConnectSidebarAvatar() {
         },
       }}
     >
-      {T3_CONNECT_ACCOUNT_PAGES.map((page) => (
+      {FDCODE_CONNECT_ACCOUNT_PAGES.map((page) => (
         <UserButton.UserProfilePage
           key={page.url}
           label={page.label}
@@ -58,7 +58,7 @@ function ConfiguredFDCodeConnectSidebarSignIn() {
         <SidebarMenuItem>
           <SidebarMenuButton onClick={openAuthPrompt}>
             <LogInIcon />
-            <span>Sign in to T3 Connect</span>
+            <span>Sign in to FD CODE Connect</span>
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>

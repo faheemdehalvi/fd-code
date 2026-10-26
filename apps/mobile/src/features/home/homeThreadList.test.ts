@@ -195,7 +195,7 @@ describe("home project scopes", () => {
         environmentId: remoteEnvironmentId,
         id: ProjectId.make("project-remote-fresh"),
         title: "t3code",
-        workspaceRoot: "/remote/t3code/",
+        workspaceRoot: "/remote/fd-code/",
         updatedAt: "2026-06-02T00:00:00.000Z",
       }),
     ];

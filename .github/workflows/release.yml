@@ -302,7 +302,7 @@ jobs:
         run: node apps/web/node_modules/playwright/cli.js install --with-deps --only-shell chromium
 
       - name: Test
-        run: vp run --parallel --concurrency-limit 4 --filter '!t3' --filter '!@fdcode/monorepo' test
+        run: vp run --parallel --concurrency-limit 4 --filter '!fd-code' --filter '!@fdcode/monorepo' test
 
   test_server:
     name: Release server tests ${{ matrix.shard }}
@@ -382,7 +382,7 @@ jobs:
           cache: true
           run-install: |
             args:
-              - --filter=t3code-relay...
+              - --filter=fd-code-relay...
 
       # The deployed stack's outputs, read from Alchemy's state store without
       # planning or applying. Select the backend explicitly to avoid loading
@@ -496,7 +496,7 @@ jobs:
       - name: Install bundle dependencies
         env:
           pnpm_config_cache_dir: ${{ runner.temp }}/pnpm-metadata
-        run: vp install --filter=t3... --filter=@fdcode/web... --filter=@fdcode/desktop... --filter=@fdcode/scripts...
+        run: vp install --filter=fd-code... --filter=@fdcode/web... --filter=@fdcode/desktop... --filter=@fdcode/scripts...
 
       - name: Download relay client tracing config
         uses: actions/download-artifact@v8
@@ -522,7 +522,7 @@ jobs:
       - name: Install browser secret helper build libraries
         run: sudo apt-get update && sudo apt-get install -y libsecret-1-dev pkg-config
 
-      # Runs t3#build (which depends on @fdcode/web#build) and
+      # Runs fd-code#build (which depends on @fdcode/web#build) and
       # @fdcode/desktop#build, so apps/server/dist holds the server bundle
       # plus the web client and apps/desktop/dist-electron the Electron main.
       # The release channel is already stable, nightly, or preview. Builds in
@@ -931,7 +931,7 @@ jobs:
           cache: true
           run-install: |
             args:
-              - --filter=t3...
+              - --filter=fd-code...
               - --filter=@fdcode/scripts...
 
       - name: Build the npm launcher

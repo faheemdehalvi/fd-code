@@ -12,7 +12,7 @@ import {
   resolveFDCodeMcpToolDefinition,
   type FDCodeMcpToolDefinition,
   type FDCodeMcpToolSummaryAction,
-} from "@fdcode/shared/t3McpToolPresentation";
+} from "@fdcode/shared/fdCodeMcpToolPresentation";
 import { classifyMarkdownImageSource } from "@fdcode/client-runtime/markdown-images";
 import { resolveMediaSource } from "@fdcode/client-runtime/media-source";
 import { parseChangeRequestUrl } from "@fdcode/shared/changeRequestUrl";
@@ -25,7 +25,7 @@ import {
   summarizeFDCodeToolCalls,
   t3ToolResultIndicatesFailure,
   type FDCodeToolSummaryCall,
-} from "@fdcode/client-runtime/t3ToolSummary";
+} from "@fdcode/client-runtime/fdCodeToolSummary";
 
 export type WorkLogToolLifecycleStatus = RuntimeItemStatus | "stopped" | "idle";
 
@@ -579,7 +579,7 @@ function toolGroupActionLabel(action: ToolGroupAction, count: number): string {
   }
 }
 
-function t3ToolSummaryCall(entry: WorkLogPresentationEntry): FDCodeToolSummaryCall {
+function fdCodeToolSummaryCall(entry: WorkLogPresentationEntry): FDCodeToolSummaryCall {
   const item = entry.structuredPayload;
   const data =
     entry.toolData !== null && typeof entry.toolData === "object"
@@ -683,7 +683,7 @@ export function summarizeToolGroup(entries: ReadonlyArray<WorkLogPresentationEnt
     count: group.entries.length,
     priority: summaryActionPriority(action),
     ...(group.t3Action
-      ? summarizeFDCodeToolCalls(group.t3Action, group.entries.map(t3ToolSummaryCall))
+      ? summarizeFDCodeToolCalls(group.t3Action, group.entries.map(fdCodeToolSummaryCall))
       : {
           label: toolGroupActionLabel(
             group.action,

@@ -60,7 +60,7 @@ import {
   resolveFDCodeMcpToolDefinition,
   resolveFDCodeMcpToolPresentation,
   type FDCodeMcpToolPresentation,
-} from "@fdcode/shared/t3McpToolPresentation";
+} from "@fdcode/shared/fdCodeMcpToolPresentation";
 import { compactDynamicToolOutput } from "@fdcode/shared/toolOutput";
 import { htmlRenderReferencesEqual, type HtmlRenderReference } from "@fdcode/shared/htmlRender";
 import { mcpAppReferencesEqual, type McpAppReference } from "@fdcode/shared/mcpApp";
@@ -186,7 +186,7 @@ export function threadReadTargetId(entry: Pick<WorkLogEntry, "structuredPayload"
   return typeof threadId === "string" && threadId.trim().length > 0 ? threadId.trim() : null;
 }
 
-const THREAD_READ_OBJECT = " a T3 thread";
+const THREAD_READ_OBJECT = " a FD CODE thread";
 
 export function threadReadTargetTitle(
   shell: Pick<ThreadShell, "title" | "archivedAt" | "deletedAt"> | null,

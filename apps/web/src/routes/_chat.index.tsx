@@ -124,7 +124,7 @@ function HostedStaticOnboardingState() {
   const description = localEnvironmentOff
     ? "The local environment is turned off. Connect a remote environment, or turn the local environment back on in Connections."
     : cloudEnabled
-      ? "Enable T3 Connect on that machine, then open Connections here to sign in with the same account. You can also add the machine using a pairing link."
+      ? "Enable FD CODE Connect on that machine, then open Connections here to sign in with the same account. You can also add the machine using a pairing link."
       : "Open Connections and add that machine using its pairing link. This app must be able to reach it.";
 
   return (

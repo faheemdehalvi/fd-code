@@ -738,7 +738,7 @@ describe("authenticated environment HTTP requests", () => {
 });
 
 describe("relay request tracing", () => {
-  it.effect("starts an exported trace for a T3 Connect request", () =>
+  it.effect("starts an exported trace for a FD CODE Connect request", () =>
     Effect.gen(function* () {
       const productSpans: Array<{ readonly name: string; readonly root: boolean }> = [];
       const productTracer = Tracer.make({

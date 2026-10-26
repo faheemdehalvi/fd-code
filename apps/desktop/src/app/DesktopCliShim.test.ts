@@ -28,7 +28,7 @@ const writeExecutable = (path: string, content: string) => {
 
 const writeShim = (root: string, target: CliShimTarget) => {
   const shim = NodePath.join(root, "bin", "t3");
-  writeExecutable(shim, renderCliShim({ target, shimPath: shim, t3Home: `${root}/home` }));
+  writeExecutable(shim, renderCliShim({ target, shimPath: shim, fdCodeHome: `${root}/home` }));
   return shim;
 };
 
@@ -92,7 +92,7 @@ describe("renderCliShim", () => {
     );
   });
 
-  it("keeps the install's T3 home under sudo, unless one is set", () => {
+  it("keeps the install's FD CODE home under sudo, unless one is set", () => {
     const root = tempRoot();
     writeExecutable(NodePath.join(root, "app"), REPORTER);
     const shim = writeShim(root, {
@@ -114,10 +114,10 @@ describe("renderCliShim", () => {
     const shim = writeShim(root, {
       kind: "direct",
       executable,
-      entry: "/opt/T3's/app.asar/bin.mjs",
+      entry: "/opt/FD CODE's/app.asar/bin.mjs",
     });
     expect(run(shim, ["browser", "setup"]).stdout.split("\n").slice(1)).toEqual([
-      "/opt/T3's/app.asar/bin.mjs",
+      "/opt/FD CODE's/app.asar/bin.mjs",
       "browser",
       "setup",
       "",
@@ -141,7 +141,7 @@ describe("renderCliShim", () => {
     const script = renderCliShim({
       target: { kind: "windows", executable, entry: "C:\\Apps\\server.asar\\bin.mjs" },
       shimPath: "C:\\Users\\José\\.fd-code\\bin\\t3.cmd",
-      t3Home: "C:\\Users\\José\\.fd-code",
+      fdCodeHome: "C:\\Users\\José\\.fd-code",
     });
     const lines = script.split("\r\n");
     expect(lines).toContain("setlocal EnableExtensions DisableDelayedExpansion");
@@ -158,9 +158,9 @@ describe("renderCliShim", () => {
 
   it("switches the Windows console to UTF-8 only when a path needs it", () => {
     const ascii = renderCliShim({
-      target: { kind: "windows", executable: "C:\\T3\\FD CODE.exe", entry: "C:\\T3\\bin.mjs" },
+      target: { kind: "windows", executable: "C:\\FD CODE\\FD CODE.exe", entry: "C:\\FD CODE\\bin.mjs" },
       shimPath: "C:\\Users\\me\\.fd-code\\bin\\t3.cmd",
-      t3Home: "C:\\Users\\me\\.fd-code",
+      fdCodeHome: "C:\\Users\\me\\.fd-code",
     });
     expect(ascii).not.toContain("chcp");
     expect(ascii.split("\r\n")).toContain("exit /b %t3_exit%");

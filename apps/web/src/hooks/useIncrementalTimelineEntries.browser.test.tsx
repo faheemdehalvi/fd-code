@@ -9,7 +9,7 @@ it("settles fresh equivalent containers and resets projection identity when swit
   const root = createRoot(document.createElement("div"));
   const observed: TimelineEntriesProjection["entries"][] = [];
   function Probe({ threadKey }: { threadKey: string }) {
-    // oxlint-disable-next-line t3code/no-manual-memo -- The probe must rebuild its inputs on every render like an uncompiled caller; compiled, the cache hides the loop this test guards.
+    // oxlint-disable-next-line fd-code/no-manual-memo -- The probe must rebuild its inputs on every render like an uncompiled caller; compiled, the cache hides the loop this test guards.
     "use no memo";
     // Chat projections can allocate new empty containers on every render.
     const entries = useIncrementalTimelineEntries(threadKey, {

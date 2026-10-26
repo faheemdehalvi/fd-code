@@ -1,5 +1,5 @@
 import { createOxlintRuleHarness } from "../test/utils.ts";
-const state = createOxlintRuleHarness("t3code/no-rpc-permission-bypass", {
+const state = createOxlintRuleHarness("fd-code/no-rpc-permission-bypass", {
   filename: "fixture.ts",
 });
 state.invalid("blocks direct session calls", "session.client[tag](input);");
@@ -17,13 +17,13 @@ state.valid(
   "allows typed requests",
   'import { request } from "../rpc/client.ts"; request(method, input);',
 );
-const rpc = createOxlintRuleHarness("t3code/no-rpc-permission-bypass", {
+const rpc = createOxlintRuleHarness("fd-code/no-rpc-permission-bypass", {
   filename: "fixture.ts",
   ruleOptions: [{ allowRawClientAccess: true }],
 });
 rpc.valid("allows the transport boundary", "session.client[tag](input);");
 
-const app = createOxlintRuleHarness("t3code/no-rpc-permission-bypass", {
+const app = createOxlintRuleHarness("fd-code/no-rpc-permission-bypass", {
   filename: "fixture.ts",
 });
 app.invalid(
@@ -51,7 +51,7 @@ rpc.invalid(
   "raw client allowance does not permit installing the guard",
   'import { RpcPermissionGuard } from "@fdcode/client-runtime/rpc";',
 );
-const boundary = createOxlintRuleHarness("t3code/no-rpc-permission-bypass", {
+const boundary = createOxlintRuleHarness("fd-code/no-rpc-permission-bypass", {
   filename: "fixture.ts",
   ruleOptions: [{ allowGuardInstallation: true }],
 });

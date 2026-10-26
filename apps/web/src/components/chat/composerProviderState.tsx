@@ -69,7 +69,7 @@ export function getComposerPromptInjectionState(prompt: string): ComposerPromptI
 }
 
 /**
- * Cursor ACP can report `fastMode: true` as the provider default. T3 only
+ * Cursor ACP can report `fastMode: true` as the provider default. FD CODE only
  * treats Fast as selected when the user chose it (draft/sticky/settings).
  */
 export function withImplicitFastModeDefault(

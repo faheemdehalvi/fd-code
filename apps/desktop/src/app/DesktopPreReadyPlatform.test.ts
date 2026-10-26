@@ -151,13 +151,13 @@ describe("DesktopPreReadyPlatform", () => {
     let desktopEntry = previousEntry;
     let iconInstalled = false;
     copyFileSyncMock.mockImplementation((_source: string, destination: string) => {
-      iconInstalled = destination === "/xdg/icons/com.t3tools.FDCode.desktop.png";
+      iconInstalled = destination === "/xdg/icons/com.faheem.FDCode.desktop.png";
     });
     setDesktopNameMock.mockImplementation((name: string) => {
       desktopName = name;
     });
     writeFileSyncMock.mockImplementation((path: string, contents: string) => {
-      if (path === "/xdg/applications/com.t3tools.FDCode.desktop") desktopEntry = contents;
+      if (path === "/xdg/applications/com.faheem.FDCode.desktop") desktopEntry = contents;
     });
 
     return Effect.scoped(
@@ -173,13 +173,13 @@ describe("DesktopPreReadyPlatform", () => {
           ),
         );
         const identity = yield* Effect.promise(() => portalIdentity);
-        assert.equal(identity.desktopName, "com.t3tools.FDCode.desktop");
+        assert.equal(identity.desktopName, "com.faheem.FDCode.desktop");
         assert.include(identity.desktopEntry ?? "", 'Exec="/Applications/current.AppImage" %U');
         assert.include(identity.desktopEntry ?? "", "Name=FD CODE");
         assert.include(identity.desktopEntry ?? "", "MimeType=x-scheme-handler/fd-code;");
         assert.include(
           identity.desktopEntry ?? "",
-          "Icon=/xdg/icons/com.t3tools.FDCode.desktop.png",
+          "Icon=/xdg/icons/com.faheem.FDCode.desktop.png",
         );
         assert.isTrue(identity.iconInstalled);
       }),

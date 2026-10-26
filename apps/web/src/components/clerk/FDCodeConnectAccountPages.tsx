@@ -6,7 +6,7 @@ import { createPortal } from "react-dom";
 import { MobileClientsUserProfilePage } from "./MobileClientsUserProfilePage";
 import { FDCodeConnectUserProfilePage } from "./FDCodeConnectUserProfilePage";
 
-export const T3_CONNECT_ACCOUNT_PAGES = [
+export const FDCODE_CONNECT_ACCOUNT_PAGES = [
   {
     label: "Mobile clients",
     url: "mobile-clients",
@@ -14,7 +14,7 @@ export const T3_CONNECT_ACCOUNT_PAGES = [
     content: <MobileClientsUserProfilePage />,
   },
   {
-    label: "T3 Connect",
+    label: "FD CODE Connect",
     url: "t3-connect",
     icon: <ServerIcon className="size-4" />,
     content: <FDCodeConnectUserProfilePage />,
@@ -40,7 +40,7 @@ export function useFDCodeConnectAccountPage(): {
       setTargets((current) => ({ ...current, [key]: element }));
     clerk.openUserProfile({
       __experimental_startPath: "/t3-connect",
-      customPages: T3_CONNECT_ACCOUNT_PAGES.map((page) => ({
+      customPages: FDCODE_CONNECT_ACCOUNT_PAGES.map((page) => ({
         label: page.label,
         url: page.url,
         mount: (element: HTMLDivElement) => setTarget(`content:${page.url}`, element),
@@ -51,7 +51,7 @@ export function useFDCodeConnectAccountPage(): {
     });
   };
 
-  const portals = T3_CONNECT_ACCOUNT_PAGES.flatMap((page) => {
+  const portals = FDCODE_CONNECT_ACCOUNT_PAGES.flatMap((page) => {
     const content = targets[`content:${page.url}`];
     const icon = targets[`icon:${page.url}`];
     return [

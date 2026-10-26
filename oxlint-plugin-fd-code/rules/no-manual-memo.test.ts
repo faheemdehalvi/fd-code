@@ -2,11 +2,11 @@ import { describe } from "@effect/vitest";
 
 import { createOxlintRuleHarness } from "../test/utils.ts";
 
-const rule = createOxlintRuleHarness("t3code/no-manual-memo", {
+const rule = createOxlintRuleHarness("fd-code/no-manual-memo", {
   filename: "fixture.tsx",
 });
 
-describe("t3code/no-manual-memo", () => {
+describe("fd-code/no-manual-memo", () => {
   rule.valid("allows plain derived values", `const total = items.length * 2;`);
 
   rule.valid("allows useStableCallback", `const onClick = useStableCallback(() => save());`);
@@ -36,12 +36,12 @@ describe("t3code/no-manual-memo", () => {
   rule.valid("allows the same text as a string value", `const label = "use no memo";`);
 });
 
-const ratchet = createOxlintRuleHarness("t3code/no-manual-memo", {
+const ratchet = createOxlintRuleHarness("fd-code/no-manual-memo", {
   filename: "fixture.tsx",
   ruleOptions: [{ allowMemoHooks: true }],
 });
 
-describe("t3code/no-manual-memo with allowMemoHooks", () => {
+describe("fd-code/no-manual-memo with allowMemoHooks", () => {
   ratchet.valid("allows useMemo", `const total = useMemo(() => items.length, [items]);`);
 
   ratchet.valid("allows useCallback", `const onClick = useCallback(() => save(), []);`);

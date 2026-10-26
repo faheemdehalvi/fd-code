@@ -6,7 +6,7 @@ import type { AcpSessionModeState } from "./runtimeModel.ts";
 export const ACP_SESSION_MODE_OPTION_ID = "_t3/session-mode";
 
 /**
- * Agents use it for a real choice (GitHub Copilot's default agent), but T3
+ * Agents use it for a real choice (GitHub Copilot's default agent), but FD CODE
  * option IDs must be non-empty. The ACP adapter maps it back to `""` before
  * applying a selection.
  */
@@ -67,7 +67,7 @@ export function acpProviderOptionDescriptors(input: {
 
   for (const option of input.configOptions ?? []) {
     // "model" options surface as the model list; "collaboration_mode" options
-    // are driven by T3's own plan/build interaction mode in the ACP adapter.
+    // are driven by FD CODE's own plan/build interaction mode in the ACP adapter.
     if (option.category === "model" || option.category === "collaboration_mode") {
       continue;
     }

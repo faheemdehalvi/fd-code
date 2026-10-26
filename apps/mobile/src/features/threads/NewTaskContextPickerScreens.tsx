@@ -99,7 +99,7 @@ function SelectionRow(props: {
         (props.icon ?? null)
       )}
       <View className="min-w-0 flex-1 gap-0.5">
-        <Text className="text-base font-t3-medium text-foreground" numberOfLines={1}>
+        <Text className="text-base font-fd-code-medium text-foreground" numberOfLines={1}>
           {props.title}
         </Text>
         {props.subtitle ? (
@@ -131,7 +131,7 @@ function ToggleRow(props: {
       <Text
         className={cn(
           "min-w-0 flex-1 text-base text-foreground",
-          Platform.OS !== "android" && "font-t3-medium",
+          Platform.OS !== "android" && "font-fd-code-medium",
         )}
         numberOfLines={1}
       >
@@ -475,7 +475,7 @@ export function BranchPickerScreen(props: {
               className="rounded-full bg-card px-4 py-2 active:opacity-70"
               onPress={props.onRefresh}
             >
-              <Text className="text-sm font-t3-medium text-foreground">Try again</Text>
+              <Text className="text-sm font-fd-code-medium text-foreground">Try again</Text>
             </Pressable>
           ) : null}
         </View>

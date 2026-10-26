@@ -1,7 +1,7 @@
 import { pruneLocalDeviceTools } from "./deviceToolMaintenance.ts";
 import { deviceToolInstallMessage } from "@fdcode/contracts";
 /**
- * The hub runs in its standalone mode (origin root). The T3 proxy strips its
+ * The hub runs in its standalone mode (origin root). The FD CODE proxy strips its
  * own prefix, and the Device panel derives stream and socket URLs from the
  * prefix itself rather than from anything the hub prints.
  */

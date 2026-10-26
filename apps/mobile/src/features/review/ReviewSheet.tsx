@@ -164,7 +164,7 @@ const ReviewNotice = function ReviewNotice(props: { readonly notice: string }) {
         Platform.OS === "android" ? "m-2 rounded-[20px]" : "border-b border-warning-border",
       )}
     >
-      <Text className="text-xs font-t3-bold uppercase text-warning-foreground">Partial diff</Text>
+      <Text className="text-xs font-fd-code-bold uppercase text-warning-foreground">Partial diff</Text>
       <Text className="text-xs leading-normal text-warning-foreground">{props.notice}</Text>
     </View>
   );
@@ -188,7 +188,7 @@ function ReviewSelectionActionBar(props: {
         tintColorClassName="accent-primary-foreground"
         type="monochrome"
       />
-      <Text className="text-base font-t3-bold text-primary-foreground">{props.title}</Text>
+      <Text className="text-base font-fd-code-bold text-primary-foreground">{props.title}</Text>
     </>
   );
 
@@ -269,18 +269,18 @@ const ReviewFileNavigatorRow = function ReviewFileNavigatorRow(props: {
       <Text
         className={
           selected
-            ? "text-xs font-t3-bold text-foreground"
-            : "text-xs font-t3-medium text-foreground-secondary"
+            ? "text-xs font-fd-code-bold text-foreground"
+            : "text-xs font-fd-code-medium text-foreground-secondary"
         }
         numberOfLines={2}
       >
         {file.path}
       </Text>
       <View className="mt-1 flex-row gap-2">
-        <Text className="text-2xs font-t3-bold text-adaptive-emerald-700-300">
+        <Text className="text-2xs font-fd-code-bold text-adaptive-emerald-700-300">
           +{formatDiffCount(file.additions)}
         </Text>
-        <Text className="text-2xs font-t3-bold text-adaptive-rose-700-300">
+        <Text className="text-2xs font-fd-code-bold text-adaptive-rose-700-300">
           -{formatDiffCount(file.deletions)}
         </Text>
       </View>
@@ -419,7 +419,7 @@ function ReviewFileNavigator({
       ) : (
         <View className="border-b border-border" style={{ paddingTop: headerInset }}>
           <View className="px-4 py-3">
-            <Text className="text-sm font-t3-bold text-foreground">Changed files</Text>
+            <Text className="text-sm font-fd-code-bold text-foreground">Changed files</Text>
             <Text className="text-xs text-foreground-muted">
               {files.length} {files.length === 1 ? "file" : "files"}
             </Text>
@@ -654,7 +654,7 @@ export function ReviewSheet(props: ReviewSheetProps) {
             Platform.OS === "android" ? "m-2 rounded-[20px]" : "border-b border-border",
           )}
         >
-          <Text className="text-sm font-t3-bold text-foreground">Review unavailable</Text>
+          <Text className="text-sm font-fd-code-bold text-foreground">Review unavailable</Text>
           <Text className="text-xs leading-normal text-foreground-muted">{error}</Text>
         </View>,
       );
@@ -799,7 +799,7 @@ export function ReviewSheet(props: ReviewSheetProps) {
                         : "border-b border-border bg-card px-4 py-5"
                     }
                   >
-                    <Text className="text-sm font-t3-bold text-foreground">No review diffs</Text>
+                    <Text className="text-sm font-fd-code-bold text-foreground">No review diffs</Text>
                     <Text
                       className={cn(
                         "text-xs leading-normal text-foreground-muted",
@@ -828,7 +828,7 @@ export function ReviewSheet(props: ReviewSheetProps) {
                       : "border-b border-border bg-card px-4 py-5"
                   }
                 >
-                  <Text className="text-sm font-t3-bold text-foreground">No changes</Text>
+                  <Text className="text-sm font-fd-code-bold text-foreground">No changes</Text>
                   <Text
                     className={cn(
                       "text-xs leading-normal text-foreground-muted",

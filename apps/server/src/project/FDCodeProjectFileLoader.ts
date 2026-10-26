@@ -6,8 +6,12 @@ import * as Option from "effect/Option";
 import * as Path from "effect/Path";
 import * as Schema from "effect/Schema";
 
-import { T3_PROJECT_FILE_NAME, type FDCodeProjectFile } from "@fdcode/contracts";
-import { FDCodeProjectFileFromJson } from "@fdcode/shared/t3ProjectFile";
+import {
+  FDCODE_PROJECT_FILE_NAME,
+  LEGACY_PROJECT_FILE_NAME,
+  type FDCodeProjectFile,
+} from "@fdcode/contracts";
+import { FDCodeProjectFileFromJson } from "@fdcode/shared/fdCodeProjectFile";
 
 const decodeFDCodeProjectFileJson = Schema.decodeEffect(FDCodeProjectFileFromJson);
 
@@ -21,7 +25,7 @@ export class FDCodeProjectFileLoadError extends Schema.TaggedError<FDCodeProject
   },
 ) {
   override get message(): string {
-    return `Failed to ${this.operation} ${T3_PROJECT_FILE_NAME} at ${this.filePath}.`;
+    return `Failed to ${this.operation} ${FDCODE_PROJECT_FILE_NAME} at ${this.filePath}.`;
   }
 }
 
@@ -54,7 +58,10 @@ export const make = Effect.gen(function* () {
   const load: FDCodeProjectFileLoader["Service"]["load"] = Effect.fn(
     "FDCodeProjectFileLoader.load",
   )(function* (workspaceRoot) {
-    const filePath = path.join(workspaceRoot, T3_PROJECT_FILE_NAME);
+    const currentPath = path.join(workspaceRoot, FDCODE_PROJECT_FILE_NAME);
+    const filePath = (yield* fileSystem.exists(currentPath).pipe(Effect.orElseSucceed(() => true)))
+      ? currentPath
+      : path.join(workspaceRoot, LEGACY_PROJECT_FILE_NAME);
     const raw = yield* fileSystem.readFileString(filePath).pipe(
       Effect.asSome,
       Effect.catchTags({

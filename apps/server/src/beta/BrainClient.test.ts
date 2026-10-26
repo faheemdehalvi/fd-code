@@ -38,7 +38,7 @@ describe("BrainClient", () => {
     const fetch = responding({ content: [{ type: "text", text: evidence }], isError: false });
     const client = createBrainClient({ fetch, loadToken });
     expect(
-      await client.callTool("brain_search", { query: "T3", collection: "Personal", limit: 2 }),
+      await client.callTool("brain_search", { query: "FD CODE", collection: "Personal", limit: 2 }),
     ).toEqual({
       ok: true,
       value: { content: [{ type: "text", text: evidence }], isError: false },
@@ -46,7 +46,7 @@ describe("BrainClient", () => {
     const request = JSON.parse(String(fetch.mock.calls[0]![1]?.body));
     expect(request.params).toEqual({
       name: "brain_search",
-      arguments: { query: "T3", collection: "Personal", limit: 2 },
+      arguments: { query: "FD CODE", collection: "Personal", limit: 2 },
     });
   });
 

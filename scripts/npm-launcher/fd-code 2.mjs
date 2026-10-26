@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // The `t3` npm package. Downloads this version's CLI archive from the GitHub
-// Release into <T3 home>/runtime/versions/<version> (the folder the install
+// Release into <FD CODE home>/runtime/versions/<version> (the folder the install
 // scripts and `t3 update` use), verifies it against the release's SHA256SUMS,
 // then runs it. `dist/bin.mjs` re-enters here for background services
 // installed before 0.0.41, which start the npm package with Node and talk to
@@ -17,7 +17,7 @@ const { version } = JSON.parse(
 
 const SUPPORTED = ["darwin-arm64", "linux-arm64", "linux-x64", "win32-arm64", "win32-x64"];
 
-function t3Home() {
+function fdCodeHome() {
   const raw = (process.env.T3CODE_HOME || "").trim();
   if (raw === "") return path.join(os.homedir(), ".fd-code");
   if (raw === "~") return os.homedir();
@@ -138,7 +138,7 @@ async function main() {
         "The desktop app is at https://github.com/pingdotgg/t3code/releases",
     );
   }
-  const dir = path.join(t3Home(), "runtime", "versions", version);
+  const dir = path.join(fdCodeHome(), "runtime", "versions", version);
   if (!isComplete(dir)) await install(dir, key);
 
   // A service launcher talks to its server over IPC; pass that channel and
@@ -150,7 +150,7 @@ async function main() {
     process.argv.slice(2),
     {
       stdio: ipc ? ["inherit", "inherit", "inherit", "ipc"] : "inherit",
-      // The executable lives in the T3 home, so this is how it knows npm launched it.
+      // The executable lives in the FD CODE home, so this is how it knows npm launched it.
       env: { ...process.env, T3CODE_NPM_LAUNCHER_PATH: import.meta.filename },
     },
   );

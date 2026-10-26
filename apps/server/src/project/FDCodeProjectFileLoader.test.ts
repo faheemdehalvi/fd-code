@@ -23,12 +23,12 @@ const makeTempDir = Effect.gen(function* () {
 const writeProjectFile = Effect.fn("writeProjectFile")(function* (cwd: string, contents: string) {
   const fileSystem = yield* FileSystem.FileSystem;
   const path = yield* Path.Path;
-  yield* fileSystem.writeFileString(path.join(cwd, "t3.json"), contents).pipe(Effect.orDie);
+  yield* fileSystem.writeFileString(path.join(cwd, "fd-code.json"), contents).pipe(Effect.orDie);
 });
 
 it.layer(layerTest)("FDCodeProjectFileLoader", (it) => {
   describe("load", () => {
-    it.effect("loads and decodes a valid t3.json", () =>
+    it.effect("loads and decodes a valid fd-code.json", () =>
       Effect.gen(function* () {
         const loader = yield* FDCodeProjectFileLoader.FDCodeProjectFileLoader;
         const cwd = yield* makeTempDir;
@@ -51,7 +51,25 @@ it.layer(layerTest)("FDCodeProjectFileLoader", (it) => {
       }),
     );
 
-    it.effect("returns none when t3.json is missing", () =>
+    it.effect("loads a legacy project file and gives fd-code.json precedence", () =>
+      Effect.gen(function* () {
+        const loader = yield* FDCodeProjectFileLoader.FDCodeProjectFileLoader;
+        const cwd = yield* makeTempDir;
+        const fs = yield* FileSystem.FileSystem;
+        const path = yield* Path.Path;
+        yield* fs.writeFileString(
+          path.join(cwd, "t3.json"),
+          '{"scripts":[{"name":"Legacy","command":"echo legacy"}]}',
+        );
+        expect(Option.getOrThrow(yield* loader.load(cwd)).scripts?.[0]?.name).toBe("Legacy");
+        yield* writeProjectFile(cwd, '{"scripts":[{"name":"Current","command":"echo current"}]}');
+        expect(Option.getOrThrow(yield* loader.load(cwd)).scripts?.[0]?.name).toBe("Current");
+        yield* writeProjectFile(cwd, "{invalid");
+        expect(Option.isNone(yield* loader.load(cwd))).toBe(true);
+      }),
+    );
+
+    it.effect("returns none when fd-code.json is missing", () =>
       Effect.gen(function* () {
         const loader = yield* FDCodeProjectFileLoader.FDCodeProjectFileLoader;
         const cwd = yield* makeTempDir;

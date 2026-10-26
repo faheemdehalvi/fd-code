@@ -304,7 +304,7 @@ function DevicePreviewScreen({
                 icon="xmark"
                 onPress={onClose}
               />
-              <AppText numberOfLines={1} className="flex-1 text-center font-t3-medium text-base">
+              <AppText numberOfLines={1} className="flex-1 text-center font-fd-code-medium text-base">
                 {preview?.name ?? "Devices"}
               </AppText>
               <ControlPill

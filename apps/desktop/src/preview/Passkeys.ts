@@ -14,7 +14,7 @@ import { macPasskeyBackend } from "./PasskeyBackendMac.ts";
 import type { PasskeyCeremonyResult } from "./PasskeyBridge.ts";
 
 const PasskeyPackageMetadata = Schema.Struct({
-  t3codeWebAuthn: Schema.optional(
+  fdCodeWebAuthn: Schema.optional(
     Schema.Struct({
       touchIdKeychainAccessGroup: Schema.optional(Schema.String),
       browserPasskeys: Schema.optional(Schema.Boolean),
@@ -128,7 +128,7 @@ const make = Effect.gen(function* () {
           .readFileString(environment.path.join(environment.appRoot, "package.json"))
           .pipe(
             Effect.flatMap(decodePasskeyPackageMetadata),
-            Effect.map((parsed) => parsed.t3codeWebAuthn),
+            Effect.map((parsed) => parsed.fdCodeWebAuthn),
             Effect.orElseSucceed(() => undefined),
           )
       : undefined;

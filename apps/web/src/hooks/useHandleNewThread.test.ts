@@ -158,7 +158,7 @@ vi.mock("../lib/chatThreadActions", async (importOriginal) => ({
   hasExplicitComposerModelSelection: () => false,
   resolveNewThreadModelSelectionOverride: () => null,
 }));
-vi.mock("../lib/t3ProjectFileDefaults", () => ({
+vi.mock("../lib/fdCodeProjectFileDefaults", () => ({
   readFDCodeProjectFile: () => testState.projectFileRead,
 }));
 vi.mock("../lib/utils", () => ({

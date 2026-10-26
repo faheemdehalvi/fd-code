@@ -125,8 +125,8 @@ describe("toolActivity", () => {
   });
 
   it.each(["cua_repl.js", "node_repl.js", "js"])("uses the action title for %s", (toolName) => {
-    expect(dynamicToolTitle(toolName, { title: " Read the current T3 desktop window " })).toBe(
-      "Read the current T3 desktop window",
+    expect(dynamicToolTitle(toolName, { title: " Read the current FD CODE desktop window " })).toBe(
+      "Read the current FD CODE desktop window",
     );
     const fallback = toolName === "cua_repl.js" ? "Computer use" : "Run JavaScript";
     expect(dynamicToolTitle(toolName, { title: " " })).toBe(fallback);

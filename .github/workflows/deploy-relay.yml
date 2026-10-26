@@ -64,10 +64,10 @@ jobs:
           cache: true
           run-install: |
             args:
-              - --filter=t3code-relay...
+              - --filter=fd-code-relay...
 
       - name: Deploy production relay stage
-        run: vp run --filter t3code-relay deploy --stage prod --yes --no-input ${{ inputs.force && '--force' || '' }}
+        run: vp run --filter fd-code-relay deploy --stage prod --yes --no-input ${{ inputs.force && '--force' || '' }}
         env:
           # The PublishClientConfig action writes the client env here instead
           # of the repo-root .env; nothing on the runner reads it.

@@ -3,7 +3,7 @@ import * as FileSystem from "effect/FileSystem";
 import * as Path from "effect/Path";
 import * as Schema from "effect/Schema";
 import * as NodeURL from "node:url";
-import { T3_CODE_ORCHESTRATION_INSTRUCTIONS } from "@fdcode/provider-core/server/orchestrationInstructions";
+import { FDCODE_ORCHESTRATION_INSTRUCTIONS } from "@fdcode/provider-core/server/orchestrationInstructions";
 
 import * as OpenCodeRuntime from "../OpenCodeRuntime.ts";
 
@@ -16,9 +16,9 @@ const decodePlugins = Schema.decodeUnknownEffect(Schema.Array(Schema.Unknown));
 // This module is materialized outside app.asar so OpenCode can import it without
 // depending on the desktop app's Node resolution or changing the user's skills.
 export const skillDiscoveryPlugin = String.raw`
-const fullAppInstructions = ${JSON.stringify(T3_CODE_ORCHESTRATION_INSTRUCTIONS.trim())};
+const fullAppInstructions = ${JSON.stringify(FDCODE_ORCHESTRATION_INSTRUCTIONS.trim())};
 const appInstructions = [
-  "Use available T3 tools through OpenCode's execute/search discovery. Discover schemas before calls; never guess tool names or claim unavailable tools after only one empty catalog read.",
+  "Use available FD CODE tools through OpenCode's execute/search discovery. Discover schemas before calls; never guess tool names or claim unavailable tools after only one empty catalog read.",
   "For delegated work discover the live provider/model catalog with orchestrator_capabilities, then use delegate_task (isolation: worktree for separate checkouts). Retain taskId; use task_status/task_cancel. Each review round needs a new delegation and clientRequestId, stable across retries. Never send review rounds to childThreadId. Use native subagents only when they support the requested model.",
   "t3_thread_launch/create_threads create top-level chats only when explicitly requested, not subagents. Launch tasks in message with explicit workspaceStrategy; preserve local commits and uncommitted work. Check thread status before retrying a lost launch response. Modes must not exceed the caller's.",
   "schedule_task is persistent: use a structured schedule object, not JSON text; recurring work requires user intent. Report cadence/next run or webhookUrl. Never invent secrets: use request_secret and its one-use secretRef. Link threads as [title](t3-thread://v1/<exactThreadId>).",

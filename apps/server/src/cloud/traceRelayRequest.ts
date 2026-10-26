@@ -16,7 +16,7 @@ export const traceRelayRequest = <A, E, R>(
 ): Effect.Effect<A, E, R> => effect.pipe(withRelayClientTracing);
 
 /**
- * Call it only after the session is verified as T3 Connect: an unverified
+ * Call it only after the session is verified as FD CODE Connect: an unverified
  * request must not add spans to a trace it names. Authentication therefore
  * runs on the local tracer, and its timing is recorded here afterwards.
  */

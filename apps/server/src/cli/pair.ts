@@ -67,7 +67,7 @@ export class NoRunningServerError extends Schema.TaggedError<NoRunningServerErro
     return [
       "No running FD CODE server found.",
       ...this.checkedStatePaths.map((statePath) => `  checked ${statePath}`),
-      "Start one with `npx fd-code serve`, or connect this machine with T3 Connect: `npx fd-code connect`.",
+      "Start one with `npx fd-code serve`, or connect this machine with FD CODE Connect: `npx fd-code connect`.",
     ].join("\n");
   }
 }
@@ -348,7 +348,7 @@ const resolveTailscalePairingBase = Effect.fn("pair.resolveTailscalePairingBase"
     });
 
     // Only an unreachable port, or a mapping already fronting this exact
-    // environment, is safe to (re)configure. Any other responder — T3 or not
+    // environment, is safe to (re)configure. Any other responder — FD CODE or not
     // — must not have its mapping silently replaced.
     const existing = yield* probeEnvironmentDescriptor(baseUrl);
     if (existing._tag === "descriptor") {

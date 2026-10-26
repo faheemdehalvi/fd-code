@@ -13,7 +13,7 @@ import {
 } from "./mcpApp.ts";
 
 describe("mcpAppContentSecurityPolicy", () => {
-  it("blocks the network and T3's own origin when the app declares nothing", () => {
+  it("blocks the network and FD CODE's own origin when the app declares nothing", () => {
     const policy = mcpAppContentSecurityPolicy(undefined);
     expect(policy).toContain("default-src 'none'");
     expect(policy).toContain("connect-src 'none'");

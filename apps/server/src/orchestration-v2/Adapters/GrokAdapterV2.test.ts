@@ -365,9 +365,9 @@ describe("Grok model context windows", () => {
                   args: [mockAgentPath],
                   cwd: process.cwd(),
                   env: {
-                    T3_ACP_SESSION_LIFECYCLE: "1",
-                    T3_ACP_GROK_MODEL: "grok-4.7",
-                    T3_ACP_GROK_CONTEXT_TOKENS: "256000",
+                    FDCODE_ACP_SESSION_LIFECYCLE: "1",
+                    FDCODE_ACP_GROK_MODEL: "grok-4.7",
+                    FDCODE_ACP_GROK_CONTEXT_TOKENS: "256000",
                   },
                 },
                 authMethodId: "test",

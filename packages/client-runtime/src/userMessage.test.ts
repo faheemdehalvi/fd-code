@@ -56,7 +56,7 @@ describe("resolveUserMessagePresentation", () => {
   });
 
   it("attributes older server-sent restart continuations to FD CODE, not another agent", () => {
-    const text = "Note: the T3 server restarted.";
+    const text = "Note: the FD CODE server restarted.";
     expect(
       resolveUserMessagePresentation({
         role: "user",

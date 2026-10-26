@@ -20,12 +20,13 @@ import {
   DEFAULT_SERVER_SETTINGS,
   MessageId,
   repositoryGroupingKeyOf,
-  T3_PROJECT_FILE_NAME,
+  FDCODE_PROJECT_FILE_NAME,
+  LEGACY_PROJECT_FILE_NAME,
   ThreadId,
 } from "@fdcode/contracts";
 import { sanitizeNewRefName } from "@fdcode/shared/git";
 import { resolveNewThreadEnvMode, resolveProjectSettings } from "@fdcode/shared/projectSettings";
-import { parseFDCodeProjectFile } from "@fdcode/shared/t3ProjectFile";
+import { parseFDCodeProjectFile } from "@fdcode/shared/fdCodeProjectFile";
 import * as Arr from "effect/Array";
 import { pipe } from "effect/Function";
 
@@ -449,24 +450,36 @@ export function NewTaskFlowProvider(props: React.PropsWithChildren) {
   const { canReadFiles } = fileAccess;
   const fileAccessPending =
     selectedProject !== null && selectedProject.workspaceRoot !== "" && fileAccess.isPending;
-  const t3ProjectFileQuery = useEnvironmentQuery(
+  const fdCodeProjectFileQuery = useEnvironmentQuery(
     canReadFiles && selectedProject !== null && selectedProject.workspaceRoot !== ""
       ? projectEnvironment.readFile({
           environmentId: selectedProject.environmentId,
-          input: { cwd: selectedProject.workspaceRoot, relativePath: T3_PROJECT_FILE_NAME },
+          input: { cwd: selectedProject.workspaceRoot, relativePath: FDCODE_PROJECT_FILE_NAME },
         })
       : null,
   );
-  const t3ProjectFileData = t3ProjectFileQuery.data as ProjectReadFileResult | null;
-  const t3ProjectFile =
-    t3ProjectFileData === null || t3ProjectFileData.truncated
+  const legacyProjectFileQuery = useEnvironmentQuery(
+    canReadFiles &&
+      selectedProject !== null &&
+      selectedProject.workspaceRoot !== "" &&
+      fdCodeProjectFileQuery.data === null
+      ? projectEnvironment.readFile({
+          environmentId: selectedProject.environmentId,
+          input: { cwd: selectedProject.workspaceRoot, relativePath: LEGACY_PROJECT_FILE_NAME },
+        })
+      : null,
+  );
+  const fdCodeProjectFileData = (fdCodeProjectFileQuery.data ??
+    legacyProjectFileQuery.data) as ProjectReadFileResult | null;
+  const fdCodeProjectFile =
+    fdCodeProjectFileData === null || fdCodeProjectFileData.truncated
       ? null
-      : parseFDCodeProjectFile(t3ProjectFileData.contents);
+      : parseFDCodeProjectFile(fdCodeProjectFileData.contents);
   const projectSettings = resolveProjectSettings(
     selectedEnvironmentServerConfig?.settings ?? DEFAULT_SERVER_SETTINGS,
     selectedProject?.id ?? null,
     selectedProject,
-    t3ProjectFile,
+    fdCodeProjectFile,
   );
   const canChooseWorkspace = !isScratchDraft;
   const selectedProjectHasThreads =
@@ -487,11 +500,11 @@ export function NewTaskFlowProvider(props: React.PropsWithChildren) {
   // While the file read is pending and nothing above it decided, the
   // resolved default is provisional. Nothing may write it into the draft
   // during that window (the auto-branch effect does), or the frozen interim
-  // value beats the t3.json default once it loads.
+  // value beats the fd-code.json default once it loads.
   const defaultWorkspaceModeSettled =
     selectedProjectDraft.workspaceSelection?.mode !== undefined ||
     projectSettings.sources.defaultThreadEnvMode !== "environment" ||
-    (!t3ProjectFileQuery.isPending && !fileAccessPending);
+    (!fdCodeProjectFileQuery.isPending && !fileAccessPending);
   const workspaceMode = canChooseWorkspace
     ? (selectedProjectDraft.workspaceSelection?.mode ?? defaultWorkspaceMode)
     : "local";

@@ -57,7 +57,7 @@ if (fixture === undefined || variant === undefined) {
   throw new Error(`Pass --scenario with a fixture that registers Pi: ${names.join(", ")}`);
 }
 
-const piBinary = process.env.T3_PI_BIN ?? "pi";
+const piBinary = process.env.FDCODE_PI_BIN ?? "pi";
 const [modelProvider, ...modelId] = variant.modelSelection.model.split("/");
 const launchArgs = `--provider ${modelProvider} --model ${modelId.join("/")} ${HERMETIC_LAUNCH_ARGS}`;
 const home = process.env.HOME ?? "";

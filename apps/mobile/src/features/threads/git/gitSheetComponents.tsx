@@ -54,7 +54,7 @@ export function SheetActionButton(props: {
         />
         <Text
           className={cn(
-            "shrink text-center text-xs font-t3-bold tracking-[0.9px] uppercase",
+            "shrink text-center text-xs font-fd-code-bold tracking-[0.9px] uppercase",
             tone === "primary"
               ? "text-primary-foreground"
               : tone === "danger"
@@ -72,7 +72,7 @@ export function SheetActionButton(props: {
 export function MetaCard(props: { readonly label: string; readonly value: string }) {
   return (
     <View className="bg-card px-4 py-3 android:rounded-[20px] ios:rounded-[18px] ios:border ios:border-border">
-      <Text className="text-foreground-muted text-2xs font-t3-bold tracking-[0.9px] uppercase">
+      <Text className="text-foreground-muted text-2xs font-fd-code-bold tracking-[0.9px] uppercase">
         {props.label}
       </Text>
       <Text selectable className="text-foreground text-sm font-medium" numberOfLines={1}>
@@ -105,7 +105,7 @@ export function SheetListRow(props: {
         />
       </View>
       <View className="flex-1 gap-0.5">
-        <Text className="text-foreground text-base android:font-t3-medium ios:font-t3-bold">
+        <Text className="text-foreground text-base android:font-fd-code-medium ios:font-fd-code-bold">
           {props.title}
         </Text>
         {props.subtitle ? (

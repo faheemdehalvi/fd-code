@@ -8,7 +8,7 @@ import * as McpToolAccess from "../../McpToolAccess.ts";
 import { assertFullAccess, loadCaller } from "../../threadAccess.ts";
 import { ArtsieToolkit } from "./tools.ts";
 
-// Same gate as the Brain toolkit: a provider session T3 started for a thread.
+// Same gate as the Brain toolkit: a provider session FD CODE started for a thread.
 const artsieCaller = Effect.gen(function* () {
   const scope = yield* McpInvocationContext.requireMcpCapability("orchestration").pipe(
     Effect.mapError(

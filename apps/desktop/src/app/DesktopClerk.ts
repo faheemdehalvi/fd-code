@@ -105,7 +105,7 @@ export const make = Effect.gen(function* () {
   const userDataPath = yield* DesktopUserData.resolveUserDataPath(environment);
   yield* electronApp.setPath("userData", userDataPath);
 
-  // T3 owns the profile-scoped lock on every platform; Clerk skips it on macOS.
+  // FD CODE owns the profile-scoped lock on every platform; Clerk skips it on macOS.
   // Quit is asynchronous, so interrupt before the application runtime is built.
   if (!(yield* electronApp.requestSingleInstanceLock)) {
     yield* electronApp.quit;

@@ -48,7 +48,7 @@ function causeMessage(cause: unknown): string | undefined {
         case "CursorModelUnavailableError":
           return stringField(cause, "message");
         case "ContextHandoffDeliveryUncertainError":
-          return "T3 could not confirm whether conversation history reached the provider. Retry the turn to recover the session.";
+          return "FD CODE could not confirm whether conversation history reached the provider. Retry the turn to recover the session.";
         case "ClaudeAgentSdkQueryRunnerError":
           return "Claude Code exited before finishing the turn. Retry; if it repeats, check Claude Code's sign-in and CLI installation.";
         case "ProviderAdapterTurnStartError":

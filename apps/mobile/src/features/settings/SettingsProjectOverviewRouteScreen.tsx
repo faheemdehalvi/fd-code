@@ -100,7 +100,7 @@ function ProjectOverviewContent(props: {
           size={48}
         />
         <View className="min-w-0 flex-1">
-          <Text className="text-xl font-t3-semibold text-foreground" numberOfLines={2}>
+          <Text className="text-xl font-fd-code-semibold text-foreground" numberOfLines={2}>
             {displayName}
           </Text>
           <Text className="text-sm text-foreground-muted">
@@ -111,7 +111,7 @@ function ProjectOverviewContent(props: {
 
       <SettingsSection title="Project">
         <View className="gap-3 p-4">
-          <Text className="text-sm font-t3-medium text-foreground-muted">Name</Text>
+          <Text className="text-sm font-fd-code-medium text-foreground-muted">Name</Text>
           <View className="flex-row items-center gap-3">
             <AppTextInput
               accessibilityLabel="Project name"
@@ -129,7 +129,7 @@ function ProjectOverviewContent(props: {
                 onPress={saveName}
                 className="rounded-full bg-subtle-strong px-4 py-2 active:opacity-70"
               >
-                <Text className="text-sm font-t3-medium text-foreground">Save</Text>
+                <Text className="text-sm font-fd-code-medium text-foreground">Save</Text>
               </Pressable>
             ) : null}
           </View>

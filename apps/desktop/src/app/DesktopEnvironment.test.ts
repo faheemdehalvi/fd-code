@@ -76,9 +76,9 @@ describe("DesktopEnvironment", () => {
       assert.equal(environment.serverRoot, "/repo");
       assert.equal(environment.backendEntryPath, "/repo/apps/server/dist/bin.mjs");
       assert.equal(environment.backendCwd, "/repo");
-      assert.equal(environment.appUserModelId, "com.t3tools.t3code.dev");
+      assert.equal(environment.appUserModelId, "com.faheem.fdcode.dev");
       assert.equal(environment.linuxWmClass, "fd-code-dev");
-      assert.equal(environment.linuxDesktopEntryName, "com.t3tools.FDCode.Development.desktop");
+      assert.equal(environment.linuxDesktopEntryName, "com.faheem.FDCode.Development.desktop");
       assert.deepEqual(
         Option.map(environment.devServerUrl, (url) => url.href),
         Option.some("http://localhost:5173/"),
@@ -149,11 +149,11 @@ describe("DesktopEnvironment", () => {
       const environment = yield* makeEnvironment({
         platform: "linux",
         isPackaged: true,
-        appPath: "/tmp/.mount_t3code/resources/app.asar",
-        resourcesPath: "/tmp/.mount_t3code/resources",
+        appPath: "/tmp/.mount_fd-code/resources/app.asar",
+        resourcesPath: "/tmp/.mount_fd-code/resources",
       });
 
-      assert.equal(environment.linuxDesktopEntryName, "com.t3tools.FDCode.desktop");
+      assert.equal(environment.linuxDesktopEntryName, "com.faheem.FDCode.desktop");
     }),
   );
 
@@ -175,12 +175,12 @@ describe("DesktopEnvironment", () => {
       const environment = yield* makeEnvironment(
         {},
         {
-          FDCODE_DESKTOP_APP_USER_MODEL_ID: " com.t3tools.t3code.dev.local ",
+          FDCODE_DESKTOP_APP_USER_MODEL_ID: " com.faheem.fdcode.dev.local ",
           VITE_DEV_SERVER_URL: "http://localhost:5173",
         },
       );
 
-      assert.equal(environment.appUserModelId, "com.t3tools.t3code.dev.local");
+      assert.equal(environment.appUserModelId, "com.faheem.fdcode.dev.local");
     }),
   );
 

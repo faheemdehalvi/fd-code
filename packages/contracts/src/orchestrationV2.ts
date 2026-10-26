@@ -424,7 +424,7 @@ export const OrchestrationV2AppThread = Schema.Struct({
 export type OrchestrationV2AppThread = typeof OrchestrationV2AppThread.Type;
 
 /**
- * The provider owns its conversation, so it cannot take messages; T3 delegate_task children
+ * The provider owns its conversation, so it cannot take messages; FD CODE delegate_task children
  * (`creationSource: "mcp"`) can.
  */
 export function isProviderNativeSubagentThread(

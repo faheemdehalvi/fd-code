@@ -2,11 +2,11 @@ import { assert, describe } from "@effect/vitest";
 
 import { createOxlintRuleHarness } from "../test/utils.ts";
 
-const rule = createOxlintRuleHarness("t3code/no-mobile-pull-request-glyph-literals", {
+const rule = createOxlintRuleHarness("fd-code/no-mobile-pull-request-glyph-literals", {
   filename: "apps/mobile/src/features/threads/PullRequestBadge.tsx",
 });
 
-describe("t3code/no-mobile-pull-request-glyph-literals", () => {
+describe("fd-code/no-mobile-pull-request-glyph-literals", () => {
   rule.valid(
     "allows glyphs picked from the module",
     `

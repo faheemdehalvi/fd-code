@@ -36,7 +36,7 @@ describe("BetaArtsieInput", () => {
     });
   });
 
-  it("rejects actions the hub exposes but T3 does not forward", () => {
+  it("rejects actions the hub exposes but FD CODE does not forward", () => {
     expect(() => decode({ action: "call", args: { app: "photocraft", tool: "x" } })).toThrow();
   });
 });

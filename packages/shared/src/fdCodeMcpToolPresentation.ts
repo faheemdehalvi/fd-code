@@ -82,9 +82,9 @@ function tool(
   return { displayName, labels, icon, summaryAction };
 }
 
-const T3_MCP_SERVER_ALIASES = new Set(["t3-code", "t3_code", "t3code"]);
+const FDCODE_MCP_SERVER_ALIASES = new Set(["t3-code", "t3_code", "t3code"]);
 
-const T3_MCP_TOOLS: Readonly<Record<string, FDCodeMcpToolDefinition>> = {
+const FDCODE_MCP_TOOLS: Readonly<Record<string, FDCodeMcpToolDefinition>> = {
   link_pull_request: tool(
     ["Link", "Linking", "Linked", "a pull request"],
     "link-pr",
@@ -144,18 +144,18 @@ const T3_MCP_TOOLS: Readonly<Record<string, FDCodeMcpToolDefinition>> = {
     "schedule-delete",
   ),
   request_secret: tool(["Ask for", "Asking for", "Asked for", "a secret"], "secret-request"),
-  create_threads: tool(["Create", "Creating", "Created", "T3 threads"], "thread-create"),
-  t3_thread_start: tool(["Start", "Starting", "Started", "a T3 thread"], "thread-create"),
-  t3_thread_list: tool(["List", "Listing", "Listed", "T3 threads"], "thread-list"),
-  t3_thread_read: tool(["Read", "Reading", "Read", "a T3 thread"], "thread-read"),
-  t3_thread_send: tool(["Send", "Sending", "Sent", "to a T3 thread"], "thread-send"),
-  t3_thread_wait: tool(["Wait", "Waiting", "Waited", "for a T3 thread"], "thread-wait"),
+  create_threads: tool(["Create", "Creating", "Created", "FD CODE threads"], "thread-create"),
+  t3_thread_start: tool(["Start", "Starting", "Started", "a FD CODE thread"], "thread-create"),
+  t3_thread_list: tool(["List", "Listing", "Listed", "FD CODE threads"], "thread-list"),
+  t3_thread_read: tool(["Read", "Reading", "Read", "a FD CODE thread"], "thread-read"),
+  t3_thread_send: tool(["Send", "Sending", "Sent", "to a FD CODE thread"], "thread-send"),
+  t3_thread_wait: tool(["Wait", "Waiting", "Waited", "for a FD CODE thread"], "thread-wait"),
   t3_workflow_stop: tool(
     ["Stop", "Stopping", "Requested a stop for", "a workflow"],
     "workflow-stop",
   ),
   t3_thread_interrupt: tool(
-    ["Interrupt", "Interrupting", "Requested an interrupt of", "a T3 thread"],
+    ["Interrupt", "Interrupting", "Requested an interrupt of", "a FD CODE thread"],
     "thread-interrupt",
   ),
   t3_worktree_handoff: tool(
@@ -301,7 +301,7 @@ const T3_MCP_TOOLS: Readonly<Record<string, FDCodeMcpToolDefinition>> = {
   t3_thread_search: tool(["Search", "Searching", "Searched", "thread content"], "thread-search"),
   t3_thread_transfers: tool(["Read", "Reading", "Read", "thread transfers"], "thread-transfers"),
   t3_thread_organize: tool(["Organize", "Organizing", "Organized", "a thread"], "thread-organize"),
-  t3_thread_update: tool(["Update", "Updating", "Updated", "T3 thread metadata"], "thread-update"),
+  t3_thread_update: tool(["Update", "Updating", "Updated", "FD CODE thread metadata"], "thread-update"),
   t3_worktree_list: tool(["List", "Listing", "Listed", "workspace branches"], "worktree-list"),
   t3_preview_list: tool(["List", "Listing", "Listed", "preview tabs"], "browser", "browser"),
   t3_preview_close: tool(["Close", "Closing", "Closed", "a preview tab"], "browser", "browser"),
@@ -333,14 +333,14 @@ const T3_MCP_TOOLS: Readonly<Record<string, FDCodeMcpToolDefinition>> = {
   html_render: tool(["Render", "Rendering", "Rendered", "an HTML page"], "html-render"),
 };
 
-export const T3_MCP_TOOL_NAMES: ReadonlySet<string> = new Set(Object.keys(T3_MCP_TOOLS));
+export const FDCODE_MCP_TOOL_NAMES: ReadonlySet<string> = new Set(Object.keys(FDCODE_MCP_TOOLS));
 
 function normalizeFDCodeMcpToolLabel(value: string): string {
   return value.replace(/\s+(?:complete|completed)\s*$/i, "").trim();
 }
 
 /**
- * ACP agents disagree on how the injected T3 server prefixes its tools:
+ * ACP agents disagree on how the injected FD CODE server prefixes its tools:
  * `mcp__t3-code__x` (Claude/Cursor), `t3-code.x` (Codex), plus single
  * underscore, colon, slash, dash, and space separators seen from registry
  * agents. The prefix match is deliberately loose because the display-name
@@ -353,7 +353,7 @@ function resolveFDCodeMcpToolName(value: string): string | null {
     const { server, tool } = mcpMatch.groups;
     return server !== undefined &&
       tool !== undefined &&
-      T3_MCP_SERVER_ALIASES.has(server.toLowerCase())
+      FDCODE_MCP_SERVER_ALIASES.has(server.toLowerCase())
       ? tool
       : null;
   }
@@ -367,13 +367,13 @@ function resolveFDCodeMcpToolName(value: string): string | null {
 
   const prefixed = /^(?:mcp[-_]{1,2})?(?:t3|fd)[-_ ]?code(?:__|[-_.:/ ])(?<tool>.+)$/i.exec(label);
   const candidate = prefixed?.groups?.tool ?? label;
-  if (Object.hasOwn(T3_MCP_TOOLS, candidate)) return candidate;
+  if (Object.hasOwn(FDCODE_MCP_TOOLS, candidate)) return candidate;
   // OpenCode 2 registers one server per thread, `t3-code-<thread>`, and joins
   // it to the tool with `_`. Thread ids can hold `_` too, so take the longest
   // known tool name that ends the label.
   if (!/^t3-code-/i.test(label)) return null;
   let longest: string | null = null;
-  for (const tool of Object.keys(T3_MCP_TOOLS)) {
+  for (const tool of Object.keys(FDCODE_MCP_TOOLS)) {
     if (label.endsWith(`_${tool}`) && tool.length > (longest?.length ?? 0)) longest = tool;
   }
   return longest;
@@ -381,14 +381,14 @@ function resolveFDCodeMcpToolName(value: string): string | null {
 
 export function resolveFDCodeMcpToolId(toolName: string | null | undefined): string | null {
   const name = toolName == null ? null : resolveFDCodeMcpToolName(toolName);
-  return name !== null && Object.hasOwn(T3_MCP_TOOLS, name) ? name : null;
+  return name !== null && Object.hasOwn(FDCODE_MCP_TOOLS, name) ? name : null;
 }
 
 export function resolveFDCodeMcpToolDefinition(
   toolName: string | null | undefined,
 ): FDCodeMcpToolDefinition | null {
   const name = toolName == null ? null : resolveFDCodeMcpToolName(toolName);
-  return name !== null && Object.hasOwn(T3_MCP_TOOLS, name) ? T3_MCP_TOOLS[name]! : null;
+  return name !== null && Object.hasOwn(FDCODE_MCP_TOOLS, name) ? FDCODE_MCP_TOOLS[name]! : null;
 }
 
 export function resolveFDCodeMcpToolPresentation(

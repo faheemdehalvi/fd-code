@@ -328,17 +328,17 @@ describe("MessagesTimeline work rows", () => {
           tone: "tool",
           itemType: "file_change",
           toolLifecycleStatus: "completed",
-          changedFiles: ["C:/Users/mike/dev-stuff/t3code/apps/web/src/session-logic.ts"],
+          changedFiles: ["C:/Users/mike/dev-stuff/fd-code/apps/web/src/session-logic.ts"],
         }),
       ],
       { workspaceRoot: "C:/Users/mike/dev-stuff/t3code" },
     );
     await click(button(/^Received 1 update/));
-    await vi.waitFor(() => expect(text()).toContain("t3code/apps/web/src/session-logic.ts"));
-    expect(text()).not.toContain("C:/Users/mike/dev-stuff/t3code/apps/web/src/session-logic.ts");
+    await vi.waitFor(() => expect(text()).toContain("fd-code/apps/web/src/session-logic.ts"));
+    expect(text()).not.toContain("C:/Users/mike/dev-stuff/fd-code/apps/web/src/session-logic.ts");
   });
 
-  it("renders T3 MCP dynamic tools with their pretty name", async () => {
+  it("renders FD CODE MCP dynamic tools with their pretty name", async () => {
     const item = {
       id: "tool-t3-thread-read",
       type: "dynamic_tool",
@@ -361,7 +361,7 @@ describe("MessagesTimeline work rows", () => {
       }),
     ]);
     await click(button(/^Received 1 update/));
-    await vi.waitFor(() => expect(text()).toContain("Read a T3 thread"));
+    await vi.waitFor(() => expect(text()).toContain("Read a FD CODE thread"));
     expect(text()).not.toContain("mcp__t3-code__t3_thread_read");
   });
 

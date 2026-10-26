@@ -3,7 +3,7 @@ import { assert, it } from "@effect/vitest";
 import * as Effect from "effect/Effect";
 import * as FileSystem from "effect/FileSystem";
 import * as NodeURL from "node:url";
-import { T3_CODE_ORCHESTRATION_INSTRUCTIONS } from "@fdcode/provider-core/server/orchestrationInstructions";
+import { FDCODE_ORCHESTRATION_INSTRUCTIONS } from "@fdcode/provider-core/server/orchestrationInstructions";
 import { describe } from "vite-plus/test";
 
 import { prepareSkillDiscovery, skillDiscoveryPlugin } from "./skillDiscovery.ts";
@@ -60,7 +60,7 @@ describe("OpenCode on-demand skills", () => {
       )
       .join("\n");
     const history = { role: "user", content: `<available_skills>${catalog}</available_skills>` };
-    const owned = `Native wrapper\n<runtime_info>OpenCode</runtime_info>\n${T3_CODE_ORCHESTRATION_INSTRUCTIONS.trim()}\nKeep this suffix.`;
+    const owned = `Native wrapper\n<runtime_info>OpenCode</runtime_info>\n${FDCODE_ORCHESTRATION_INSTRUCTIONS.trim()}\nKeep this suffix.`;
     const systemUpdate = { role: "system", content: [{ type: "text", text: owned }] };
     const request = {
       sessionID: "qa",

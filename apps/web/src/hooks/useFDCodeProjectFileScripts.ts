@@ -1,10 +1,11 @@
 import {
-  T3_PROJECT_FILE_NAME,
+  FDCODE_PROJECT_FILE_NAME,
+  LEGACY_PROJECT_FILE_NAME,
   type EnvironmentId,
   type FDCodeProjectFile,
   type FDCodeProjectFileScript,
 } from "@fdcode/contracts";
-import { parseFDCodeProjectFile } from "@fdcode/shared/t3ProjectFile";
+import { parseFDCodeProjectFile } from "@fdcode/shared/fdCodeProjectFile";
 
 import { useProjectFileQuery } from "~/components/files/projectFilesQueryState";
 
@@ -20,9 +21,22 @@ export function useFDCodeProjectFileState(
   environmentId: EnvironmentId,
   cwd: string | null,
 ): FDCodeProjectFileState {
-  const query = useProjectFileQuery(environmentId, cwd ?? "", T3_PROJECT_FILE_NAME, cwd !== null);
-  const contents = query.data && !query.data.truncated ? query.data.contents : null;
-  const isPending = query.isPending;
+  const query = useProjectFileQuery(
+    environmentId,
+    cwd ?? "",
+    FDCODE_PROJECT_FILE_NAME,
+    cwd !== null,
+  );
+  const useLegacy = cwd !== null && !query.isPending && query.data === null;
+  const legacyQuery = useProjectFileQuery(
+    environmentId,
+    cwd ?? "",
+    LEGACY_PROJECT_FILE_NAME,
+    useLegacy,
+  );
+  const selected = useLegacy ? legacyQuery : query;
+  const contents = selected.data && !selected.data.truncated ? selected.data.contents : null;
+  const isPending = selected.isPending;
   if (contents === null) {
     return {
       status: isPending ? "loading" : "missing",

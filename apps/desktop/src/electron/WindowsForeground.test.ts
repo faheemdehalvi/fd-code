@@ -55,7 +55,7 @@ describe("Windows foreground activation", () => {
     assert.deepEqual(api.setForegroundWindow.mock.calls, [[41n]]);
   });
 
-  it("does not disturb input queues when T3 is already foreground", () => {
+  it("does not disturb input queues when FD CODE is already foreground", () => {
     const api = makeApi({ foregroundWindow: 41n });
 
     assert.isTrue(activateWindowsForegroundWithApi(nativeHandle(41n), api));

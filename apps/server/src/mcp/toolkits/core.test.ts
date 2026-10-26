@@ -80,7 +80,7 @@ import {
   resolveFDCodeMcpToolDefinition,
   resolveFDCodeMcpToolPresentation,
   resolveFDCodeMcpToolSummaryAction,
-} from "@fdcode/shared/t3McpToolPresentation";
+} from "@fdcode/shared/fdCodeMcpToolPresentation";
 import { htmlRenderFromToolItem } from "@fdcode/shared/toolOutput";
 
 const decodeMcpAttachmentInput = Schema.decodeUnknownEffect(McpAttachmentInput);
@@ -118,7 +118,7 @@ it("publishes unique tool names with reference-free object-root inputs", () => {
         definition?.labels.every((label) => label.trim().length > 0),
         tool.name,
       ).toBe(true);
-      for (const name of [tool.name, `mcp__t3-code__${tool.name}`, `T3-code.${tool.name}`]) {
+      for (const name of [tool.name, `mcp__t3-code__${tool.name}`, `FD CODE-code.${tool.name}`]) {
         expect(resolveFDCodeMcpToolPresentation(name)?.logo, name).toBe("t3-code");
         expect(resolveFDCodeMcpToolSummaryAction(name), name).not.toBeNull();
       }

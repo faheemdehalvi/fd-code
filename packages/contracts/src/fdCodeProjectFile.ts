@@ -5,12 +5,13 @@ import { ThreadEnvMode, WorktreeSubmodules } from "./environment.ts";
 import { ProjectScriptIcon } from "./project.ts";
 import type { ProjectScopedServerSettingKey, ServerSettings } from "./settings.ts";
 
-export const T3_PROJECT_FILE_NAME = "t3.json";
+export const FDCODE_PROJECT_FILE_NAME = "fd-code.json";
+export const LEGACY_PROJECT_FILE_NAME = "t3.json";
 
-export const T3_PROJECT_FILE_SCHEMA_URL = "https://t3.codes/schema/t3.json";
+export const FDCODE_PROJECT_FILE_SCHEMA_URL = "https://t3.codes/schema/t3.json";
 
-const T3_PROJECT_FILE_PATH_MAX_LENGTH = 512;
-const T3_PROJECT_FILE_MAX_SCRIPTS = 50;
+const FDCODE_PROJECT_FILE_PATH_MAX_LENGTH = 512;
+const FDCODE_PROJECT_FILE_MAX_SCRIPTS = 50;
 
 // Annotations go on the encoded (string) side so they survive into the
 // published JSON Schema; decoding still trims and re-validates non-emptiness.
@@ -73,7 +74,7 @@ export type FDCodeProjectFileScript = typeof FDCodeProjectFileScript.Type;
 export const FDCodeProjectFile = Schema.Struct({
   $schema: Schema.optionalKey(
     Schema.String.annotate({
-      description: `URL of the JSON Schema for this file, typically "${T3_PROJECT_FILE_SCHEMA_URL}".`,
+      description: `URL of the JSON Schema for this file, typically "${FDCODE_PROJECT_FILE_SCHEMA_URL}".`,
     }),
   ),
   iconPath: Schema.optionalKey(
@@ -82,7 +83,7 @@ export const FDCodeProjectFile = Schema.Struct({
         description:
           'Workspace-relative path to the project icon (e.g. "assets/logo.svg"). Checked before FD CODE\'s built-in icon locations.',
       },
-      T3_PROJECT_FILE_PATH_MAX_LENGTH,
+      FDCODE_PROJECT_FILE_PATH_MAX_LENGTH,
     ),
   ),
   defaultThreadEnvMode: Schema.optionalKey(
@@ -102,19 +103,19 @@ export const FDCodeProjectFile = Schema.Struct({
       .annotate({
         description: "Project scripts shared with everyone who opens this repository in FD CODE.",
       })
-      .check(Schema.isMaxLength(T3_PROJECT_FILE_MAX_SCRIPTS)),
+      .check(Schema.isMaxLength(FDCODE_PROJECT_FILE_MAX_SCRIPTS)),
   ),
 }).annotate({
-  title: "T3 project file",
+  title: "FD CODE project file",
   description:
-    "Checked-in project configuration for FD CODE (t3.json at the repository root). See https://t3.codes for documentation.",
+    "Checked-in project configuration for FD CODE (fd-code.json at the repository root). See https://t3.codes for documentation.",
 });
 export type FDCodeProjectFile = typeof FDCodeProjectFile.Type;
 
 /**
  * A key here must be nullable on `ServerSettings` (null means inherit) so both
  * the project override and the environment value can defer to the file; `field`
- * names the t3.json field carrying the same value and `builtIn` is what applies
+ * names the fd-code.json field carrying the same value and `builtIn` is what applies
  * when every tier is unset.
  */
 export const PROJECT_FILE_BACKED_SETTINGS = {

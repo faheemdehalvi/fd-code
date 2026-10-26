@@ -33,7 +33,7 @@ export const config: VercelConfig = {
     "npm install -g vite-plus && vp install --ignore-scripts --filter '@fdcode/scripts...' --filter '@fdcode/web...'",
   routes: [
     {
-      src: "/__t3code/channel",
+      src: "/__fd-code/channel",
       has: [matchers.query("channel", "nightly")],
       transforms: CLEAN_CHANNEL_QUERY_TRANSFORMS,
       headers: {
@@ -43,7 +43,7 @@ export const config: VercelConfig = {
       status: 302,
     },
     {
-      src: "/__t3code/channel",
+      src: "/__fd-code/channel",
       transforms: CLEAN_CHANNEL_QUERY_TRANSFORMS,
       headers: {
         Location: "/",

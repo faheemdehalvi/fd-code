@@ -75,7 +75,7 @@ struct ScriptReply {
     owner: String,
     result: mpsc::SyncSender<String>,
 }
-#[zbus::interface(name = "com.t3tools.KdeCapture")]
+#[zbus::interface(name = "com.faheem.KdeCapture")]
 impl ScriptReply {
     fn reply(
         &self,
@@ -101,7 +101,7 @@ fn script(connection: &Connection, directory: &Path, body: &str) -> Result<Strin
     let owner = dbus.get_name_owner("org.kde.KWin".try_into()?)?.to_string();
     let (send, receive) = mpsc::sync_channel(1);
     connection.object_server().at(
-        "/com/t3tools/KdeCapture",
+        "/com/faheem/KdeCapture",
         ScriptReply {
             owner,
             result: send,
@@ -116,7 +116,7 @@ fn script(connection: &Connection, directory: &Path, body: &str) -> Result<Strin
             .as_str(),
     )?;
     let source = format!(
-        "function reply(value) {{ callDBus({destination}, '/com/t3tools/KdeCapture', 'com.t3tools.KdeCapture', 'Reply', JSON.stringify(value)); }}\ntry {{ {body} }} catch (error) {{ reply({{error: String(error)}}); }}"
+        "function reply(value) {{ callDBus({destination}, '/com/faheem/KdeCapture', 'com.faheem.KdeCapture', 'Reply', JSON.stringify(value)); }}\ntry {{ {body} }} catch (error) {{ reply({{error: String(error)}}); }}"
     );
     std::fs::write(&path, source)?;
     let scripting = Proxy::new(
@@ -149,7 +149,7 @@ fn script(connection: &Connection, directory: &Path, body: &str) -> Result<Strin
     })();
     connection
         .object_server()
-        .remove::<ScriptReply, _>("/com/t3tools/KdeCapture")?;
+        .remove::<ScriptReply, _>("/com/faheem/KdeCapture")?;
     let _ = std::fs::remove_file(path);
     result
 }

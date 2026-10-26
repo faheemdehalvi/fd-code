@@ -159,24 +159,24 @@ export default defineConfig({
         "error",
         { paths: [...RESTRICTED_IMPORT_PATHS, RESTRICTED_PULL_REQUEST_GLYPH_IMPORTS] },
       ],
-      "t3code/no-global-process-runtime": "error",
-      "t3code/no-inline-schema-compile": "warn",
-      "t3code/no-low-value-comments": "error",
-      "t3code/no-manual-effect-runtime-in-tests": "error",
-      "t3code/no-native-title-tooltip": "error",
-      "t3code/no-raw-mcp-registration": "error",
-      "t3code/no-test-in-loop": "error",
-      "t3code/no-rpc-permission-bypass": ["error", { allowRawClientAccess: true }],
-      "t3code/no-unscoped-has": "error",
-      "t3code/namespace-node-imports": "error",
-      "t3code/prefer-catch-tags": "error",
-      "t3code/require-centered-scroll-gutter": "error",
-      "t3code/require-suppression-reason": "error",
+      "fd-code/no-global-process-runtime": "error",
+      "fd-code/no-inline-schema-compile": "warn",
+      "fd-code/no-low-value-comments": "error",
+      "fd-code/no-manual-effect-runtime-in-tests": "error",
+      "fd-code/no-native-title-tooltip": "error",
+      "fd-code/no-raw-mcp-registration": "error",
+      "fd-code/no-test-in-loop": "error",
+      "fd-code/no-rpc-permission-bypass": ["error", { allowRawClientAccess: true }],
+      "fd-code/no-unscoped-has": "error",
+      "fd-code/namespace-node-imports": "error",
+      "fd-code/prefer-catch-tags": "error",
+      "fd-code/require-centered-scroll-gutter": "error",
+      "fd-code/require-suppression-reason": "error",
     },
     overrides: [
       {
         files: ["packages/client-runtime/src/state/**", "apps/{web,mobile,desktop}/src/**"],
-        rules: { "t3code/no-rpc-permission-bypass": ["error", { allowRawClientAccess: false }] },
+        rules: { "fd-code/no-rpc-permission-bypass": ["error", { allowRawClientAccess: false }] },
       },
       {
         files: [
@@ -184,7 +184,7 @@ export default defineConfig({
           "packages/client-runtime/src/state/vcsAction.ts",
         ],
         rules: {
-          "t3code/no-rpc-permission-bypass": [
+          "fd-code/no-rpc-permission-bypass": [
             "error",
             { allowGuardInstallation: true, allowRawClientAccess: false },
           ],
@@ -197,34 +197,34 @@ export default defineConfig({
           "apps/web/src/components/device/DevicePhoneViewport.tsx",
           "apps/web/src/components/device/DeviceDuoViewport.tsx",
         ],
-        rules: { "t3code/no-rpc-permission-bypass": ["error", { allowRawClientAccess: true }] },
+        rules: { "fd-code/no-rpc-permission-bypass": ["error", { allowRawClientAccess: true }] },
       },
       {
         files: ["packages/client-runtime/src/connection/outdatedHostUpdate.ts"],
-        rules: { "t3code/no-rpc-permission-bypass": "off" },
+        rules: { "fd-code/no-rpc-permission-bypass": "off" },
       },
       {
         files: [
           "packages/client-runtime/src/rpc/**",
           "**/*.{test,spec}.{ts,tsx,js,jsx,mts,cts,mjs,cjs}",
         ],
-        rules: { "t3code/no-rpc-permission-bypass": "off" },
+        rules: { "fd-code/no-rpc-permission-bypass": "off" },
       },
       {
         files: ["packages/shared/src/HostProcess.ts"],
-        rules: { "t3code/no-global-process-runtime": "off" },
+        rules: { "fd-code/no-global-process-runtime": "off" },
       },
       {
         // The `t3` npm launcher is published as plain, dependency-free Node.
         files: ["scripts/npm-launcher/**"],
         rules: {
-          "t3code/no-global-process-runtime": "off",
-          "t3code/namespace-node-imports": "off",
+          "fd-code/no-global-process-runtime": "off",
+          "fd-code/namespace-node-imports": "off",
         },
       },
       {
         files: ["apps/server/src/mcp/McpHttpServer.ts"],
-        rules: { "t3code/no-raw-mcp-registration": "off" },
+        rules: { "fd-code/no-raw-mcp-registration": "off" },
       },
       {
         files: ["apps/web/src/**"],
@@ -245,7 +245,7 @@ export default defineConfig({
       },
       {
         files: ["apps/mobile/src/**"],
-        rules: { "t3code/no-mobile-uniwind-theme-escape-hatches": "error" },
+        rules: { "fd-code/no-mobile-uniwind-theme-escape-hatches": "error" },
       },
       {
         files: ["apps/mobile/src/**"],
@@ -254,7 +254,7 @@ export default defineConfig({
           "apps/mobile/src/components/ui/AppSymbol.ios.tsx",
           "apps/mobile/src/features/pull-requests/pullRequestGlyphs.ts",
         ],
-        rules: { "t3code/no-mobile-pull-request-glyph-literals": "error" },
+        rules: { "fd-code/no-mobile-pull-request-glyph-literals": "error" },
       },
       {
         // React commits state set in a raw ResizeObserver callback after the paint, so derived
@@ -264,7 +264,7 @@ export default defineConfig({
           "apps/web/src/lib/observeResize.ts",
           "**/*.{test,spec}.{ts,tsx,js,jsx,mts,cts,mjs,cjs}",
         ],
-        rules: { "t3code/no-raw-resize-observer": "error" },
+        rules: { "fd-code/no-raw-resize-observer": "error" },
       },
       {
         files: ["apps/web/src/**"],
@@ -272,7 +272,7 @@ export default defineConfig({
       },
       {
         files: ["apps/web/src/**"],
-        rules: { "t3code/no-outset-state-indicators": "error" },
+        rules: { "fd-code/no-outset-state-indicators": "error" },
       },
       {
         files: ["apps/web/src/**"],
@@ -332,7 +332,7 @@ export default defineConfig({
       {
         // Every web file must compile under the React Compiler. Its bailout rules are errors here,
         // and manual memoization is redundant. No upstream rule bans useMemo/useCallback, hence
-        // t3code/no-manual-memo.
+        // fd-code/no-manual-memo.
         files: ["apps/web/src/**/*.{ts,tsx}"],
         rules: {
           "react/exhaustive-effect-dependencies": "error",
@@ -349,7 +349,7 @@ export default defineConfig({
           "react/set-state-in-render": "error",
           "react/static-components": "error",
           "react/unsupported-syntax": "error",
-          "t3code/no-manual-memo": "error",
+          "fd-code/no-manual-memo": "error",
         },
       },
       {
@@ -368,21 +368,21 @@ export default defineConfig({
           "packages/shared/src/**",
         ],
         excludeFiles: ["**/*.test.ts", "**/*.test.tsx"],
-        rules: { "t3code/no-hermes-unsupported-apis": "error" },
+        rules: { "fd-code/no-hermes-unsupported-apis": "error" },
       },
       {
         // Mobile is ratcheting toward full React Compiler coverage
         // (apps/mobile/src/reactCompilerCoverage.test.ts). Directives would hide bailouts from it;
         // the manual memo hooks go once the allowlist there is empty.
         files: ["apps/mobile/src/**/*.{ts,tsx}"],
-        rules: { "t3code/no-manual-memo": ["error", { allowMemoHooks: true }] },
+        rules: { "fd-code/no-manual-memo": ["error", { allowMemoHooks: true }] },
       },
       {
         // The compiler only compiles a use* function that calls a hook; one that calls none is
         // silently left as a plain function, so whatever it returns loses its caching.
         files: ["apps/web/src/**/*.{ts,tsx}", "apps/mobile/src/**/*.{ts,tsx}"],
         excludeFiles: ["**/*.test.ts", "**/*.test.tsx"],
-        rules: { "t3code/no-hookless-use-function": "error" },
+        rules: { "fd-code/no-hookless-use-function": "error" },
       },
       {
         files: [
@@ -414,7 +414,7 @@ export default defineConfig({
           "apps/mobile/src/native/SelectableMarkdownText.tsx",
         ],
         rules: {
-          "t3code/no-mobile-uniwind-theme-escape-hatches": ["error", { allowUniwindTheme: true }],
+          "fd-code/no-mobile-uniwind-theme-escape-hatches": ["error", { allowUniwindTheme: true }],
         },
       },
     ],

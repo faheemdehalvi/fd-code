@@ -2,11 +2,11 @@ import { assert, describe } from "@effect/vitest";
 
 import { createOxlintRuleHarness } from "../test/utils.ts";
 
-const rule = createOxlintRuleHarness("t3code/require-suppression-reason", {
+const rule = createOxlintRuleHarness("fd-code/require-suppression-reason", {
   filename: "fixture.tsx",
 });
 
-describe("t3code/require-suppression-reason", () => {
+describe("fd-code/require-suppression-reason", () => {
   rule.valid(
     "allows a directive with a -- reason",
     `

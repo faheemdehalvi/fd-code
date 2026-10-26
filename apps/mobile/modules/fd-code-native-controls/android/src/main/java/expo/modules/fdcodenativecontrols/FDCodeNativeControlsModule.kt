@@ -58,7 +58,7 @@ class FDCodeNativeControlsModule : Module() {
     Function("getShowcaseScene") {
       val storedScene = appContext.reactContext
         ?.filesDir
-        ?.resolve("t3-showcase-scene")
+        ?.resolve("fd-code-showcase-scene")
         ?.takeIf { it.isFile }
         ?.readText()
         ?.trim()
@@ -79,7 +79,7 @@ class FDCodeNativeControlsModule : Module() {
     Function("markShowcaseReady") { scene: String ->
       appContext.reactContext
         ?.filesDir
-        ?.resolve("t3-showcase-ready")
+        ?.resolve("fd-code-showcase-ready")
         ?.writeText(scene)
     }
   }

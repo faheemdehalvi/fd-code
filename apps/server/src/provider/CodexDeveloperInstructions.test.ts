@@ -1,8 +1,8 @@
 import * as NodeAssert from "node:assert/strict";
 
 import {
-  T3_CODE_ORCHESTRATION_INSTRUCTIONS,
-  T3_CODE_ORCHESTRATION_SECTIONS,
+  FDCODE_ORCHESTRATION_INSTRUCTIONS,
+  FDCODE_ORCHESTRATION_SECTIONS,
 } from "@fdcode/provider-core/server/orchestrationInstructions";
 import { describe, it } from "vite-plus/test";
 
@@ -52,11 +52,11 @@ describe("buildCodexAdditionalContext", () => {
 
     NodeAssert.deepEqual(
       sections,
-      T3_CODE_ORCHESTRATION_SECTIONS.map((value) => ({ kind: "application", value })),
+      FDCODE_ORCHESTRATION_SECTIONS.map((value) => ({ kind: "application", value })),
     );
     NodeAssert.equal(
       sections.map((entry) => entry.value).join("\n\n"),
-      T3_CODE_ORCHESTRATION_INSTRUCTIONS.trim(),
+      FDCODE_ORCHESTRATION_INSTRUCTIONS.trim(),
     );
   });
 });
@@ -124,7 +124,7 @@ describe("buildCodexDeveloperInstructions", () => {
   });
 });
 
-describe("T3 browser developer instructions", () => {
+describe("FD CODE browser developer instructions", () => {
   const runtime = { model: "gpt-5.3-codex", reasoningEffort: "high" };
 
   it("prefers the product-native preview tools in both collaboration modes", () => {

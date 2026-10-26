@@ -40,15 +40,15 @@
 }
 
 /* ─── Custom utilities ──────────────────────────────────────────────── */
-@utility font-t3-medium {
+@utility font-fd-code-medium {
   font-family: var(--font-medium);
 }
 
-@utility font-t3-bold {
+@utility font-fd-code-bold {
   font-family: var(--font-bold);
 }
 
-@utility font-t3-extrabold {
+@utility font-fd-code-extrabold {
   font-family: var(--font-bold);
   font-weight: 800;
 }

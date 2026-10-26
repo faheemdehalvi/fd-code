@@ -973,7 +973,7 @@ describe.runIf(binaryPath !== undefined && ROOT !== "")("OpenCode 2 live orchest
   );
 
   it.live(
-    "generates a title, calls T3's MCP server, and reconciles a turn cut off by a killed server",
+    "generates a title, calls FD CODE's MCP server, and reconciles a turn cut off by a killed server",
     () =>
       Effect.gen(function* () {
         const work = `${ROOT}/work`;
@@ -1108,7 +1108,7 @@ describe.runIf(binaryPath !== undefined && ROOT !== "")("OpenCode 2 live orchest
         assert.deepEqual(
           servers.data.map((server) => server.name),
           [],
-          "an external server gets no T3 MCP server, as with 1.x",
+          "an external server gets no FD CODE MCP server, as with 1.x",
         );
       }).pipe(Effect.provide(Layer.merge(layerLive, NodeServices.layer)), Effect.scoped),
     360_000,

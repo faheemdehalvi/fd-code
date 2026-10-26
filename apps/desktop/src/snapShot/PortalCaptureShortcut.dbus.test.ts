@@ -52,7 +52,7 @@ it.runIf(NodeChildProcess.spawnSync("dbus-daemon", ["--version"]).status === 0)(
       let bindCount = 0;
       server.addMethodHandler((message: Message) => {
         if (message.member === "Register") {
-          expect(message.body[0]).toBe("com.t3tools.FDCode");
+          expect(message.body[0]).toBe("com.faheem.FDCode");
           identities.add(message.sender);
           server!.send(Message.newMethodReturn(message));
         } else if (message.member === "Get") {
@@ -116,7 +116,7 @@ it.runIf(NodeChildProcess.spawnSync("dbus-daemon", ["--version"]).status === 0)(
         const received = Promise.withResolvers<void>();
         const capture = vi.fn(() => received.resolve());
         const client = new PortalCaptureShortcut(
-          "com.t3tools.FDCode",
+          "com.faheem.FDCode",
           { ...shortcut, key },
           capture,
           () => {},

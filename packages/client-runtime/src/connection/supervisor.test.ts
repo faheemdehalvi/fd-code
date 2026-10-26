@@ -1765,7 +1765,7 @@ describe("EnvironmentSupervisor", () => {
 });
 
 describe("EnvironmentSupervisor routes", () => {
-  it.effect("skips a silent LAN route and connects over T3 Connect", () =>
+  it.effect("skips a silent LAN route and connects over FD CODE Connect", () =>
     Effect.gen(function* () {
       const harness = yield* makeHarness({
         checkRoute: (route) =>
@@ -1849,14 +1849,14 @@ describe("EnvironmentSupervisor routes", () => {
       }).pipe(Effect.provide(TestClock.layer())),
   );
 
-  it.effect("still tries a silent LAN route after the T3 Connect route fails", () =>
+  it.effect("still tries a silent LAN route after the FD CODE Connect route fails", () =>
     Effect.gen(function* () {
       const harness = yield* makeHarness({
         checkRoute: (route) =>
           Effect.succeed(route.target._tag === "BearerConnectionTarget" ? "silent" : "unchecked"),
         prepare: (_attempt, target) =>
           target._tag === "RelayConnectionTarget"
-            ? Effect.fail(blocked("Sign in to T3 Connect."))
+            ? Effect.fail(blocked("Sign in to FD CODE Connect."))
             : Effect.succeed(preparedFor(target)),
       });
       const supervisor = yield* EnvironmentSupervisor.make(LAN_THEN_RELAY_ENTRY, {
@@ -1876,7 +1876,7 @@ describe("EnvironmentSupervisor routes", () => {
         checkRoute: () => Effect.succeed("answered"),
         prepare: (_attempt, target) =>
           target._tag === "RelayConnectionTarget"
-            ? Effect.fail(blocked("Sign in to T3 Connect."))
+            ? Effect.fail(blocked("Sign in to FD CODE Connect."))
             : Effect.fail(transient("LAN socket refused.")),
       });
       const supervisor = yield* EnvironmentSupervisor.make(LAN_THEN_RELAY_ENTRY, {
@@ -2064,7 +2064,7 @@ describe("EnvironmentSupervisor routes", () => {
     }),
   );
 
-  it.effect("keeps a LAN session when the T3 Connect account changes", () =>
+  it.effect("keeps a LAN session when the FD CODE Connect account changes", () =>
     Effect.gen(function* () {
       const harness = yield* makeHarness({
         checkRoute: () => Effect.succeed("answered"),
@@ -2086,7 +2086,7 @@ describe("EnvironmentSupervisor routes", () => {
     }),
   );
 
-  it.effect("learns the LAN address over T3 Connect and moves to it", () =>
+  it.effect("learns the LAN address over FD CODE Connect and moves to it", () =>
     Effect.gen(function* () {
       const relayEntry: ConnectionCatalogEntry = {
         target: RELAY_TARGET,

@@ -2,11 +2,11 @@ import { assert, describe } from "@effect/vitest";
 
 import { createOxlintRuleHarness } from "../test/utils.ts";
 
-const rule = createOxlintRuleHarness("t3code/no-test-in-loop", {
+const rule = createOxlintRuleHarness("fd-code/no-test-in-loop", {
   filename: "fixture.test.ts",
 });
 
-describe("t3code/no-test-in-loop", () => {
+describe("fd-code/no-test-in-loop", () => {
   rule.valid(
     "allows it.each and it.effect.each",
     `
@@ -103,7 +103,7 @@ describe("t3code/no-test-in-loop", () => {
   );
 });
 
-const productionRule = createOxlintRuleHarness("t3code/no-test-in-loop");
+const productionRule = createOxlintRuleHarness("fd-code/no-test-in-loop");
 
 productionRule.valid(
   "ignores non-test files",

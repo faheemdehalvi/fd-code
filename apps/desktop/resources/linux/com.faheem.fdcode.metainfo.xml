@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>com.t3tools.t3code</id>
+  <id>com.faheem.fdcode</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>MIT</project_license>
   <name>FD CODE</name>
   <summary>Desktop GUI for coding agents</summary>
-  <developer id="com.t3tools">
-    <name>T3 Tools Inc.</name>
+  <developer id="com.faheem">
+    <name>Faheem Dehalvi</name>
   </developer>
   <description>
     <p>
@@ -18,15 +18,15 @@
       Connect from desktop, web, or mobile to continue working remotely.
     </p>
   </description>
-  <launchable type="desktop-id">t3code.desktop</launchable>
-  <icon type="stock">t3code</icon>
+  <launchable type="desktop-id">fd-code.desktop</launchable>
+  <icon type="stock">fd-code</icon>
   <provides>
-    <binary>t3code</binary>
+    <binary>fd-code</binary>
   </provides>
   <categories>
     <category>Development</category>
   </categories>
-  <url type="homepage">https://t3.codes</url>
-  <url type="bugtracker">https://github.com/pingdotgg/t3code/issues</url>
-  <url type="vcs-browser">https://github.com/pingdotgg/t3code</url>
+  <url type="homepage">https://github.com/faheemdehalvi/fd-code</url>
+  <url type="bugtracker">https://github.com/faheemdehalvi/fd-code/issues</url>
+  <url type="vcs-browser">https://github.com/faheemdehalvi/fd-code</url>
 </component>

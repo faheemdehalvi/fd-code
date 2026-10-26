@@ -208,10 +208,10 @@ describe("desktop update UI helpers", () => {
 
   it("uses the configured desktop update repository for release URLs", () => {
     expect(getDesktopUpdateReleaseUrl("1.2.3", "JustYannicc/t3code")).toBe(
-      "https://github.com/JustYannicc/t3code/releases/tag/v1.2.3",
+      "https://github.com/JustYannicc/fd-code/releases/tag/v1.2.3",
     );
     expect(getDesktopUpdateReleaseHistoryUrl("JustYannicc/t3code")).toBe(
-      "https://github.com/JustYannicc/t3code/releases",
+      "https://github.com/JustYannicc/fd-code/releases",
     );
   });
 

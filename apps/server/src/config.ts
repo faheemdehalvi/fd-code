@@ -99,7 +99,7 @@ export const otlpResource = (
   config: Pick<ServerConfig["Service"], "mode" | "otelEnvironment">,
   hostName: string,
 ) => ({
-  serviceName: "t3code-server",
+  serviceName: "fd-code-server",
   serviceVersion: packageJson.version,
   attributes: {
     "service.namespace": "fd-code",

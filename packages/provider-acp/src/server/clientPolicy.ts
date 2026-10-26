@@ -221,7 +221,7 @@ export function acpMcpToolApprovalElicitationDisposition(
   ) {
     return undefined;
   }
-  // This request comes from T3's authenticated, scope-checked MCP endpoint,
+  // This request comes from FD CODE's authenticated, scope-checked MCP endpoint,
   // not an arbitrary provider command. Let explicit approval mode surface it
   // to the user and otherwise allow the endpoint to enforce its own policy.
   return acpPolicyRequiresApproval(runtimePolicy) ? "ask" : "allow";

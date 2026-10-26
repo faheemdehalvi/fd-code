@@ -2073,7 +2073,7 @@ function OpenCommandPaletteDialog(props: {
         "grouping",
         "checkout",
         "remove",
-        "t3.json",
+        "fd-code.json",
       ],
       title: "Project settings",
       description: contextualProjectGroup.displayName,

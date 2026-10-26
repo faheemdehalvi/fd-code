@@ -77,7 +77,7 @@ describe("showDesktopUpdateDownloadedToast", () => {
 
     await vi.waitFor(() => {
       expect(openExternal).toHaveBeenCalledWith(
-        "https://github.com/JustYannicc/t3code/releases/tag/v0.0.30",
+        "https://github.com/JustYannicc/fd-code/releases/tag/v0.0.30",
       );
     });
   });

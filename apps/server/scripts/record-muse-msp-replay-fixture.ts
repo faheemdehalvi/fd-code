@@ -56,8 +56,8 @@ if (fixture === undefined || variant === undefined) {
   throw new Error(`Pass --scenario with a fixture that registers Muse: ${names.join(", ")}`);
 }
 
-const museBinary = process.env.T3_MUSE_BIN ?? "muse";
-// Started as T3 starts it, so Windows needs no T3_MUSE_BIN for Muse's `muse.cmd` launcher.
+const museBinary = process.env.FDCODE_MUSE_BIN ?? "muse";
+// Started as FD CODE starts it, so Windows needs no FDCODE_MUSE_BIN for Muse's `muse.cmd` launcher.
 const museStart = Effect.runSync(museLaunch(museBinary));
 const home = process.env.HOME ?? "";
 

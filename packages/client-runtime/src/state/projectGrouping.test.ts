@@ -362,7 +362,7 @@ describe("buildProjectGroups", () => {
       repositoryIdentity: null,
       updatedAt: "2026-07-01T00:00:00.000Z",
     });
-    const fresh = makeProject("fresh", "/work/t3code/", {
+    const fresh = makeProject("fresh", "/work/fd-code/", {
       updatedAt: "2026-07-02T00:00:00.000Z",
     });
 
@@ -380,7 +380,7 @@ describe("buildProjectGroups", () => {
     const identified = makeProject("identified", "/work/t3code", {
       updatedAt: "2026-07-01T00:00:00.000Z",
     });
-    const freshUnidentified = makeProject("fresh", "/work/t3code/", {
+    const freshUnidentified = makeProject("fresh", "/work/fd-code/", {
       repositoryIdentity: null,
       updatedAt: "2026-07-02T00:00:00.000Z",
     });
@@ -405,7 +405,7 @@ describe("buildProjectGroups", () => {
       repositoryIdentity: staleIdentity,
       updatedAt: "2026-07-01T00:00:00.000Z",
     });
-    const fresh = makeProject("fresh", "/work/t3code/", {
+    const fresh = makeProject("fresh", "/work/fd-code/", {
       updatedAt: "2026-07-02T00:00:00.000Z",
     });
     const sibling = makeProject("sibling", "/work/t3code-2");
@@ -429,7 +429,7 @@ describe("buildProjectGroups", () => {
       repositoryIdentity: staleIdentity,
       updatedAt: "2026-07-01T00:00:00.000Z",
     });
-    const freshIdentified = makeProject("fresh-identified", "/work/t3code/", {
+    const freshIdentified = makeProject("fresh-identified", "/work/fd-code/", {
       updatedAt: "2026-07-02T00:00:00.000Z",
     });
     const winner = makeProject("winner", "/work/t3code", {

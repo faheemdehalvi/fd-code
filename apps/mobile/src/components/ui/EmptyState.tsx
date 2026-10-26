@@ -15,7 +15,7 @@ export function EmptyState(props: {
   if (props.variant === "plain") {
     return (
       <View className="items-center px-8 py-8">
-        <Text textRole="title" className="text-center font-t3-bold text-foreground">
+        <Text textRole="title" className="text-center font-fd-code-bold text-foreground">
           {props.title}
         </Text>
         <Text
@@ -37,7 +37,7 @@ export function EmptyState(props: {
 
   return (
     <View className="rounded-[22px] border border-border bg-card p-5">
-      <Text textRole="headline" className="font-t3-bold text-foreground">
+      <Text textRole="headline" className="font-fd-code-bold text-foreground">
         {props.title}
       </Text>
       <Text textRole="footnote" className="mt-2 font-sans leading-relaxed text-foreground-muted">

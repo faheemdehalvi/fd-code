@@ -171,7 +171,7 @@ export function SettingsMicrophoneRouteScreen() {
                 onPress={() => setEditing((value) => !value)}
                 className="px-2 py-1 active:opacity-70"
               >
-                <Text className="text-sm font-t3-medium text-foreground">
+                <Text className="text-sm font-fd-code-medium text-foreground">
                   {editing ? "Done" : "Edit"}
                 </Text>
               </Pressable>

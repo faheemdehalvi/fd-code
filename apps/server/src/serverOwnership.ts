@@ -30,7 +30,7 @@ export class ServerAlreadyRunningError extends Schema.TaggedError<ServerAlreadyR
   override readonly [Runtime.errorExitCode] = SERVER_EXIT_CODE_STATE_DIR_OWNED;
 
   override get message(): string {
-    return `A FD CODE server already owns ${this.stateDir}. Stop that server, or use a separate T3 home and pair with it, then retry. No server was stopped.`;
+    return `A FD CODE server already owns ${this.stateDir}. Stop that server, or use a separate FD CODE home and pair with it, then retry. No server was stopped.`;
   }
 }
 

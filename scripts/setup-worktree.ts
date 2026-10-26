@@ -7,7 +7,7 @@ const ENV_FILES = [".env", NodePath.join("infra", "relay", ".env")];
 
 const projectRoot = process.env.FDCODE_PROJECT_ROOT;
 if (!projectRoot) {
-  throw new Error("FDCODE_PROJECT_ROOT is not set. Run this through the t3.json setup action.");
+  throw new Error("FDCODE_PROJECT_ROOT is not set. Run this through the fd-code.json setup action.");
 }
 const worktree = NodePath.dirname(import.meta.dirname);
 

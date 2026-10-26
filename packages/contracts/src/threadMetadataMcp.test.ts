@@ -78,13 +78,13 @@ describe("ThreadMetadataMcpUpdateInput", () => {
         pullRequest: {
           repository: "engineering/t3code",
           number: 42,
-          url: "https://git.corp.example/engineering/t3code/pulls/42",
+          url: "https://git.corp.example/engineering/fd-code/pulls/42",
         },
       }).pullRequest,
       {
         repository: "engineering/t3code",
         number: 42,
-        url: "https://git.corp.example/engineering/t3code/pulls/42",
+        url: "https://git.corp.example/engineering/fd-code/pulls/42",
       },
     );
 

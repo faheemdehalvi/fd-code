@@ -86,7 +86,7 @@ const connectInspector = Effect.fn("measure.connectInspector")(function* (metro:
   const targets = yield* http
     .get(`${metro}/json/list`)
     .pipe(Effect.flatMap(HttpClientResponse.schemaBodyJson(InspectorTargets)));
-  const target = targets.find((entry) => entry.appId.startsWith("com.t3tools.t3code"));
+  const target = targets.find((entry) => entry.appId.startsWith("com.faheem.fdcode"));
   if (!target)
     return yield* new MeasureError({ message: `No FD CODE app is attached to Metro at ${metro}.` });
   // Expo terminates inspector sockets whose Origin differs from the URL Metro

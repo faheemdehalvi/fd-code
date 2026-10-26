@@ -14,7 +14,7 @@ it.layer(NodeServices.layer)("Linux browser secret path", (it) => {
     Effect.gen(function* () {
       const fileSystem = yield* FileSystem.FileSystem;
       const path = yield* Path.Path;
-      const root = yield* fileSystem.makeTempDirectoryScoped({ prefix: "t3-browser-secret-path-" });
+      const root = yield* fileSystem.makeTempDirectoryScoped({ prefix: "fd-code-browser-secret-path-" });
       const resourcesPath = path.join(root, "install", "resources");
       const native = path.join(
         root,
@@ -22,7 +22,7 @@ it.layer(NodeServices.layer)("Linux browser secret path", (it) => {
         "browser-secret",
         "build",
         "x64",
-        "t3-browser-secret",
+        "fd-code-browser-secret",
       );
       const staged = path.join(
         root,
@@ -30,9 +30,9 @@ it.layer(NodeServices.layer)("Linux browser secret path", (it) => {
         "desktop",
         "prod-resources",
         "browser-secret",
-        "t3-browser-secret",
+        "fd-code-browser-secret",
       );
-      const packaged = path.join(resourcesPath, "browser-secret", "t3-browser-secret");
+      const packaged = path.join(resourcesPath, "browser-secret", "fd-code-browser-secret");
       for (const filename of [native, staged, packaged]) {
         yield* fileSystem.makeDirectory(path.dirname(filename), { recursive: true });
         yield* fileSystem.writeFileString(filename, "helper");

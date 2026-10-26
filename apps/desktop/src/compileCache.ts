@@ -10,7 +10,7 @@ import * as NodePath from "node:path";
 try {
   if (!process.env.APPIMAGE) {
     const cacheRoot =
-      // oxlint-disable-next-line t3code/no-global-process-runtime -- Loads before any Effect runtime.
+      // oxlint-disable-next-line fd-code/no-global-process-runtime -- Loads before any Effect runtime.
       process.platform === "linux"
         ? process.env.XDG_CACHE_HOME || NodePath.join(NodeOS.homedir(), ".cache")
         : NodeOS.tmpdir();

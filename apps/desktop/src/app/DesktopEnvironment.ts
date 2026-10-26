@@ -166,13 +166,13 @@ const make = Effect.fn("desktop.environment.make")(function* (
   let baseDir = resolveDesktopBaseDir({
     homeDirectory,
     joinPath: path.join,
-    t3Home: config.t3Home,
+    fdCodeHome: config.fdCodeHome,
   });
   // One-time move from the former `.t3` home to `.fd-code` when the desktop uses
   // the default location (no explicit FDCODE_HOME). Non-destructive: if the move
   // cannot happen, the legacy directory keeps being used in place so data is
   // never lost. Runtime-unverified in this environment (no desktop build here).
-  if (Option.isNone(config.t3Home)) {
+  if (Option.isNone(config.fdCodeHome)) {
     const fs = yield* FileSystem.FileSystem;
     const legacy = path.join(homeDirectory, ".t3");
     const hasNext = yield* fs.exists(baseDir).pipe(Effect.orElseSucceed(() => true));
@@ -202,7 +202,7 @@ const make = Effect.fn("desktop.environment.make")(function* (
     baseDir,
     isDevelopment,
     joinPath: path.join,
-    t3Home: config.t3Home,
+    fdCodeHome: config.fdCodeHome,
   });
   const linuxApplicationsDir = path.join(
     Option.getOrElse(config.xdgDataHome, () => path.join(homeDirectory, ".local", "share")),
@@ -254,7 +254,7 @@ const make = Effect.fn("desktop.environment.make")(function* (
     branding,
     displayName,
     appUserModelId: Option.getOrElse(config.appUserModelIdOverride, () =>
-      isDevelopment ? "com.t3tools.t3code.dev" : "com.t3tools.t3code",
+      isDevelopment ? "com.faheem.fdcode.dev" : "com.faheem.fdcode",
     ),
     linuxDesktopEntryName: resolveLinuxDesktopEntryName(isDevelopment),
     linuxWmClass: isDevelopment ? "fd-code-dev" : "fd-code",

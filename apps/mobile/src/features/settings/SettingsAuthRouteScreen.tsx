@@ -14,7 +14,7 @@ import { FDCodeConnectProfilePage } from "../cloud/FDCodeConnectProfilePage";
 const USER_PROFILE_CUSTOM_PAGES = [
   {
     path: "t3-connect",
-    label: "T3 Connect",
+    label: "FD CODE Connect",
     icon: "globe",
     content: <FDCodeConnectProfilePage />,
   },

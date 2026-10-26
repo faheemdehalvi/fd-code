@@ -148,8 +148,8 @@ export function scopedSettingsSource(
     ? "mixed"
     : sources.has("project")
       ? "project"
-      : sources.has("t3.json")
-        ? "t3.json"
+      : sources.has("fd-code.json")
+        ? "fd-code.json"
         : "environment";
 }
 

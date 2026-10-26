@@ -137,7 +137,7 @@ export function toolOutcome(
 ) {
   if (result === undefined) return { outcome: "error", errorCode: "exception" };
   const content = asFields(result.structuredContent);
-  // T3 tool failures are declared errors whose structured content carries a
+  // FD CODE tool failures are declared errors whose structured content carries a
   // closed `code`; the MCP layer does not always set isError for them.
   const code = stringField(content, "code") ?? stringField(asFields(content.error), "_tag");
   if (result.isError === true || (content._tag !== undefined && code !== undefined)) {

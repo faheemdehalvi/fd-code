@@ -6,7 +6,7 @@ import * as NodeOS from "node:os";
 import * as NodePath from "node:path";
 import { expect, it } from "vite-plus/test";
 
-// oxlint-disable-next-line t3code/no-global-process-runtime -- This test compiles against the host Foundation framework.
+// oxlint-disable-next-line fd-code/no-global-process-runtime -- This test compiles against the host Foundation framework.
 it.skipIf(NodeOS.platform() !== "darwin")(
   "registers and reads native permissions concurrently without corrupting the registry",
   () => {

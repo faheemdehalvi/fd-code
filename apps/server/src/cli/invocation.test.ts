@@ -43,7 +43,7 @@ it("formats package runner commands from their cache entry paths", () => {
 it("treats stable installs as direct invocations", () => {
   for (const entryPath of [
     "/usr/local/lib/node_modules/fd-code/dist/bin.mjs",
-    "/home/theo/Code/work/t3code/apps/server/dist/bin.mjs",
+    "/home/theo/Code/work/fd-code/apps/server/dist/bin.mjs",
     "/home/theo/.fd-code/runtime/0.0.31/node_modules/fd-code/dist/bin.mjs",
     "",
   ]) {
@@ -209,14 +209,14 @@ it.layer(NodeServices.layer)("host CLI commands", (it) => {
       );
       // Typographic quotes also delimit PowerShell strings; doubling keeps them.
       expect(
-        (yield* resolveHostCliCommand("doctor", ["--base-dir", "C:\\T3\\\u201CArchive\u201D"]).pipe(
+        (yield* resolveHostCliCommand("doctor", ["--base-dir", "C:\\FD CODE\\\u201CArchive\u201D"]).pipe(
           Effect.provideService(HostProcess.Platform, "win32"),
           Effect.provideService(HostProcess.Environment, { PATH: "" }),
           Effect.provideService(HostProcess.ExecutablePath, "C:\\t3.exe"),
           Effect.provideService(HostProcess.Arguments, ["C:\\t3.exe", "C:\\bin.mjs"]),
           Effect.provideService(HostProcess.IsExecutable, false),
         )).command,
-      ).toBe('fd-code doctor "--base-dir" "C:\\T3\\\u201C\u201CArchive\u201D\u201D"');
+      ).toBe('fd-code doctor "--base-dir" "C:\\FD CODE\\\u201C\u201CArchive\u201D\u201D"');
       // POSIX hosts keep single quotes for the same input. The shim prefix is
       // a host path, so only the arguments are asserted.
       expect((yield* hostCommand("linux", { FDCODE_CLI_PATH: shim })).command).toMatch(

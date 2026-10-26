@@ -29,7 +29,7 @@ Vendored Ghostty revision and license details are in `THIRD_PARTY_NOTICES.md`.
 The checked-in `GhosttyKit.xcframework` is built from Yash Singh's Ghostty fork at revision
 `cf8edc23f3a6a87a96e41a90013e89e987d34980`. Set `GHOSTTY_SOURCE_DIR` to a clone of
 https://github.com/Yash-Singh1/ghostty checked out at that revision (the
-`t3code/custom-io-ordered-feed` branch when vendored, based on VVTerm's
+`fd-code/custom-io-ordered-feed` branch when vendored, based on VVTerm's
 `vvterm/custom-io-padding` branch).
 
 ```bash

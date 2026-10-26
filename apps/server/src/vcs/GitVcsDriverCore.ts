@@ -21,7 +21,7 @@ import { ChildProcess, ChildProcessSpawner } from "effect/process";
 import {
   GitCommandError,
   type GitCommandFailureReason,
-  T3_PROJECT_FILE_NAME,
+  FDCODE_PROJECT_FILE_NAME,
   type ReviewDiffFileContentsInput,
   type ReviewDiffPreviewInput,
   type ReviewDiffFileStat,
@@ -33,7 +33,7 @@ import * as HostProcess from "@fdcode/shared/HostProcess";
 import { compactTraceAttributes } from "@fdcode/shared/observability";
 import { decodeJsonResult } from "@fdcode/shared/schemaJson";
 import { resolveSpawnCommand } from "@fdcode/shared/shell";
-import { parseFDCodeProjectFile } from "@fdcode/shared/t3ProjectFile";
+import { parseFDCodeProjectFile } from "@fdcode/shared/fdCodeProjectFile";
 import { resolveProjectFileBackedSetting } from "@fdcode/shared/projectSettings";
 import { gitCommandDuration, gitCommandsTotal, withMetrics } from "../observability/Metrics.ts";
 import * as GitVcsDriver from "./GitVcsDriver.ts";
@@ -3541,11 +3541,11 @@ export const makeGitVcsDriverCore = Effect.fn("makeGitVcsDriverCore")(function* 
           options?.submodules ?? null,
           options?.submodules != null
             ? null
-            : yield* fileSystem.readFileString(path.join(worktreePath, T3_PROJECT_FILE_NAME)).pipe(
+            : yield* fileSystem.readFileString(path.join(worktreePath, FDCODE_PROJECT_FILE_NAME)).pipe(
                 Effect.flatMap((contents) => {
                   const file = parseFDCodeProjectFile(contents);
                   return file === null
-                    ? Effect.logWarning("t3.json is invalid; initializing submodules recursively", {
+                    ? Effect.logWarning("fd-code.json is invalid; initializing submodules recursively", {
                         worktreePath,
                       }).pipe(Effect.as(null))
                     : Effect.succeed(file);
@@ -3555,7 +3555,7 @@ export const makeGitVcsDriverCore = Effect.fn("makeGitVcsDriverCore")(function* 
         );
     if (hasSubmodules && submoduleMode.value === "none" && progress?.onSubmodulesDisabled) {
       yield* progress.onSubmodulesDisabled({
-        source: submoduleMode.source === "t3.json" ? "t3.json" : "settings",
+        source: submoduleMode.source === "fd-code.json" ? "fd-code.json" : "settings",
       });
     }
     if (submoduleMode.value !== "none") {
@@ -3700,7 +3700,7 @@ export const makeGitVcsDriverCore = Effect.fn("makeGitVcsDriverCore")(function* 
         yield* executeGit(
           "GitVcsDriver.refreshCheckedOutBranch.keepPrevious",
           input.cwd,
-          ["update-ref", "refs/t3code/pre-refresh", headCommit],
+          ["update-ref", "refs/fd-code/pre-refresh", headCommit],
           { fallbackErrorDetail: "git failed to record the previous checkout commit" },
         );
       }

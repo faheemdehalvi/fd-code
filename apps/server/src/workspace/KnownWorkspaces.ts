@@ -1,5 +1,5 @@
 /**
- * KnownWorkspaces - the folders a client-named cwd may act in: a T3-managed
+ * KnownWorkspaces - the folders a client-named cwd may act in: a FD CODE-managed
  * worktree folder, a registered project, or a thread's worktree. Clients send
  * the thread's worktree, else the project root. A client also sets a thread's
  * worktree path, so one counts only under a managed folder or when git lists

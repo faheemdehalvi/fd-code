@@ -145,7 +145,7 @@ import {
 } from "../../provider/claudeUsageLimits.ts";
 import type { ManagedServerProvider } from "@fdcode/provider-core/server/snapshot";
 import { mergeProviderInstanceEnvironment } from "@fdcode/provider-core/server/instanceEnvironment";
-import { T3_CODE_ORCHESTRATION_INSTRUCTIONS } from "@fdcode/provider-core/server/orchestrationInstructions";
+import { FDCODE_ORCHESTRATION_INSTRUCTIONS } from "@fdcode/provider-core/server/orchestrationInstructions";
 import { buildRuntimeInstructions } from "@fdcode/provider-core/server/runtimeInstructions";
 import {
   mcpToolPresentation,
@@ -1198,7 +1198,7 @@ export function makeClaudeQueryOptions(input: {
       preset: "claude_code" as const,
       append:
         buildRuntimeInstructions({ harness: "Claude Code" }) +
-        (input.mcpServers === undefined ? "" : T3_CODE_ORCHESTRATION_INSTRUCTIONS),
+        (input.mcpServers === undefined ? "" : FDCODE_ORCHESTRATION_INSTRUCTIONS),
     },
     ...(Object.keys(extraArgs).length === 0 ? {} : { extraArgs }),
   };
@@ -1238,7 +1238,7 @@ export const CLAUDE_READ_ONLY_T3_MCP_ALLOWED_TOOLS: ReadonlyArray<string> = [
 ];
 
 // Claude Code aborts an HTTP MCP call after 60 s ("The operation timed out.")
-// unless the server config sets `timeout`. T3's wait tools (t3_thread_wait,
+// unless the server config sets `timeout`. FD CODE's wait tools (t3_thread_wait,
 // delegate_task mode=wait) legitimately block for up to an hour
 // (MAX_WAIT_TIMEOUT_MS in OrchestratorMcpService), so the budget sits just
 // above that and the server's own wait timeout is what ends a long call.
@@ -9264,7 +9264,7 @@ export const makeClaudeAdapterV2 = Effect.fn("makeClaudeAdapterV2")(function* (
                   detail: `Claude session ${nativeThreadId} has no conversation to resume.`,
                 });
               }
-              // Imported native histories have no T3 provider turns yet, but their
+              // Imported native histories have no FD CODE provider turns yet, but their
               // existing Claude session must be resumed rather than created again.
               if (nativeThreadId !== undefined && nativeThreadId !== null) {
                 yield* Ref.update(resumedNativeThreads, (current) =>

@@ -85,7 +85,7 @@ describe("relay request tracing", () => {
 });
 
 describe("relay request tracing boundary", () => {
-  it.effect("exports a T3 Connect handler span but not its local work", () =>
+  it.effect("exports a FD CODE Connect handler span but not its local work", () =>
     Effect.gen(function* () {
       const productSpans: Array<string> = [];
       const localSpans: Array<string> = [];

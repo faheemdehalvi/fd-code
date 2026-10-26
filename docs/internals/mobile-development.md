@@ -77,8 +77,8 @@ same preset over every source file. It fails on a new bailout, and on a file in 
 that now compiles, so the list only shrinks. When you fix a listed file, delete its entry and its
 manual `useMemo`/`useCallback`/`memo` in the same change. Most mobile bailouts are `try` without
 `catch` or with `finally`, and refs read during render; see [Web UI](web-ui.md#react-compiler)
-for the usual rewrites. Mobile runs `t3code/no-manual-memo` with `allowMemoHooks`, so memo
+for the usual rewrites. Mobile runs `fd-code/no-manual-memo` with `allowMemoHooks`, so memo
 directives are errors but the hooks stay legal until `KNOWN_BAILOUTS` is empty.
-`t3code/no-hookless-use-function` rejects a `use*` function that calls no hook, since the compiler
+`fd-code/no-hookless-use-function` rejects a `use*` function that calls no hook, since the compiler
 leaves it uncached. A platform stub of a real hook, such as an `.android.ts` file, keeps the hook
 name and suppresses the rule with a reason.

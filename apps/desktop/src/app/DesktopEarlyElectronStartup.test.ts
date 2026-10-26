@@ -84,7 +84,7 @@ describe("DesktopEarlyElectronStartup", () => {
     assert.deepEqual(options, {
       isDevelopment: true,
       linuxWmClass: "fd-code-dev",
-      linuxDesktopEntryName: "com.t3tools.FDCode.Development.desktop",
+      linuxDesktopEntryName: "com.faheem.FDCode.Development.desktop",
       passwordStore: "gnome-libsecret",
     });
   });

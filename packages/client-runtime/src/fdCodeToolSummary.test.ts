@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { summarizeFDCodeToolCalls, type FDCodeToolSummaryCall } from "./t3ToolSummary.ts";
+import { summarizeFDCodeToolCalls, type FDCodeToolSummaryCall } from "./fdCodeToolSummary.ts";
 
 function completed(input: unknown, output?: unknown): FDCodeToolSummaryCall {
   return { input, output, outcome: "completed" };

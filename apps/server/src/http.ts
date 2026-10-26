@@ -559,6 +559,11 @@ const handleStaticAndDevRequest = Effect.fn("handleStaticAndDevRequest")(
       return HttpServerResponse.text("Bad Request", { status: 400 });
     }
 
+    // Unmatched API requests must not look like successful HTML responses to clients.
+    if (url.value.pathname === "/api" || url.value.pathname.startsWith("/api/")) {
+      return HttpServerResponse.text("Not Found", { status: 404 });
+    }
+
     const config = yield* ServerConfig.ServerConfig;
     if (config.devUrl && isDevProxiedPath(url.value.pathname)) {
       return HttpServerResponse.text("Not Found", { status: 404 });

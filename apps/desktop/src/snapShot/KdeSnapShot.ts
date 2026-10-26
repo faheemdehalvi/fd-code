@@ -15,7 +15,7 @@ import { startNativeCaptureFeedback } from "./NativeCaptureFeedback.ts";
 export { isKdeCaptureSession } from "./linuxCaptureSession.ts";
 
 export const KDE_CAPTURE_EXECUTABLE = "fd-code-kde-snap-shot";
-const DESKTOP_FILE = "com.t3tools.FDCode.KdeCapture.desktop";
+const DESKTOP_FILE = "com.faheem.FDCode.KdeCapture.desktop";
 const MARKER = "X-FDCode-Capture-Helper=true";
 const decodeCapabilities = Schema.decodeUnknownSync(
   Schema.fromJsonString(Schema.Struct({ feedbackAvailable: Schema.optional(Schema.Boolean) })),

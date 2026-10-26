@@ -488,7 +488,7 @@ it.live(
   60_000,
 );
 
-it.live.skipIf(process.env.T3_BENCH_RECOVERY !== "1")(
+it.live.skipIf(process.env.FDCODE_BENCH_RECOVERY !== "1")(
   "restart recovery scales with active threads, not settled history",
   () =>
     Effect.gen(function* () {

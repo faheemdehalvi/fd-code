@@ -214,6 +214,24 @@ it.layer(
     Layer.provideMerge(NodeServices.layer),
   ),
 )("static HTTP responses", (it) => {
+  it.effect("returns 404 for unknown API paths while preserving client navigation", () =>
+    Effect.gen(function* () {
+      const fs = yield* FileSystem.FileSystem;
+      const path = yield* Path.Path;
+      const staticDir = yield* fs.makeTempDirectoryScoped({ prefix: "fd-code-static-api-" });
+      yield* fs.writeFileString(path.join(staticDir, "index.html"), "<html>FD CODE</html>");
+      const request = yield* makeStaticRequest(staticDir);
+      for (const resource of ["/api", "/api/settings", "/api/missing?test=1"]) {
+        const response = yield* request(resource);
+        expect(response.status).toBe(404);
+        expect(yield* response.text).toBe("Not Found");
+      }
+      const navigation = yield* request("/threads/example");
+      expect(navigation.status).toBe(200);
+      expect(yield* navigation.text).toBe("<html>FD CODE</html>");
+    }),
+  );
+
   it.effect("revalidates non-HTML files and returns changed contents", () =>
     Effect.gen(function* () {
       const fs = yield* FileSystem.FileSystem;

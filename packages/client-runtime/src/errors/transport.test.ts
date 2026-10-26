@@ -47,8 +47,8 @@ describe("isTransportConnectionErrorMessage", () => {
     ).toBe(false);
   });
 
-  it("returns true for the T3 server WebSocket message", () => {
-    expect(isTransportConnectionErrorMessage("Unable to connect to the T3 server WebSocket.")).toBe(
+  it("returns true for the FD CODE server WebSocket message", () => {
+    expect(isTransportConnectionErrorMessage("Unable to connect to the FD CODE server WebSocket.")).toBe(
       true,
     );
   });

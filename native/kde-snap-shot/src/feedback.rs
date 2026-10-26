@@ -3,7 +3,7 @@
 use super::*;
 use std::io::BufRead;
 
-const OBJECT: &str = "/com/t3tools/KdeCapture/Feedback";
+const OBJECT: &str = "/com/faheem/KdeCapture/Feedback";
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -36,7 +36,7 @@ impl Bridge {
         }
     }
 }
-#[zbus::interface(name = "com.t3tools.KdeCapture.Feedback")]
+#[zbus::interface(name = "com.faheem.KdeCapture.Feedback")]
 impl Bridge {
     // An async pending call is an event channel, not a timer or a blocking KWin call.
     async fn next(
@@ -247,7 +247,7 @@ mod tests {
             &stranger,
             destination.as_str(),
             OBJECT,
-            "com.t3tools.KdeCapture.Feedback",
+            "com.faheem.KdeCapture.Feedback",
         )
         .unwrap();
         let error = unrelated.call::<_, _, String>("Next", &()).unwrap_err();
@@ -266,7 +266,7 @@ mod tests {
             &f._server,
             destination.clone(),
             OBJECT,
-            "com.t3tools.KdeCapture.Feedback",
+            "com.faheem.KdeCapture.Feedback",
         )
         .unwrap();
         // Event remains responsive while Next waits. No blocking the D-Bus executor.

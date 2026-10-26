@@ -28,7 +28,7 @@ describe("VcsProjectConfig", () => {
     );
   });
 
-  it.layer(layerTest)("discovers .t3code/vcs.json from nested workspaces", (it) => {
+  it.layer(layerTest)("discovers .fd-code/vcs.json from nested workspaces", (it) => {
     it.effect("returns the configured kind", () =>
       Effect.gen(function* () {
         const fileSystem = yield* FileSystem.FileSystem;

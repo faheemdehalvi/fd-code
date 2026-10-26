@@ -14,7 +14,7 @@ import {
   readHtmlRenderLinkRequest,
   readHtmlRenderReference,
 } from "./htmlRender.ts";
-import { T3_CODE_DARK_THEME_COLORS, T3_CODE_LIGHT_THEME_COLORS } from "./themePalettes.ts";
+import { FDCODE_DARK_THEME_COLORS, FDCODE_LIGHT_THEME_COLORS } from "./themePalettes.ts";
 import { htmlRenderFromToolItem } from "./toolOutput.ts";
 
 const reference = { attachmentId: "thread-abc-123.html", title: "Chart", height: 420 };
@@ -172,7 +172,7 @@ describe("readHtmlRenderContentHeight", () => {
 
 describe("htmlRenderThemeMessage", () => {
   it("is an MCP Apps host-context-changed notification carrying the theme variables", () => {
-    const theme = htmlRenderTheme(T3_CODE_DARK_THEME_COLORS, "dark");
+    const theme = htmlRenderTheme(FDCODE_DARK_THEME_COLORS, "dark");
     expect(htmlRenderThemeMessage(theme)).toEqual({
       jsonrpc: "2.0",
       method: "ui/notifications/host-context-changed",
@@ -183,15 +183,15 @@ describe("htmlRenderThemeMessage", () => {
 
 describe("htmlRenderTheme", () => {
   it("exposes the brand accent as --accent and keeps the fragment decodable", () => {
-    const theme = htmlRenderTheme(T3_CODE_LIGHT_THEME_COLORS, "light");
-    expect(theme.variables["--accent"]).toBe(T3_CODE_LIGHT_THEME_COLORS.accent);
-    expect(theme.variables["--chart-1"]).toBe(T3_CODE_LIGHT_THEME_COLORS.accent);
+    const theme = htmlRenderTheme(FDCODE_LIGHT_THEME_COLORS, "light");
+    expect(theme.variables["--accent"]).toBe(FDCODE_LIGHT_THEME_COLORS.accent);
+    expect(theme.variables["--chart-1"]).toBe(FDCODE_LIGHT_THEME_COLORS.accent);
     expect(theme.variables["--chart-6"]).toBeDefined();
     const fragment = htmlRenderThemeFragment(theme);
     expect(JSON.parse(decodeURIComponent(fragment.slice("#t3-theme=".length)))).toEqual(theme);
     expect(fragment).not.toContain("&");
-    expect(htmlRenderTheme(T3_CODE_DARK_THEME_COLORS, "dark").variables["--background"]).toBe(
-      T3_CODE_DARK_THEME_COLORS.canvas,
+    expect(htmlRenderTheme(FDCODE_DARK_THEME_COLORS, "dark").variables["--background"]).toBe(
+      FDCODE_DARK_THEME_COLORS.canvas,
     );
   });
 });

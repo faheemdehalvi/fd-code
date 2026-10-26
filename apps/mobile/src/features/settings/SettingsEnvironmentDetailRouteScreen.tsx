@@ -314,7 +314,7 @@ function EnvironmentDetail({ environmentId }: { readonly environmentId: Environm
                         <View className="gap-1 p-4">
                           <View className="flex-row items-center gap-2">
                             <ProviderIcon provider={provider.driver} size={18} />
-                            <Text className="min-w-0 flex-1 text-base font-t3-medium text-foreground">
+                            <Text className="min-w-0 flex-1 text-base font-fd-code-medium text-foreground">
                               {provider.displayName ?? provider.driver}
                             </Text>
                           </View>

@@ -52,7 +52,7 @@ interface ManagedChild {
 
 const runtimePaths = (baseDir: string, version: string) => {
   const versionDir = NodePath.join(baseDir, "runtime", "versions", version);
-  // oxlint-disable-next-line t3code/no-global-process-runtime -- Standalone launcher has no Effect runtime.
+  // oxlint-disable-next-line fd-code/no-global-process-runtime -- Standalone launcher has no Effect runtime.
   const executableName = process.platform === "win32" ? "fd-code.exe" : "fd-code";
   return {
     versionDir,
@@ -119,7 +119,7 @@ function runCp(args: ReadonlyArray<string>): Promise<boolean> {
  * Node's own clone flag is not used: on macOS `fs.copyFile` falls back to a full copy.
  */
 async function copyDatabaseFile(source: string, destination: string): Promise<void> {
-  // oxlint-disable-next-line t3code/no-global-process-runtime -- Standalone launcher has no Effect runtime.
+  // oxlint-disable-next-line fd-code/no-global-process-runtime -- Standalone launcher has no Effect runtime.
   const platform = process.platform;
   // `cp -c` replaces the destination with a new file, which would cut a
   // hard-linked database off from its other links; copy into it instead.
@@ -162,7 +162,7 @@ async function statDatabaseFiles(dbPath: string): Promise<ReadonlyArray<NodeFS.S
  *   which is always APFS.
  */
 async function backupCanClone(dbPath: string, backupRoot: string): Promise<boolean> {
-  // oxlint-disable-next-line t3code/no-global-process-runtime -- Standalone launcher has no Effect runtime.
+  // oxlint-disable-next-line fd-code/no-global-process-runtime -- Standalone launcher has no Effect runtime.
   const platform = process.platform;
   if (platform === "darwin") {
     const [backupDirectory, backupFs, systemFs] = await Promise.all([
@@ -796,7 +796,7 @@ export class Launcher {
     // Signal listeners alone do not keep Node alive.
     this.#timer = setInterval(() => {}, 2_147_483_647);
     process.stderr.write(
-      "[service-launcher] Another FD CODE server owns this T3 home. Stop it, then restart this service.\n",
+      "[service-launcher] Another FD CODE server owns this FD CODE home. Stop it, then restart this service.\n",
     );
   }
 

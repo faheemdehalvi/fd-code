@@ -40,7 +40,7 @@ import {
 
 /**
  * Every URL is derived from the request's own origin, so the same server
- * answers correctly over loopback, Tailscale Serve and a T3 Connect tunnel.
+ * answers correctly over loopback, Tailscale Serve and a FD CODE Connect tunnel.
  * Client registration is stateless: a client id is its signed metadata, so an
  * unauthenticated caller cannot grow server state.
  */

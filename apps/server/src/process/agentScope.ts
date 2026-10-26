@@ -18,11 +18,11 @@ import * as Path from "effect/Path";
 import * as ServerConfig from "../config.ts";
 import * as ProcessRunner from "../processRunner.ts";
 
-const AGENT_SLICE = "app-t3code-agents.slice";
+const AGENT_SLICE = "app-fd-code-agents.slice";
 
 export function ownedAgentSlice(stateDir: string): string {
   const hash = NodeCrypto.createHash("sha256").update(stateDir).digest("hex").slice(0, 12);
-  return `app-t3code-agents-${hash}.slice`;
+  return `app-fd-code-agents-${hash}.slice`;
 }
 
 const GiB = 1024 ** 3;

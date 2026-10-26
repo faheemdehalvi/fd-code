@@ -150,7 +150,7 @@ export function PendingUserInputCard(props: PendingUserInputCardProps) {
         onPress={props.onToggleCollapsed}
         className="min-h-10 flex-1 flex-row items-center gap-2 active:opacity-70"
       >
-        <Text className="font-t3-bold text-2xs uppercase tracking-[1.1px] text-foreground-secondary">
+        <Text className="font-fd-code-bold text-2xs uppercase tracking-[1.1px] text-foreground-secondary">
           User input needed
         </Text>
         <Text className="font-sans text-xs text-foreground-muted">
@@ -207,10 +207,10 @@ export function PendingUserInputCard(props: PendingUserInputCardProps) {
         className="flex-row items-start gap-2"
       >
         <View className="flex-1 gap-2.5">
-          <Text className="font-t3-bold text-2xs uppercase tracking-[1.1px] text-foreground-secondary">
+          <Text className="font-fd-code-bold text-2xs uppercase tracking-[1.1px] text-foreground-secondary">
             User input needed
           </Text>
-          <Text className="font-t3-bold text-lg text-foreground">Fill in the pending answers</Text>
+          <Text className="font-fd-code-bold text-lg text-foreground">Fill in the pending answers</Text>
         </View>
         <View className="h-8 w-8 items-center justify-center rounded-full bg-subtle-strong">
           <SymbolView
@@ -240,7 +240,7 @@ export function PendingUserInputCard(props: PendingUserInputCardProps) {
           const draft = props.drafts[question.id];
           return (
             <View key={question.id} className="gap-2 pt-1">
-              <Text className="font-t3-bold text-xs uppercase tracking-[1px] text-foreground-muted">
+              <Text className="font-fd-code-bold text-xs uppercase tracking-[1px] text-foreground-muted">
                 {question.header}
               </Text>
               <QuestionText markdown={question.question} />
@@ -271,7 +271,7 @@ export function PendingUserInputCard(props: PendingUserInputCardProps) {
                       <View className="min-w-0 flex-1 gap-0.5">
                         <Text
                           className={cn(
-                            "font-t3-bold text-sm",
+                            "font-fd-code-bold text-sm",
                             selected ? "text-foreground" : "text-foreground-secondary",
                           )}
                         >
@@ -318,7 +318,7 @@ export function PendingUserInputCard(props: PendingUserInputCardProps) {
           disabled={isResponding}
           onPress={() => void props.onDismiss()}
         >
-          <Text className="font-t3-bold text-sm text-foreground-muted">
+          <Text className="font-fd-code-bold text-sm text-foreground-muted">
             Dismiss without answering
           </Text>
         </Pressable>

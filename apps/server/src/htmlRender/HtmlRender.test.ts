@@ -8,7 +8,7 @@ import {
   HTML_RENDER_MEASURE_WIDTHS,
   htmlRenderTheme,
 } from "@fdcode/shared/htmlRender";
-import { T3_CODE_DARK_THEME_COLORS } from "@fdcode/shared/themePalettes";
+import { FDCODE_DARK_THEME_COLORS } from "@fdcode/shared/themePalettes";
 import * as Deferred from "effect/Deferred";
 import * as Effect from "effect/Effect";
 import * as Base64 from "effect/encoding/Base64";
@@ -55,7 +55,7 @@ const layerTest = layerHtmlRender();
 const PNG_BYTES = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
 
 /**
- * A stand-in browser that reads T3's first command off its debugging pipe,
+ * A stand-in browser that reads FD CODE's first command off its debugging pipe,
  * then runs `exit`. Reading it first keeps the pipe from resetting.
  */
 const exitingBrowser = (exit: string) =>
@@ -328,7 +328,7 @@ describe("HtmlRender", () => {
               { level: "info", text: HTML_RENDER_MEASURE_FONTS.sans },
               {
                 level: "warning",
-                text: htmlRenderTheme(T3_CODE_DARK_THEME_COLORS, "dark").variables["--background"],
+                text: htmlRenderTheme(FDCODE_DARK_THEME_COLORS, "dark").variables["--background"],
               },
               { level: "error", text: "boom" },
               {

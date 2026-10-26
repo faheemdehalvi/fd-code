@@ -51,7 +51,7 @@ export function PullRequestAvatar(props: {
       className="items-center justify-center rounded-full bg-grouped-card"
       style={{ width: size, height: size }}
     >
-      <Text className="font-t3-medium text-foreground-muted" style={{ fontSize: size * 0.45 }}>
+      <Text className="font-fd-code-medium text-foreground-muted" style={{ fontSize: size * 0.45 }}>
         {props.actor?.login.slice(0, 1).toUpperCase() ?? "?"}
       </Text>
     </View>
@@ -67,12 +67,12 @@ export function PullRequestDiffStats(props: {
   return (
     <View className="shrink-0 flex-row items-center gap-2">
       {!props.compact || props.additions > 0 ? (
-        <Text className={cn(textSize, "font-t3-medium tabular-nums text-adaptive-emerald-600-400")}>
+        <Text className={cn(textSize, "font-fd-code-medium tabular-nums text-adaptive-emerald-600-400")}>
           +{props.additions.toLocaleString()}
         </Text>
       ) : null}
       {!props.compact || props.deletions > 0 ? (
-        <Text className={cn(textSize, "font-t3-medium tabular-nums text-danger-foreground")}>
+        <Text className={cn(textSize, "font-fd-code-medium tabular-nums text-danger-foreground")}>
           −{props.deletions.toLocaleString()}
         </Text>
       ) : null}

@@ -72,7 +72,7 @@ export function resolveShowcaseAndroidAbi(
     return value as NonNullable<ShowcaseAndroidDevice["abi"]>;
   }
   throw new Error(
-    `Unsupported T3_SHOWCASE_ANDROID_ABI '${value}'. Use ${ANDROID_ABIS.join(", ")}.`,
+    `Unsupported FDCODE_SHOWCASE_ANDROID_ABI '${value}'. Use ${ANDROID_ABIS.join(", ")}.`,
   );
 }
 
@@ -86,7 +86,7 @@ const config: ShowcaseConfig = {
     {
       id: "iphone-6.9",
       platform: "ios",
-      simulator: "T3 Showcase iPhone 17 Pro Max",
+      simulator: "FD CODE Showcase iPhone 17 Pro Max",
       simulatorDeviceType: "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro-Max",
       appearance: "dark",
       theme: DEFAULT_SHOWCASE_THEME,
@@ -103,7 +103,7 @@ const config: ShowcaseConfig = {
     {
       id: "iphone-6.5",
       platform: "ios",
-      simulator: "T3 Showcase iPhone 14 Plus",
+      simulator: "FD CODE Showcase iPhone 14 Plus",
       simulatorDeviceType: "com.apple.CoreSimulator.SimDeviceType.iPhone-14-Plus",
       appearance: "dark",
       theme: DEFAULT_SHOWCASE_THEME,
@@ -143,7 +143,7 @@ const config: ShowcaseConfig = {
       avd: "Pixel_10_Pro",
       // Apple Silicon uses ARM64 locally; CI overrides this with x86_64 so its
       // Blacksmith Linux runner can use KVM acceleration.
-      abi: resolveShowcaseAndroidAbi(process.env.T3_SHOWCASE_ANDROID_ABI),
+      abi: resolveShowcaseAndroidAbi(process.env.FDCODE_SHOWCASE_ANDROID_ABI),
       appearance: "dark",
       theme: DEFAULT_SHOWCASE_THEME,
       viewport: {
@@ -166,7 +166,7 @@ const config: ShowcaseConfig = {
       id: "android-tablet-7",
       platform: "android",
       avd: "Pixel_10_Pro",
-      abi: resolveShowcaseAndroidAbi(process.env.T3_SHOWCASE_ANDROID_ABI),
+      abi: resolveShowcaseAndroidAbi(process.env.FDCODE_SHOWCASE_ANDROID_ABI),
       appearance: "dark",
       theme: DEFAULT_SHOWCASE_THEME,
       viewport: {
@@ -189,7 +189,7 @@ const config: ShowcaseConfig = {
       id: "android-tablet-10",
       platform: "android",
       avd: "Pixel_10_Pro",
-      abi: resolveShowcaseAndroidAbi(process.env.T3_SHOWCASE_ANDROID_ABI),
+      abi: resolveShowcaseAndroidAbi(process.env.FDCODE_SHOWCASE_ANDROID_ABI),
       appearance: "dark",
       theme: DEFAULT_SHOWCASE_THEME,
       viewport: {

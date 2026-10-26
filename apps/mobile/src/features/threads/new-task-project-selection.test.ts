@@ -56,14 +56,14 @@ function makeScope(projects: ReadonlyArray<EnvironmentProject>): HomeProjectScop
 
 describe("getProjectScopeSelectionTarget", () => {
   it("keeps the current environment when it hosts the selected logical project", () => {
-    const projects = [makeProject("t3code-mac", "mac"), makeProject("t3code-server", "server")];
+    const projects = [makeProject("t3code-mac", "mac"), makeProject("fd-code-server", "server")];
     expect(getProjectScopeSelectionTarget(makeScope(projects), EnvironmentId.make("server"))).toBe(
       projects[1],
     );
   });
 
   it("falls back to the representative when the current environment does not host the project", () => {
-    const projects = [makeProject("t3code-mac", "mac"), makeProject("t3code-server", "server")];
+    const projects = [makeProject("t3code-mac", "mac"), makeProject("fd-code-server", "server")];
     expect(getProjectScopeSelectionTarget(makeScope(projects), EnvironmentId.make("other"))).toBe(
       projects[0],
     );

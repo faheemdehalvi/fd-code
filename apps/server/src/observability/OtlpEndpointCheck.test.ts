@@ -71,7 +71,7 @@ const check = (input: Parameters<OtlpEndpointCheck.OtlpEndpointCheck["Service"][
   });
 
 describe("OtlpEndpointCheck", () => {
-  it.effect("posts an empty export for the signal with the T3 headers", () => {
+  it.effect("posts an empty export for the signal with the FD CODE headers", () => {
     const { requests, layer } = checkWith(200, {
       otlpMetricsUrl: "http://collector:4318/v1/metrics",
       otlpMetricsExport: { ...DEFAULT_SIGNAL_EXPORT, headers: { authorization: "Bearer t3" } },
@@ -87,7 +87,7 @@ describe("OtlpEndpointCheck", () => {
     }).pipe(Effect.provide(layer));
   });
 
-  it.effect("keeps T3 credentials paired with each running signal endpoint", () => {
+  it.effect("keeps FD CODE credentials paired with each running signal endpoint", () => {
     const signalExport = { ...DEFAULT_SIGNAL_EXPORT, headers: { "x-api-key": "secret" } };
     const { requests, layer } = checkWith(200, {
       otlpTracesUrl: "https://collector.example.com/v1/traces",

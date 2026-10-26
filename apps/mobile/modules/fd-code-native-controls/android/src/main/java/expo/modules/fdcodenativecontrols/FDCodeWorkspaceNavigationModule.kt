@@ -137,9 +137,9 @@ class FDCodeWorkspaceNavigationView(
   @Composable
   private fun tabIcon(tab: String) {
     val drawable = if (tab == "threads") {
-      R.drawable.t3_chats
+      R.drawable.fd_code_chats
     } else {
-      R.drawable.t3_pull_requests
+      R.drawable.fd_code_pull_requests
     }
     Icon(
       painter = painterResource(drawable),

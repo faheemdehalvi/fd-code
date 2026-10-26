@@ -65,8 +65,8 @@ export function PullRequestCardRow(props: {
         <Text
           className={
             props.destructive
-              ? "text-sm font-t3-medium text-danger-foreground"
-              : "text-sm font-t3-medium"
+              ? "text-sm font-fd-code-medium text-danger-foreground"
+              : "text-sm font-fd-code-medium"
           }
         >
           {props.title}

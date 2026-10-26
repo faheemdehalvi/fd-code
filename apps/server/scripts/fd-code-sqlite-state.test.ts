@@ -6,7 +6,7 @@ import * as Path from "effect/Path";
 import * as SqlClient from "effect/sql/SqlClient";
 
 import * as NodeSqliteClient from "@fdcode/shared/nodeSqliteClient";
-import { runSqliteState } from "./t3-sqlite-state.ts";
+import { runSqliteState } from "./fd-code-sqlite-state.ts";
 import * as HostProcess from "@fdcode/shared/HostProcess";
 import { symlinksSupported } from "@fdcode/shared/testing/symlinks";
 
@@ -25,11 +25,11 @@ const createFixtureDatabase = Effect.fn("createSqliteStateFixtureDatabase")(func
   }).pipe(Effect.provide(NodeSqliteClient.layer({ filename: databasePath })));
 });
 
-it.layer(NodeServices.layer)("t3-sqlite-state", (it) => {
+it.layer(NodeServices.layer)("fd-code-sqlite-state", (it) => {
   it.effect("reports each invalid SQL source with a specific error", () =>
     Effect.gen(function* () {
       const fs = yield* FileSystem.FileSystem;
-      const baseDir = yield* fs.makeTempDirectoryScoped({ prefix: "t3-sqlite-state-input-" });
+      const baseDir = yield* fs.makeTempDirectoryScoped({ prefix: "fd-code-sqlite-state-input-" });
 
       const multipleSources = yield* runSqliteState({
         operation: "query",
@@ -59,7 +59,7 @@ it.layer(NodeServices.layer)("t3-sqlite-state", (it) => {
   it.effect("queries an isolated database through Effect SQL", () =>
     Effect.gen(function* () {
       const fs = yield* FileSystem.FileSystem;
-      const baseDir = yield* fs.makeTempDirectoryScoped({ prefix: "t3-sqlite-state-query-" });
+      const baseDir = yield* fs.makeTempDirectoryScoped({ prefix: "fd-code-sqlite-state-query-" });
       yield* createFixtureDatabase(baseDir);
 
       const result = yield* runSqliteState({
@@ -78,7 +78,7 @@ it.layer(NodeServices.layer)("t3-sqlite-state", (it) => {
   it.effect("enables checkpoint_fullfsync on its direct connection", () =>
     Effect.gen(function* () {
       const fs = yield* FileSystem.FileSystem;
-      const baseDir = yield* fs.makeTempDirectoryScoped({ prefix: "t3-sqlite-state-fsync-" });
+      const baseDir = yield* fs.makeTempDirectoryScoped({ prefix: "fd-code-sqlite-state-fsync-" });
       yield* createFixtureDatabase(baseDir);
 
       const result = yield* runSqliteState({
@@ -100,7 +100,7 @@ it.layer(NodeServices.layer)("t3-sqlite-state", (it) => {
       Effect.gen(function* () {
         const fs = yield* FileSystem.FileSystem;
         const path = yield* Path.Path;
-        const baseDir = yield* fs.makeTempDirectoryScoped({ prefix: "t3-sqlite-state-exec-" });
+        const baseDir = yield* fs.makeTempDirectoryScoped({ prefix: "fd-code-sqlite-state-exec-" });
         yield* createFixtureDatabase(baseDir);
 
         const mutation = yield* runSqliteState({
@@ -124,7 +124,7 @@ it.layer(NodeServices.layer)("t3-sqlite-state", (it) => {
         assert.equal(error._tag, "SqliteStateSharedHomeMutationError");
 
         const aliasParent = yield* fs.makeTempDirectoryScoped({
-          prefix: "t3-sqlite-state-alias-",
+          prefix: "fd-code-sqlite-state-alias-",
         });
         const aliasBaseDir = path.join(aliasParent, "shared-home-alias");
         yield* fs.symlink(baseDir, aliasBaseDir);

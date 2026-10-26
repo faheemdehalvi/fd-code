@@ -197,8 +197,8 @@ server.listen(0, "127.0.0.1", () => {
           [
             ...(isWindows ? ["@echo off"] : ["#!/bin/sh"]),
             isWindows
-              ? '"%T3_TEST_NODE_BINARY%" "%T3_TEST_OPENCODE_SCRIPT%" %*'
-              : 'exec "$T3_TEST_NODE_BINARY" "$T3_TEST_OPENCODE_SCRIPT" "$@"',
+              ? '"%FDCODE_TEST_NODE_BINARY%" "%FDCODE_TEST_OPENCODE_SCRIPT%" %*'
+              : 'exec "$FDCODE_TEST_NODE_BINARY" "$FDCODE_TEST_OPENCODE_SCRIPT" "$@"',
             "",
           ].join("\n"),
         );
@@ -213,8 +213,8 @@ server.listen(0, "127.0.0.1", () => {
           port: 0,
           environment: {
             ...environment,
-            T3_TEST_NODE_BINARY: executablePath,
-            T3_TEST_OPENCODE_SCRIPT: scriptPath,
+            FDCODE_TEST_NODE_BINARY: executablePath,
+            FDCODE_TEST_OPENCODE_SCRIPT: scriptPath,
           },
         });
         const response = yield* HttpClient.get(`${server.url}/output`);
@@ -278,7 +278,7 @@ describe("OpenCode database lock startup", () => {
 import { readFileSync, writeFileSync, writeSync } from "node:fs";
 import { createServer } from "node:http";
 import { spawn } from "node:child_process";
-const path = process.env.T3_TEST_ATTEMPTS;
+const path = process.env.FDCODE_TEST_ATTEMPTS;
 let attempt = 0;
 try { attempt = Number(readFileSync(path, "utf8")); } catch {}
 writeFileSync(path, String(++attempt));
@@ -305,8 +305,8 @@ server.listen(0, "127.0.0.1", () => console.log("opencode server listening on ht
         yield* fs.writeFileString(
           binaryPath,
           platform === "win32"
-            ? '@echo off\n"%T3_TEST_NODE_BINARY%" "%T3_TEST_OPENCODE_SCRIPT%" %*\n'
-            : '#!/bin/sh\nexec "$T3_TEST_NODE_BINARY" "$T3_TEST_OPENCODE_SCRIPT" "$@"\n',
+            ? '@echo off\n"%FDCODE_TEST_NODE_BINARY%" "%FDCODE_TEST_OPENCODE_SCRIPT%" %*\n'
+            : '#!/bin/sh\nexec "$FDCODE_TEST_NODE_BINARY" "$FDCODE_TEST_OPENCODE_SCRIPT" "$@"\n',
         );
         if (platform !== "win32") yield* fs.chmod(binaryPath, 0o700);
         const runtime = yield* OpenCodeRuntime.OpenCodeRuntime;
@@ -318,9 +318,9 @@ server.listen(0, "127.0.0.1", () => console.log("opencode server listening on ht
             timeoutMs: 2_000,
             environment: {
               ...environment,
-              T3_TEST_NODE_BINARY: executablePath,
-              T3_TEST_OPENCODE_SCRIPT: scriptPath,
-              T3_TEST_ATTEMPTS: attemptsPath,
+              FDCODE_TEST_NODE_BINARY: executablePath,
+              FDCODE_TEST_OPENCODE_SCRIPT: scriptPath,
+              FDCODE_TEST_ATTEMPTS: attemptsPath,
             },
             verify: () => Effect.succeed("1.14.19"),
           }),

@@ -57,7 +57,7 @@ jobs:
           run-install: false
 
       - name: Install bundle dependencies
-        run: vp install --filter=t3... --filter=@fdcode/web... --filter=@fdcode/desktop... --filter=@fdcode/scripts...
+        run: vp install --filter=fd-code... --filter=@fdcode/web... --filter=@fdcode/desktop... --filter=@fdcode/scripts...
 
       # The publish workflow derives the same version from this run's number,
       # so the version baked into the bundle matches the packaged app.

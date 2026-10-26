@@ -47,7 +47,7 @@ describe("relayManagedEnvironmentIds", () => {
 });
 
 describe("mobile environment settings sections", () => {
-  it("keeps saved relay-managed connections under T3 Connect", () => {
+  it("keeps saved relay-managed connections under FD CODE Connect", () => {
     const local = connectedEnvironment({
       environmentId: "environment-local",
       isRelayManaged: false,
@@ -158,7 +158,7 @@ describe("mobile environment settings sections", () => {
     expect(sections.availableCloudEnvironments).toEqual([]);
   });
 
-  it("offers T3 Connect for a machine saved only over the LAN, as an added route", () => {
+  it("offers FD CODE Connect for a machine saved only over the LAN, as an added route", () => {
     const local = connectedEnvironment({
       environmentId: "environment-desk",
       isRelayManaged: false,

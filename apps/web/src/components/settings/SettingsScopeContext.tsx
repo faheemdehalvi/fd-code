@@ -1,9 +1,10 @@
 import {
   type EnvironmentId,
-  T3_PROJECT_FILE_NAME,
+  FDCODE_PROJECT_FILE_NAME,
+  LEGACY_PROJECT_FILE_NAME,
   type FDCodeProjectFile,
 } from "@fdcode/contracts";
-import { parseFDCodeProjectFile } from "@fdcode/shared/t3ProjectFile";
+import { parseFDCodeProjectFile } from "@fdcode/shared/fdCodeProjectFile";
 import { useAtomValue } from "@effect/atom-react";
 import * as Option from "effect/Option";
 import { AsyncResult, Atom } from "effect/reactivity";
@@ -29,12 +30,21 @@ const memberProjectFilesAtom = Atom.family((membersKey: string) => {
     const files = new Map<string, FDCodeProjectFile | null>();
     for (const [environmentId, workspaceRoot, physicalProjectKey] of members) {
       const result = get(
-        getProjectFileQueryAtom(environmentId, workspaceRoot, T3_PROJECT_FILE_NAME),
+        getProjectFileQueryAtom(environmentId, workspaceRoot, FDCODE_PROJECT_FILE_NAME),
       );
       if (result.waiting) continue;
-      const data =
-        get(optimisticFileAtom(environmentId, workspaceRoot, T3_PROJECT_FILE_NAME))?.data ??
+      let data =
+        get(optimisticFileAtom(environmentId, workspaceRoot, FDCODE_PROJECT_FILE_NAME))?.data ??
         Option.getOrNull(AsyncResult.value(result));
+      if (data === null) {
+        const legacy = get(
+          getProjectFileQueryAtom(environmentId, workspaceRoot, LEGACY_PROJECT_FILE_NAME),
+        );
+        if (legacy.waiting) continue;
+        data =
+          get(optimisticFileAtom(environmentId, workspaceRoot, LEGACY_PROJECT_FILE_NAME))?.data ??
+          Option.getOrNull(AsyncResult.value(legacy));
+      }
       files.set(
         physicalProjectKey,
         data === null || data.truncated ? null : parseFDCodeProjectFile(data.contents),

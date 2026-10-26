@@ -96,7 +96,7 @@ export function RenderFailureView(
         props.bottomInset ? { paddingBottom: 32 + props.bottomInset } : undefined
       }
     >
-      <Text accessibilityRole="header" className="text-center text-xl font-t3-bold">
+      <Text accessibilityRole="header" className="text-center text-xl font-fd-code-bold">
         {title}
       </Text>
       <Text className="text-center text-sm text-foreground-muted">

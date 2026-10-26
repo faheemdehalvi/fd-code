@@ -35,7 +35,7 @@ import {
   resolveFDCodeMcpToolPresentation,
   type FDCodeMcpToolLogo,
   type FDCodeMcpToolPresentation,
-} from "@fdcode/shared/t3McpToolPresentation";
+} from "@fdcode/shared/fdCodeMcpToolPresentation";
 import type {
   ChatAttachment,
   MessageId,

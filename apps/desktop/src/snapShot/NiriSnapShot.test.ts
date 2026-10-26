@@ -108,11 +108,11 @@ afterEach(async () => {
 });
 
 it("selects the native adapter without needing a portal or GNOME extension", async () => {
-  expect(await getLinuxCaptureSupport("com.t3tools.FDCode")).toEqual({
+  expect(await getLinuxCaptureSupport("com.faheem.FDCode")).toEqual({
     linuxBackend: "niri",
     linuxFeedbackAvailable: false,
   });
-  const snapshot = await captureLinuxWindow("com.t3tools.FDCode");
+  const snapshot = await captureLinuxWindow("com.faheem.FDCode");
   expect(snapshot?.png).toEqual(png);
   expect(snapshot?.window).toMatchObject({
     processId: 123,
@@ -128,19 +128,19 @@ it("selects the native adapter without needing a portal or GNOME extension", asy
   expect(await NodeFSP.stat(NodePath.dirname(capturePath!)).catch(() => undefined)).toBeUndefined();
 });
 
-it("does not activate T3 until requested, then matches PID and title", async () => {
+it("does not activate FD CODE until requested, then matches PID and title", async () => {
   const snapshot = await captureNiriWindow(socketPath);
   expect(calls.some((call) => typeof call !== "string" && call.Action.FocusWindow)).toBe(false);
   windows = [
     { ...window, id: 1, pid: 999, title: "FD CODE" },
-    { ...window, id: 2, pid: process.pid, title: "Other T3" },
+    { ...window, id: 2, pid: process.pid, title: "Other FD CODE" },
     { ...window, id: 3, pid: process.pid, title: "FD CODE" },
   ];
   await snapshot.feedback!.activate("FD CODE");
   expect(calls).toContainEqual({ Action: { FocusWindow: { id: 3 } } });
 });
 
-it("waits for the restored T3 window to map instead of polling", async () => {
+it("waits for the restored FD CODE window to map instead of polling", async () => {
   const snapshot = await captureNiriWindow(socketPath);
   const original = handler;
   handler = async (request, socket) => {
@@ -196,7 +196,7 @@ it("rejects compositor errors and cleans up its temporary image", async () => {
       send(socket, { Err: "window disappeared" });
     } else await original(request, socket);
   };
-  await expect(captureLinuxWindow("com.t3tools.FDCode")).rejects.toThrow("window disappeared");
+  await expect(captureLinuxWindow("com.faheem.FDCode")).rejects.toThrow("window disappeared");
   expect(await NodeFSP.stat(NodePath.dirname(capturePath!)).catch(() => undefined)).toBeUndefined();
 });
 

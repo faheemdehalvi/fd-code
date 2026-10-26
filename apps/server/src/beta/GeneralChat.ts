@@ -7,6 +7,7 @@ import {
   type GeneralChatSendInput,
   type GeneralChatSendResult,
   MessageId,
+  type Project,
   ProjectId,
   ProviderInstanceId,
   ThreadId,
@@ -51,13 +52,29 @@ export const make = Effect.gen(function* () {
   const laya = yield* Laya.Laya;
   const lock = yield* Semaphore.make(1);
   const workspaceRoot = path.join(config.baseDir, "general-chat");
+  const projectId = ProjectId.make("general-chat-project");
+  const legacyWorkspaceRoot =
+    path.basename(config.baseDir) === ".fd-code"
+      ? path.join(path.dirname(config.baseDir), ".t3", "general-chat")
+      : null;
   const operationFailed = (cause: unknown) =>
     new GeneralChatError({ reason: "operation_failed", cause });
+  // Moving the home directory does not rewrite the event-sourced project path.
+  const repairWorkspace = (project: Project) =>
+    project.id === projectId && project.workspaceRoot === legacyWorkspaceRoot
+      ? projects.update({
+          commandId: CommandId.make(`general-workspace:${workspaceRoot}`),
+          projectId,
+          workspaceRoot,
+        })
+      : Effect.succeed(project);
   const open = Effect.gen(function* () {
     yield* laya.warm;
+    const previousProject = yield* projects.getById(projectId);
+    if (Option.isSome(previousProject)) yield* repairWorkspace(previousProject.value);
     const project = yield* projects.bootstrap({
       commandId: CommandId.make("general-chat:project"),
-      projectId: ProjectId.make("general-chat-project"),
+      projectId,
       title: "General",
       workspaceRoot,
       createWorkspaceRootIfMissing: true,
@@ -116,10 +133,14 @@ export const make = Effect.gen(function* () {
     if (
       !input.threadId.startsWith(GENERAL_CHAT_THREAD_PREFIX) ||
       Option.isNone(project) ||
-      project.value.workspaceRoot !== workspaceRoot ||
       source.thread.archivedAt !== null ||
       source.thread.deletedAt !== null
     )
+      return yield* new GeneralChatError({ reason: "unavailable" });
+    const sourceProject = yield* repairWorkspace(project.value).pipe(
+      Effect.mapError(operationFailed),
+    );
+    if (sourceProject.workspaceRoot !== workspaceRoot)
       return yield* new GeneralChatError({ reason: "unavailable" });
     const prior = source.messages.find((m) => m.id === input.messageId);
     if (prior && prior.text !== input.text)

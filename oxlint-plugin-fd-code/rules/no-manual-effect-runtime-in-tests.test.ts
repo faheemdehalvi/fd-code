@@ -2,11 +2,11 @@ import { assert, describe } from "@effect/vitest";
 
 import { createOxlintRuleHarness } from "../test/utils.ts";
 
-const rule = createOxlintRuleHarness("t3code/no-manual-effect-runtime-in-tests", {
+const rule = createOxlintRuleHarness("fd-code/no-manual-effect-runtime-in-tests", {
   filename: "fixture.test.ts",
 });
 
-describe("t3code/no-manual-effect-runtime-in-tests", () => {
+describe("fd-code/no-manual-effect-runtime-in-tests", () => {
   rule.valid(
     "allows @effect/vitest effect tests",
     `
@@ -61,7 +61,7 @@ describe("t3code/no-manual-effect-runtime-in-tests", () => {
   );
 });
 
-const productionRule = createOxlintRuleHarness("t3code/no-manual-effect-runtime-in-tests");
+const productionRule = createOxlintRuleHarness("fd-code/no-manual-effect-runtime-in-tests");
 
 productionRule.valid(
   "allows production runtime boundaries",
@@ -72,12 +72,12 @@ productionRule.valid(
   `,
 );
 
-const legacyRule = createOxlintRuleHarness("t3code/no-manual-effect-runtime-in-tests", {
+const legacyRule = createOxlintRuleHarness("fd-code/no-manual-effect-runtime-in-tests", {
   filename: "legacy.test.ts",
   ruleOptions: [{ maxOccurrences: 2 }],
 });
 
-describe("t3code/no-manual-effect-runtime-in-tests with maxOccurrences", () => {
+describe("fd-code/no-manual-effect-runtime-in-tests with maxOccurrences", () => {
   legacyRule.valid(
     "allows occurrences up to the ceiling",
     `

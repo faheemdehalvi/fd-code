@@ -1,7 +1,7 @@
 import * as Exit from "effect/Exit";
 import * as Schema from "effect/Schema";
 
-import { FDCodeProjectFile, T3_PROJECT_FILE_SCHEMA_URL } from "@fdcode/contracts";
+import { FDCodeProjectFile, FDCODE_PROJECT_FILE_SCHEMA_URL } from "@fdcode/contracts";
 
 import { fromLenientJson } from "./schemaJson.ts";
 
@@ -18,7 +18,7 @@ export function buildFDCodeProjectFileJsonSchema(): Record<string, unknown> {
   const document = Schema.toJsonSchemaDocument(FDCodeProjectFile, { onExcessProperty: "error" });
   const jsonSchema: Record<string, unknown> = {
     $schema: "https://json-schema.org/draft/2020-12/schema",
-    $id: T3_PROJECT_FILE_SCHEMA_URL,
+    $id: FDCODE_PROJECT_FILE_SCHEMA_URL,
     ...document.schema,
   };
   if (document.definitions && Object.keys(document.definitions).length > 0) {

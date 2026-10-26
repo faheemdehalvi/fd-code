@@ -1,5 +1,5 @@
 import type { ToolActivityIcon, ToolActivitySource } from "@fdcode/contracts";
-import { resolveFDCodeMcpToolDefinition } from "@fdcode/shared/t3McpToolPresentation";
+import { resolveFDCodeMcpToolDefinition } from "@fdcode/shared/fdCodeMcpToolPresentation";
 
 export function normalizeMcpText(value: unknown, maxLength = 160): string | undefined {
   if (typeof value !== "string") return undefined;

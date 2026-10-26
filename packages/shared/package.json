@@ -155,9 +155,9 @@
       "types": "./src/projectSettings.ts",
       "import": "./src/projectSettings.ts"
     },
-    "./t3ProjectFile": {
-      "types": "./src/t3ProjectFile.ts",
-      "import": "./src/t3ProjectFile.ts"
+    "./fdCodeProjectFile": {
+      "types": "./src/fdCodeProjectFile.ts",
+      "import": "./src/fdCodeProjectFile.ts"
     },
     "./orchestrationTiming": {
       "types": "./src/orchestrationTiming.ts",
@@ -391,9 +391,9 @@
       "types": "./src/orchestrationV2Timeline.ts",
       "import": "./src/orchestrationV2Timeline.ts"
     },
-    "./t3McpToolPresentation": {
-      "types": "./src/t3McpToolPresentation.ts",
-      "import": "./src/t3McpToolPresentation.ts"
+    "./fdCodeMcpToolPresentation": {
+      "types": "./src/fdCodeMcpToolPresentation.ts",
+      "import": "./src/fdCodeMcpToolPresentation.ts"
     },
     "./Array": {
       "types": "./src/Array.ts",

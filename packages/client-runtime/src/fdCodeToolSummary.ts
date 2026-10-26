@@ -1,4 +1,4 @@
-import type { FDCodeMcpToolSummaryAction } from "@fdcode/shared/t3McpToolPresentation";
+import type { FDCodeMcpToolSummaryAction } from "@fdcode/shared/fdCodeMcpToolPresentation";
 
 export interface FDCodeToolSummaryCall {
   readonly input: unknown;

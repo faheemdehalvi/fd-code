@@ -9,7 +9,7 @@ import { parse as parseYamlDocument } from "yaml";
 
 /**
  * The home directory the agent expands `~` against, matching Python's
- * `os.path.expanduser` in the launch environment T3 hands the process:
+ * `os.path.expanduser` in the launch environment FD CODE hands the process:
  * `USERPROFILE`, then `HOMEDRIVE` + `HOMEPATH`, on Windows and `HOME`
  * elsewhere.
  */
@@ -29,7 +29,7 @@ export function resolveAntigravityUserHome(
 }
 
 /**
- * The agent resolves both under `GEMINI_HOME`, which T3 points at a private
+ * The agent resolves both under `GEMINI_HOME`, which FD CODE points at a private
  * profile, so the profile links these back to the user's `~/.gemini`.
  * `~/.agents/skills` is not read: the agent only treats `.agents/skills` as a
  * project directory.

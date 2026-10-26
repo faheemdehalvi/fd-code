@@ -37,7 +37,7 @@ export const DesktopConfig = Config.all({
   appDataDirectory: trimmedString("APPDATA"),
   xdgConfigHome: trimmedString("XDG_CONFIG_HOME"),
   xdgDataHome: trimmedString("XDG_DATA_HOME"),
-  t3Home: trimmedString("FDCODE_HOME"),
+  fdCodeHome: trimmedString("FDCODE_HOME"),
   devServerUrl: Config.URL("VITE_DEV_SERVER_URL").pipe(Config.option),
   appUserModelIdOverride: trimmedString("FDCODE_DESKTOP_APP_USER_MODEL_ID"),
   devRemoteFDCodeServerEntryPath: trimmedString("FDCODE_DEV_REMOTE_T3_SERVER_ENTRY_PATH"),

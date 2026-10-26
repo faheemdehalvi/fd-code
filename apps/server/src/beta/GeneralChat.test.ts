@@ -17,6 +17,7 @@ import * as DateTime from "effect/DateTime";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import * as Option from "effect/Option";
+import * as Path from "effect/Path";
 import * as Schema from "effect/Schema";
 import * as GeneralChat from "./GeneralChat.ts";
 import { Laya } from "./Laya.ts";
@@ -36,7 +37,7 @@ const decodeThread = Schema.decodeUnknownSync(OrchestrationV2AppThread);
 const decodeEvent = Schema.decodeUnknownSync(OrchestrationV2DomainEvent);
 const sourceId = ThreadId.make("general-chat-test");
 const targetId = ThreadId.make("target-chat");
-const generalProject = ProjectId.make("general-project");
+const generalProject = ProjectId.make("general-chat-project");
 const targetProject = ProjectId.make("target-project");
 const request = {
   threadId: sourceId,
@@ -44,9 +45,14 @@ const request = {
   text: "Fix the analysis cache",
 };
 
-const fixture = (mode: "match" | "uncertain" | "unavailable" | "busy" = "match") =>
+const fixture = (
+  mode: "match" | "uncertain" | "unavailable" | "busy" = "match",
+  workspace: "current" | "legacy" | "foreign" = "current",
+) =>
   Effect.gen(function* () {
-    const config = yield* Config.ServerConfig;
+    const originalConfig = yield* Config.ServerConfig;
+    const path = yield* Path.Path;
+    const config = { ...originalConfig, baseDir: path.join(originalConfig.baseDir, ".fd-code") };
     const at = DateTime.makeUnsafe("2026-10-21T00:00:00.000Z");
     const projection = (id: ThreadId, projectId: ProjectId, title: string) =>
       emptyProjection({
@@ -82,10 +88,14 @@ const fixture = (mode: "match" | "uncertain" | "unavailable" | "busy" = "match")
       [sourceId, projection(sourceId, generalProject, "General chat")],
       [targetId, projection(targetId, targetProject, "REA cache optimisation")],
     ]);
-    const project: Project = {
+    let project: Project = {
       id: generalProject,
       title: "General",
-      workspaceRoot: `${config.baseDir}/general-chat`,
+      workspaceRoot: path.join(
+        originalConfig.baseDir,
+        workspace === "legacy" ? ".t3" : workspace === "foreign" ? "other" : ".fd-code",
+        "general-chat",
+      ),
       defaultModelSelection: null,
       scripts: [],
       createdAt: DateTime.formatIso(at),
@@ -95,6 +105,7 @@ const fixture = (mode: "match" | "uncertain" | "unavailable" | "busy" = "match")
     const sent: Threads.ThreadManagementSendInput[] = [];
     const recorded: OrchestrationV2DomainEvent[] = [];
     const commands: unknown[] = [];
+    const movedRoots: string[] = [];
     let choices = 0;
     let failNext = false;
     let busy = mode === "busy";
@@ -105,6 +116,14 @@ const fixture = (mode: "match" | "uncertain" | "unavailable" | "busy" = "match")
     const layer = Layer.mergeAll(
       Layer.mock(Projects.ProjectService)({
         getById: () => Effect.succeed(Option.some(project)),
+        update: (input) =>
+          Effect.sync(() => {
+            if (input.workspaceRoot !== undefined) {
+              movedRoots.push(input.workspaceRoot);
+              project = { ...project, workspaceRoot: input.workspaceRoot };
+            }
+            return project;
+          }),
         bootstrap: () => Effect.succeed({ project, created: false }),
         listShells: () =>
           Effect.succeed([
@@ -182,13 +201,18 @@ const fixture = (mode: "match" | "uncertain" | "unavailable" | "busy" = "match")
       }),
       Settings.layerTest(),
     );
-    const service = yield* GeneralChat.make.pipe(Effect.provide(layer));
+    const service = yield* GeneralChat.make.pipe(
+      Effect.provide(layer),
+      Effect.provideService(Config.ServerConfig, config),
+    );
     return {
       service,
       sent,
       recorded,
       commands,
       state,
+      movedRoots,
+      workspaceRoot: path.join(config.baseDir, "general-chat"),
       choices: () => choices,
       fail: () => {
         failNext = true;
@@ -330,6 +354,49 @@ it.effect("honours General composer choices while leaving routed destination cho
       });
       expect(routed.sent[0]).not.toHaveProperty("modelSelection");
       expect(routed.commands).toHaveLength(0);
+    }),
+  ),
+);
+
+it.effect("repairs the renamed home before sending follow-ups without replacing the thread", () =>
+  test(
+    Effect.gen(function* () {
+      const f = yield* fixture("unavailable", "legacy");
+      const first = yield* f.service.send({ ...request, text: "Is Laya working?" });
+      const second = yield* f.service.send({
+        ...request,
+        messageId: MessageId.make("question-2"),
+        text: "What about now?",
+      });
+      expect(first.threadId).toBe(sourceId);
+      expect(second.threadId).toBe(sourceId);
+      expect(f.movedRoots).toEqual([f.workspaceRoot]);
+      expect(f.sent).toHaveLength(2);
+      expect(f.commands).toHaveLength(0);
+    }),
+  ),
+);
+
+it.effect("repairs the renamed home before reopening the existing General thread", () =>
+  test(
+    Effect.gen(function* () {
+      const f = yield* fixture("unavailable", "legacy");
+      expect((yield* f.service.open).threadId).toBe(sourceId);
+      expect(f.movedRoots).toEqual([f.workspaceRoot]);
+      expect((yield* f.service.send(request)).threadId).toBe(sourceId);
+      expect(f.movedRoots).toHaveLength(1);
+    }),
+  ),
+);
+
+it.effect("does not relocate an unrelated General-looking workspace", () =>
+  test(
+    Effect.gen(function* () {
+      const f = yield* fixture("unavailable", "foreign");
+      expect((yield* Effect.flip(f.service.send(request))).reason).toBe("unavailable");
+      expect(f.movedRoots).toHaveLength(0);
+      expect(f.sent).toHaveLength(0);
+      expect(f.choices()).toBe(0);
     }),
   ),
 );
