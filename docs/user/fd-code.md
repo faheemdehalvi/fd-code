@@ -4,9 +4,17 @@ FD CODE is Faheem's customised FD CODE app, based on the newer Alpha codebase. I
 
 ## Install on macOS
 
-Download the Apple Silicon DMG from this repository's Releases page, open it, and drag **FD CODE.app** into Applications. Quit the existing FD CODE normally before replacing it. The app keeps its existing T3 data directory and desktop profile; installing it does not import or erase the older Beta profile.
+Download [FD-CODE-macOS-arm64.dmg](https://github.com/faheemdehalvi/fd-code/releases/latest/download/FD-CODE-macOS-arm64.dmg), open it, and drag **FD CODE.app** into Applications. Quit the existing FD CODE normally before replacing it. The app keeps its existing T3 data directory and desktop profile; installing it does not import or erase the older Beta profile.
 
-This release is locally signed, not Apple-notarized. macOS may require you to allow it under System Settings → Privacy & Security after the first launch attempt.
+This release is locally signed, not Apple-notarized. macOS may require you to allow it under System Settings → Privacy & Security after the first launch attempt. If macOS instead reports that the app is damaged, run `xattr -dr com.apple.quarantine "/Applications/FD CODE.app"` and open it again.
+
+## Install on Windows
+
+Download [FD-CODE-Windows-x64.exe](https://github.com/faheemdehalvi/fd-code/releases/latest/download/FD-CODE-Windows-x64.exe) and run it. The installer is not code-signed, so Windows SmartScreen may stop it: choose **More info**, then **Run anyway**.
+
+## Add-ons
+
+Laya, the RAG and Graphify skills, and individual ARTsie editors install separately. The [README](../../README.md#add-ons) has one command for each.
 
 ## General chat and Laya
 

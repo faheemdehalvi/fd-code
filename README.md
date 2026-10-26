@@ -2,8 +2,45 @@
 
 This repository now ships the current **FD CODE** app, based on the newer Alpha codebase, with General chat, local Laya routing, Brain continuity and ARTsie integration.
 
-- [Download the macOS Apple Silicon DMG](https://github.com/faheemdehalvi/t3-beta/releases/latest)
-- [Installation and General/Laya setup](docs/user/fd-code.md)
+## Download
+
+| Platform | Installer |
+| --- | --- |
+| macOS, Apple Silicon | [FD-CODE-macOS-arm64.dmg](https://github.com/faheemdehalvi/fd-code/releases/latest/download/FD-CODE-macOS-arm64.dmg) |
+| Windows x64 | [FD-CODE-Windows-x64.exe](https://github.com/faheemdehalvi/fd-code/releases/latest/download/FD-CODE-Windows-x64.exe) |
+
+Each installer has a `.sha256` file next to it on the [release page](https://github.com/faheemdehalvi/fd-code/releases/latest). Neither build is notarised or code-signed by a publisher, so macOS and Windows warn on first launch. See [Installation](docs/user/fd-code.md) for how to allow it.
+
+## Add-ons
+
+The app runs without any of these. Install only the ones you want.
+
+| Add-on | What it adds | macOS / Linux | Windows (PowerShell) |
+| --- | --- | --- | --- |
+| Laya | Local routing for General chat | `curl -fsSL https://raw.githubusercontent.com/faheemdehalvi/fd-code/t3-beta/scripts/laya-setup.mjs -o laya-setup.mjs && node laya-setup.mjs` | `iwr https://raw.githubusercontent.com/faheemdehalvi/fd-code/t3-beta/scripts/laya-setup.mjs -OutFile laya-setup.mjs; node laya-setup.mjs --python python` |
+| RAG skill | Agents search your document knowledge bases | `git clone https://github.com/faheemdehalvi/rag-skill.git ~/.claude/skills/rag && ~/.claude/skills/rag/scripts/setup.sh` | Use WSL and the macOS / Linux command |
+| Graphify skill | Agents query a repository as a knowledge graph | `uv tool install graphifyy && graphify install` | `uv tool install graphifyy; graphify install` |
+| ARTsie editors | ArtCraft creative apps with a shared MCP gateway (macOS only) | `git clone https://github.com/faheemdehalvi/artsie.git ARTsie && cd ARTsie && ./setup.sh --apps soundcraft` | Not available |
+
+Laya needs Node and Python 3.11. Graphify needs [uv](https://docs.astral.sh/uv/).
+
+**ARTsie: choose your editors.** Replace `soundcraft` with any of the ids below, as many as you want. `./setup.sh --apps photocraft effectcraft` installs those two and nothing else; `--all` installs the full suite (about 6 GB). Run it again later with more ids to add editors.
+
+| Editor | id | Editor | id |
+| --- | --- | --- | --- |
+| PhotoCraft | `photocraft` | SoundCraft (audio) | `soundcraft` |
+| EffectCraft | `effectcraft` | FilmCraft | `filmcraft` |
+| VectorCraft | `vectorcraft` | LightCraft | `lightcraft` |
+| DesignCraft | `designcraft` | FigCraft | `figcraft` |
+| PdfCraft | `pdfcraft` | WordCraft | `wordcraft` |
+| DeckCraft | `deckcraft` | GridCraft | `gridcraft` |
+| CADCraft | `cadcraft` | ArtCraft Launcher | `craft-launcher` |
+
+`/rag` and `/graphify` inside a chat are built into the app and need no add-on. Brain session continuity is also built in; the separate Brain knowledge desk is not distributed.
+
+## More
+
+- [Installation, General chat and Laya](docs/user/fd-code.md)
 
 The older Beta implementation remains in Git history. Upstream T3 Code documentation follows below; upstream downloads are not this customised build.
 
