@@ -57,7 +57,7 @@ export function CompactBrandTitle(
         className="font-fd-code-medium text-foreground-muted"
         style={{ fontSize: 21 * scale, letterSpacing: -0.5 * scale }}
       >
-        Code
+        CODE
       </Text>
       {showStage ? (
         <View
