@@ -44,7 +44,7 @@ const target = new PrimaryConnectionTarget({
   wsBaseUrl: "wss://remote.example.test/ws",
 });
 const responses = {
-  "/.well-known/fd-code/environment": {
+  "/.well-known/t3/environment": {
     environmentId: target.environmentId,
     label: target.label,
     platform: { os: "linux", arch: "x64" },

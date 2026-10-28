@@ -66,7 +66,7 @@ function layerPairingHttp(
     const url = String(input);
     calls.push({ url, init });
 
-    if (url.endsWith("/.well-known/fd-code/environment")) {
+    if (url.endsWith("/.well-known/t3/environment")) {
       if (options?.failDescriptor === true) {
         return Promise.resolve(
           Response.json({ message: "descriptor unavailable" }, { status: 503 }),
@@ -251,7 +251,7 @@ describe("connection onboarding", () => {
         },
       });
       expect(calls.map((call) => call.url)).toEqual([
-        "https://remote.example.test/.well-known/fd-code/environment",
+        "https://remote.example.test/.well-known/t3/environment",
         "https://remote.example.test/oauth/token",
       ]);
 
@@ -416,7 +416,7 @@ describe("connection onboarding", () => {
       );
       expect(error).toMatchObject({ reason: "unsupported" });
       expect(calls.map((call) => call.url)).toEqual([
-        "https://remote.example.test/.well-known/fd-code/environment",
+        "https://remote.example.test/.well-known/t3/environment",
       ]);
     }),
   );
@@ -456,7 +456,7 @@ describe("connection onboarding", () => {
       expect(error).toMatchObject({ reason: "configuration" });
       expect(error.message).toContain("different machine");
       expect(calls.map((call) => call.url)).toEqual([
-        "https://remote.example.test/.well-known/fd-code/environment",
+        "https://remote.example.test/.well-known/t3/environment",
       ]);
     }),
   );
@@ -501,7 +501,7 @@ describe("connection onboarding", () => {
       expect(error).toMatchObject({ reason: "unsupported" });
       expect(error).not.toHaveProperty("serverUpdateRequired");
       expect(calls.map((call) => call.url)).toEqual([
-        "https://remote.example.test/.well-known/fd-code/environment",
+        "https://remote.example.test/.well-known/t3/environment",
       ]);
     }),
   );
@@ -524,7 +524,7 @@ describe("connection onboarding", () => {
       );
 
       expect(calls.map((call) => call.url)).toEqual([
-        "https://remote.example.test/.well-known/fd-code/environment",
+        "https://remote.example.test/.well-known/t3/environment",
       ]);
     }),
   );

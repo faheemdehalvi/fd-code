@@ -41,7 +41,7 @@ describe("primary environment HTTP layer", { concurrent: false }, () => {
     Object.defineProperty(globalThis, "window", {
       configurable: true,
       value: {
-        location: { origin: "fd-code://app" },
+        location: { origin: "t3code://app" },
         desktopBridge: {
           getLocalEnvironmentBootstrap: () => ({
             label: "Local environment",

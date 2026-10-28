@@ -1546,7 +1546,7 @@ describe("EnvironmentSupervisor", () => {
         const pathname = new URL(request.url).pathname;
         httpPaths.push(pathname);
         switch (pathname) {
-          case "/.well-known/fd-code/environment":
+          case "/.well-known/t3/environment":
             return Promise.resolve(
               Response.json({
                 environmentId: TARGET.environmentId,

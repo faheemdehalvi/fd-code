@@ -122,8 +122,8 @@ describe("environmentBootstrap", () => {
     await installDescriptorApi();
 
     await expect(resolveInitialPrimaryEnvironmentDescriptor()).resolves.toEqual(BASE_ENVIRONMENT);
-    expect(resolvePrimaryEnvironmentHttpUrl("/.well-known/fd-code/environment")).toBe(
-      "https://remote.example.com/.well-known/fd-code/environment",
+    expect(resolvePrimaryEnvironmentHttpUrl("/.well-known/t3/environment")).toBe(
+      "https://remote.example.com/.well-known/t3/environment",
     );
   });
 
@@ -132,8 +132,8 @@ describe("environmentBootstrap", () => {
     await installDescriptorApi();
 
     await expect(resolveInitialPrimaryEnvironmentDescriptor()).resolves.toEqual(BASE_ENVIRONMENT);
-    expect(resolvePrimaryEnvironmentHttpUrl("/.well-known/fd-code/environment")).toBe(
-      "https://remote.example.com/.well-known/fd-code/environment",
+    expect(resolvePrimaryEnvironmentHttpUrl("/.well-known/t3/environment")).toBe(
+      "https://remote.example.com/.well-known/t3/environment",
     );
     expect(getPrimaryKnownEnvironment()?.target).toEqual({
       httpBaseUrl: "https://remote.example.com/",
@@ -146,8 +146,8 @@ describe("environmentBootstrap", () => {
     await installDescriptorApi();
 
     await expect(resolveInitialPrimaryEnvironmentDescriptor()).resolves.toEqual(BASE_ENVIRONMENT);
-    expect(resolvePrimaryEnvironmentHttpUrl("/.well-known/fd-code/environment")).toBe(
-      "https://remote.example.com/.well-known/fd-code/environment",
+    expect(resolvePrimaryEnvironmentHttpUrl("/.well-known/t3/environment")).toBe(
+      "https://remote.example.com/.well-known/t3/environment",
     );
     expect(getPrimaryKnownEnvironment()?.target).toEqual({
       httpBaseUrl: "https://remote.example.com/",
@@ -178,8 +178,8 @@ describe("environmentBootstrap", () => {
     await installDescriptorApi();
 
     await expect(resolveInitialPrimaryEnvironmentDescriptor()).resolves.toEqual(BASE_ENVIRONMENT);
-    expect(resolvePrimaryEnvironmentHttpUrl("/.well-known/fd-code/environment")).toBe(
-      "http://localhost:5735/.well-known/fd-code/environment",
+    expect(resolvePrimaryEnvironmentHttpUrl("/.well-known/t3/environment")).toBe(
+      "http://localhost:5735/.well-known/t3/environment",
     );
   });
 
@@ -205,8 +205,8 @@ describe("environmentBootstrap", () => {
     await installDescriptorApi();
 
     await expect(resolveInitialPrimaryEnvironmentDescriptor()).resolves.toEqual(BASE_ENVIRONMENT);
-    expect(resolvePrimaryEnvironmentHttpUrl("/.well-known/fd-code/environment")).toBe(
-      "http://127.0.0.1:5733/.well-known/fd-code/environment",
+    expect(resolvePrimaryEnvironmentHttpUrl("/.well-known/t3/environment")).toBe(
+      "http://127.0.0.1:5733/.well-known/t3/environment",
     );
   });
 
@@ -259,7 +259,7 @@ describe("environmentBootstrap", () => {
 
   it("has no primary target when the desktop local environment is disabled", () => {
     vi.stubGlobal("window", {
-      location: new URL("fd-code://app/"),
+      location: new URL("t3code://app/"),
       desktopBridge: {
         getLocalEnvironmentEnabled: () => false,
         getLocalEnvironmentBootstraps: () => [],

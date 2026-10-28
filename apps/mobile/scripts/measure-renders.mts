@@ -132,7 +132,7 @@ const connectServer = Effect.fn("measure.connectServer")(function* (options: Opt
     HttpClient.filterStatusOk,
   );
   const descriptor = yield* http
-    .get(`${options.server}/.well-known/fd-code/environment`)
+    .get(`${options.server}/.well-known/t3/environment`)
     .pipe(Effect.flatMap(HttpClientResponse.schemaBodyJson(ExecutionEnvironmentDescriptor)));
   const shell = yield* http
     .get(`${options.server}/api/orchestration/shell`)

@@ -17,7 +17,7 @@ const APP_DISPLAY_NAME = isDevelopment ? "FD CODE (Dev)" : "FD CODE (Beta)";
 const APP_BUNDLE_ID = isDevelopment
   ? `com.faheem.fdcode.dev.${devBundleIdSuffix || "local"}`
   : "com.faheem.fdcode";
-const APP_PROTOCOL_SCHEMES = isDevelopment ? ["fd-code-dev"] : ["fd-code"];
+const APP_PROTOCOL_SCHEMES = isDevelopment ? ["t3code-dev"] : ["t3code"];
 const LAUNCHER_VERSION = 20;
 const developmentMacIconPngPath = NodePath.join(
   repoRoot,

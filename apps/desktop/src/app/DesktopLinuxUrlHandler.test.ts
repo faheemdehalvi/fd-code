@@ -164,7 +164,7 @@ describe("DesktopLinuxUrlHandler", () => {
     const entry = DesktopLinuxUrlHandler.renderUrlHandlerDesktopEntry({
       displayName: "FD CODE (Nightly)",
       execTarget: '/home/al ice/Apps/FD CODE "100%" $HOME\\x.AppImage',
-      scheme: "fd-code",
+      scheme: "t3code",
       iconPath: "/home/al ice/icons/FD CODE\\x.png",
     });
 
@@ -176,20 +176,20 @@ describe("DesktopLinuxUrlHandler", () => {
     );
     assert.include(entry, "NoDisplay=true");
     assert.notInclude(entry, "StartupWMClass=");
-    assert.include(entry, "MimeType=x-scheme-handler/fd-code;");
+    assert.include(entry, "MimeType=x-scheme-handler/t3code;");
     assert.include(entry, "Icon=/home/al ice/icons/FD CODE\\\\x.png");
   });
 
   it("carries structured context on registration errors", () => {
     const writeError = new DesktopLinuxUrlHandler.DesktopLinuxUrlHandlerRegistrationError({
       step: "write-desktop-entry",
-      scheme: "fd-code",
+      scheme: "t3code",
       desktopEntryPath: "/home/alice/.local/share/applications/com.faheem.FDCode.desktop",
       cause: new Error("boom"),
     });
     assert.equal(
       writeError.message,
-      "Failed to register the fd-code:// URL handler (step: write-desktop-entry).",
+      "Failed to register the t3code:// URL handler (step: write-desktop-entry).",
     );
     assert.equal(
       writeError.desktopEntryPath,
@@ -198,12 +198,12 @@ describe("DesktopLinuxUrlHandler", () => {
 
     const exitError = new DesktopLinuxUrlHandler.DesktopLinuxUrlHandlerRegistrationError({
       step: "set-default-handler",
-      scheme: "fd-code",
+      scheme: "t3code",
       exitCode: 4,
     });
     assert.equal(
       exitError.message,
-      "Failed to register the fd-code:// URL handler (step: set-default-handler, xdg-mime exit code 4).",
+      "Failed to register the t3code:// URL handler (step: set-default-handler, xdg-mime exit code 4).",
     );
   });
 
@@ -225,7 +225,7 @@ describe("DesktopLinuxUrlHandler", () => {
           recorded.files[0]?.content,
           'Exec="/home/alice/Applications/FD CODE-Code.AppImage" %U',
         );
-        assert.include(recorded.files[0]?.content, "MimeType=x-scheme-handler/fd-code;");
+        assert.include(recorded.files[0]?.content, "MimeType=x-scheme-handler/t3code;");
         assert.deepEqual(recorded.commands, [
           {
             command: "update-desktop-database",
@@ -233,7 +233,7 @@ describe("DesktopLinuxUrlHandler", () => {
           },
           {
             command: "xdg-mime",
-            args: ["default", "com.faheem.FDCode.desktop", "x-scheme-handler/fd-code"],
+            args: ["default", "com.faheem.FDCode.desktop", "x-scheme-handler/t3code"],
           },
         ]);
       });
@@ -261,7 +261,7 @@ describe("DesktopLinuxUrlHandler", () => {
         existingEntry: DesktopLinuxUrlHandler.renderUrlHandlerDesktopEntry({
           displayName: "FD CODE",
           execTarget: "/home/alice/Applications/FD CODE-Code.AppImage",
-          scheme: "fd-code",
+          scheme: "t3code",
           iconPath: "/home/alice/.local/share/icons/com.faheem.FDCode.desktop.png",
         }),
       });
@@ -275,7 +275,7 @@ describe("DesktopLinuxUrlHandler", () => {
         },
         {
           command: "xdg-mime",
-          args: ["default", "com.faheem.FDCode.desktop", "x-scheme-handler/fd-code"],
+          args: ["default", "com.faheem.FDCode.desktop", "x-scheme-handler/t3code"],
         },
       ]);
     });
@@ -290,7 +290,7 @@ describe("DesktopLinuxUrlHandler", () => {
         existingEntry: DesktopLinuxUrlHandler.renderUrlHandlerDesktopEntry({
           displayName: "FD CODE",
           execTarget: "/home/alice/Applications/FD CODE-Code.AppImage",
-          scheme: "fd-code",
+          scheme: "t3code",
           iconPath,
         }),
       });

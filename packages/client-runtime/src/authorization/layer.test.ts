@@ -258,7 +258,7 @@ describe("RemoteEnvironmentAuthorization", () => {
       expect(second.socketUrl).toContain("wsTicket=second-ticket");
       expect(
         harness.fetch.calls.filter(([url]) =>
-          String(url).endsWith("/.well-known/fd-code/environment"),
+          String(url).endsWith("/.well-known/t3/environment"),
         ),
       ).toHaveLength(1);
       expect(
@@ -306,7 +306,7 @@ describe("RemoteEnvironmentAuthorization", () => {
       );
       expect(
         harness.fetch.calls.filter(([url]) =>
-          String(url).endsWith("/.well-known/fd-code/environment"),
+          String(url).endsWith("/.well-known/t3/environment"),
         ),
       ).toHaveLength(2);
     }),
@@ -376,7 +376,7 @@ describe("RemoteEnvironmentAuthorization", () => {
       expect(authorized.socketUrl).toMatch(/^ws:\/\/192\.168\.1\.10:3773\/ws\?/);
       expect(yield* Ref.get(harness.bootstrapCalls)).toBe(0);
       expect(harness.fetch.calls.map(([url]) => String(url))).toEqual([
-        "http://192.168.1.10:3773/.well-known/fd-code/environment",
+        "http://192.168.1.10:3773/.well-known/t3/environment",
         "http://192.168.1.10:3773/api/auth/websocket-ticket",
       ]);
     }),
@@ -406,7 +406,7 @@ describe("RemoteEnvironmentAuthorization", () => {
 
       expect(error).toMatchObject({ _tag: "ConnectionBlockedError", reason: "configuration" });
       expect(harness.fetch.calls.map(([url]) => String(url))).toEqual([
-        "http://192.168.1.10:3773/.well-known/fd-code/environment",
+        "http://192.168.1.10:3773/.well-known/t3/environment",
       ]);
       expect((yield* Ref.get(harness.tokens)).get(ENVIRONMENT_ID)?.accessToken).toBe(
         "cached-access-token",
@@ -745,7 +745,7 @@ describe("RemoteEnvironmentAuthorization", () => {
           },
         ]);
         expect(harness.fetch.calls.map(([url]) => String(url))).toEqual([
-          `${ENDPOINT.httpBaseUrl}/.well-known/fd-code/environment`,
+          `${ENDPOINT.httpBaseUrl}/.well-known/t3/environment`,
           `${ENDPOINT.httpBaseUrl}/oauth/token`,
         ]);
         expect(yield* Ref.get(harness.proofInputs)).toEqual([

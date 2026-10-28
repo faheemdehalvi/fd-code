@@ -107,20 +107,20 @@ describe("link round trips", () => {
   });
 
   it("maps app scheme and hosted links to in-app paths, and nothing else", () => {
-    expect(promptLinkAppPath("fd-code://new?prompt=hi")).toBe("/new?prompt=hi");
-    expect(promptLinkAppPath("fd-code-dev://threads/env-1/thread-1")).toBe("/env-1/thread-1");
+    expect(promptLinkAppPath("t3code://new?prompt=hi")).toBe("/new?prompt=hi");
+    expect(promptLinkAppPath("t3code-dev://threads/env-1/thread-1")).toBe("/env-1/thread-1");
     expect(promptLinkAppPath("https://app.t3.codes/env-1/thread-1?prompt=go")).toBe(
       "/env-1/thread-1?prompt=go",
     );
     expect(promptLinkAppPath("https://app.t3.codes/settings/general")).toBeNull();
     expect(promptLinkAppPath("https://evil.test/new?prompt=hi")).toBeNull();
-    expect(promptLinkAppPath("fd-code://app/index.html")).toBeNull();
+    expect(promptLinkAppPath("t3code://app/index.html")).toBeNull();
   });
 
   it("hands an in-app path to the installed app", () => {
-    expect(promptLinkDeepLink("/new?prompt=hi")).toBe("fd-code://new?prompt=hi");
+    expect(promptLinkDeepLink("/new?prompt=hi")).toBe("t3code://new?prompt=hi");
     expect(promptLinkDeepLink("/env-1/thread-1?prompt=hi")).toBe(
-      "fd-code://threads/env-1/thread-1?prompt=hi",
+      "t3code://threads/env-1/thread-1?prompt=hi",
     );
   });
 });

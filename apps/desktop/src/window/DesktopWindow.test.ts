@@ -78,7 +78,7 @@ function makeFakeBrowserWindow() {
     copyImageAt: vi.fn(),
     focus: vi.fn(),
     isDestroyed: vi.fn(() => false),
-    getURL: vi.fn(() => "fd-code-dev://app/"),
+    getURL: vi.fn(() => "t3code-dev://app/"),
     getZoomLevel: vi.fn(() => zoomLevel),
     getZoomFactor: vi.fn(() => 1.2 ** zoomLevel),
     setZoomLevel: vi.fn((level: number) => {
@@ -613,19 +613,19 @@ describe("DesktopWindow", () => {
   it("recognizes only same-origin renderer navigations", () => {
     assert.isTrue(
       DesktopWindow.isSameOriginRendererNavigation({
-        applicationUrl: "fd-code://app/",
-        navigationUrl: "fd-code://app/settings/connections",
+        applicationUrl: "t3code://app/",
+        navigationUrl: "t3code://app/settings/connections",
       }),
     );
     assert.isFalse(
       DesktopWindow.isSameOriginRendererNavigation({
-        applicationUrl: "fd-code://app/",
+        applicationUrl: "t3code://app/",
         navigationUrl: "https://accounts.microsoft.com/oauth",
       }),
     );
     assert.isFalse(
       DesktopWindow.isSameOriginRendererNavigation({
-        applicationUrl: "fd-code://app/",
+        applicationUrl: "t3code://app/",
         navigationUrl: "not a url",
       }),
     );
@@ -658,7 +658,7 @@ describe("DesktopWindow", () => {
         assert.isTrue(createdWindowOptions[0]?.disableAutoHideCursor);
         assert.isFalse(createdWindowOptions[0]?.webPreferences?.backgroundThrottling);
         assert.deepEqual(fakeWindow.setAutoHideCursor.mock.calls, [[false]]);
-        assert.deepEqual(fakeWindow.loadURL.mock.calls[0], ["fd-code-dev://app/"]);
+        assert.deepEqual(fakeWindow.loadURL.mock.calls[0], ["t3code-dev://app/"]);
         assert.equal(fakeWindow.openDevTools.mock.calls.length, 1);
       }).pipe(Effect.provide(layer));
     }),
@@ -1435,17 +1435,17 @@ describe("DesktopWindow", () => {
           return yield* Effect.die("renderer load listeners were not registered");
         }
 
-        didFailLoad({}, -9, "ERR_UNEXPECTED", "fd-code-dev://app/", true);
+        didFailLoad({}, -9, "ERR_UNEXPECTED", "t3code-dev://app/", true);
         assert.equal(fakeWindow.loadURL.mock.calls.length, 1);
 
         yield* TestClock.adjust(100);
         assert.deepEqual(fakeWindow.loadURL.mock.calls, [
-          ["fd-code-dev://app/"],
-          ["fd-code-dev://app/"],
+          ["t3code-dev://app/"],
+          ["t3code-dev://app/"],
         ]);
         assert.equal(fakeWindow.reload.mock.calls.length, 0);
 
-        didFailLoad({}, -9, "ERR_UNEXPECTED", "fd-code-dev://app/", true);
+        didFailLoad({}, -9, "ERR_UNEXPECTED", "t3code-dev://app/", true);
         didFinishLoad();
         yield* TestClock.adjust(250);
         assert.equal(fakeWindow.loadURL.mock.calls.length, 2);
@@ -1457,23 +1457,23 @@ describe("DesktopWindow", () => {
   it("retries only transient failures for the development renderer", () => {
     assert.isTrue(
       DesktopWindow.isRetryableDevelopmentRendererLoadFailure({
-        applicationUrl: "fd-code-dev://app/",
+        applicationUrl: "t3code-dev://app/",
         errorCode: -102,
         isMainFrame: true,
-        validatedUrl: "fd-code-dev://app/",
+        validatedUrl: "t3code-dev://app/",
       }),
     );
     assert.isFalse(
       DesktopWindow.isRetryableDevelopmentRendererLoadFailure({
-        applicationUrl: "fd-code-dev://app/",
+        applicationUrl: "t3code-dev://app/",
         errorCode: -3,
         isMainFrame: true,
-        validatedUrl: "fd-code-dev://app/",
+        validatedUrl: "t3code-dev://app/",
       }),
     );
     assert.isFalse(
       DesktopWindow.isRetryableDevelopmentRendererLoadFailure({
-        applicationUrl: "fd-code-dev://app/",
+        applicationUrl: "t3code-dev://app/",
         errorCode: -102,
         isMainFrame: true,
         validatedUrl: "https://example.com/",

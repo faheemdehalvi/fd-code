@@ -2768,7 +2768,7 @@ export const createBuildConfig = Effect.fn("createBuildConfig")(function* (
       protocols: [
         {
           name: "FD CODE",
-          schemes: ["fd-code", "fd-code-dev"],
+          schemes: ["t3code", "t3code-dev"],
         },
         {
           name: "Web site URL",
@@ -2825,7 +2825,7 @@ export const createBuildConfig = Effect.fn("createBuildConfig")(function* (
       protocols: [
         {
           name: "FD CODE",
-          schemes: ["fd-code", "fd-code-dev"],
+          schemes: ["t3code", "t3code-dev"],
         },
       ],
       desktop: {
