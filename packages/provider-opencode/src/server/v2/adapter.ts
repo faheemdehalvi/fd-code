@@ -32,7 +32,7 @@ import {
   type RunId,
   type RuntimeRequestId,
 } from "@fdcode/contracts";
-import type * as Cause from "effect/Cause";
+import * as Cause from "effect/Cause";
 import * as DateTime from "effect/DateTime";
 import * as Deferred from "effect/Deferred";
 import * as Crypto from "effect/Crypto";
@@ -245,6 +245,7 @@ interface Wake {
   readonly after: string | undefined;
   readonly first: string | undefined;
   readonly children: Set<string>;
+  overflowed: boolean;
 }
 
 interface OpenBlock {
@@ -532,8 +533,11 @@ const RECONNECT_ATTEMPTS = 5;
 const RECONNECT_DELAY = "2 seconds";
 const RECONCILE_TIMEOUT = "15 seconds";
 const RECONNECT_WAIT = "30 seconds";
+const MAX_HELD_WAKE_EVENTS = 4_096;
 const LOST_BACKGROUND =
   "FD CODE lost its connection to OpenCode while this subagent ran, so its result is not shown.";
+const LOST_WAKE_EVENTS =
+  "OpenCode produced too many background events while FD CODE was waiting to resume. The work was not replayed; review the OpenCode conversation before continuing.";
 const INVENTORY_TIMEOUT = "5 seconds";
 const ACTIVE_CHECK_TIMEOUT = "5 seconds";
 /** Answers that mean the server refused a prompt; any other failure may have been accepted. */
@@ -671,21 +675,25 @@ export const make = Effect.fn("OpenCode2Adapter.make")(function* (instanceId: Pr
   const mcpServerNameFor = (threadId: string) =>
     t3McpServerName(threadId).pipe(Effect.provideService(Crypto.Crypto, crypto));
 
-  const borrow = Effect.gen(function* () {
-    const lent = yield* Deferred.make<
-      OpenCode2Server.OpenCode2Connection,
-      OpenCodeRuntime.OpenCodeRuntimeError
-    >();
-    yield* server
-      .withConnection((connection) =>
-        Deferred.succeed(lent, connection).pipe(Effect.andThen(Effect.never)),
-      )
-      .pipe(
-        Effect.catch((error) => Deferred.fail(lent, error)),
-        Effect.forkScoped,
-      );
-    return yield* Deferred.await(lent);
-  });
+  const borrow = (onFailure?: (error: OpenCodeRuntime.OpenCodeRuntimeError) => void) =>
+    Effect.gen(function* () {
+      const lent = yield* Deferred.make<
+        OpenCode2Server.OpenCode2Connection,
+        OpenCodeRuntime.OpenCodeRuntimeError
+      >();
+      yield* server
+        .withConnection((connection) =>
+          Deferred.succeed(lent, connection).pipe(Effect.andThen(Effect.never)),
+        )
+        .pipe(
+          Effect.catch((error) => {
+            onFailure?.(error);
+            return Deferred.fail(lent, error);
+          }),
+          Effect.forkScoped,
+        );
+      return yield* Deferred.await(lent);
+    });
 
   const openSession = Effect.fn("OpenCode2Adapter.openSession")(function* (
     input: Parameters<ProviderAdapter.ProviderAdapterV2["Service"]["openSession"]>[0],
@@ -2113,6 +2121,7 @@ export const make = Effect.fn("OpenCode2Adapter.make")(function* (instanceId: Pr
         after: delivered.at(-1)?.inboxId,
         first: delivered[0]?.inboxId,
         children: new Set(),
+        overflowed: false,
       };
       state.wakes.push(wake);
       yield* Effect.logInfo("OpenCode started a turn on its own; asking for a continuation.", {
@@ -2243,7 +2252,8 @@ export const make = Effect.fn("OpenCode2Adapter.make")(function* (instanceId: Pr
       const holder = sessionId === undefined ? undefined : holderOf(sessionId);
       const held = holder?.wakes.at(-1);
       if (holder !== undefined && held !== undefined) {
-        held.events.push(event);
+        if (held.events.length < MAX_HELD_WAKE_EVENTS) held.events.push(event);
+        else held.overflowed = true;
         if (
           sessionId === holder.sessionId &&
           (event.type === "unreadable.execution.ended" || executionEnd(event.type))
@@ -2384,11 +2394,14 @@ export const make = Effect.fn("OpenCode2Adapter.make")(function* (instanceId: Pr
     // execution it lost.
     let streamFailure: string | undefined;
     let reconnected = yield* Deferred.make<void>();
-    const failAll = Effect.fnUntraced(function* (message: string) {
+    const failAll = Effect.fnUntraced(function* (
+      message: string,
+      failureClass: "permission_error" | "transport_error" = "transport_error",
+    ) {
       streamFailure = message;
       yield* Deferred.succeed(reconnected, undefined);
       for (const state of threads.values()) {
-        const failure = makeProviderFailure({ message, class: "transport_error" });
+        const failure = makeProviderFailure({ message, class: failureClass });
         yield* finishTurn(state, { status: "failed", failure }, "broken");
       }
       for (const state of threads.values()) {
@@ -2547,13 +2560,34 @@ export const make = Effect.fn("OpenCode2Adapter.make")(function* (instanceId: Pr
       }
     });
 
-    const reconnect = Effect.gen(function* () {
+    let reconnectAuthenticationRejected = false;
+    const reconnectAttempt = Effect.gen(function* () {
+      reconnectAuthenticationRejected = false;
       // Returned on any failure, including the interrupt a closing session
       // sends a reconnect still in flight, so a spawned server can idle-stop.
       const scope = yield* Scope.make();
       const { next, stream } = yield* Effect.gen(function* () {
-        const next = yield* borrow.pipe(Effect.provideService(Scope.Scope, scope));
-        return { next, stream: yield* next.events };
+        const next = yield* borrow((cause) => {
+          reconnectAuthenticationRejected = OpenCode2Server.isAuthenticationRejection(cause);
+        }).pipe(Effect.provideService(Scope.Scope, scope));
+        const stream = yield* next.events.pipe(
+          Effect.tapError((cause) =>
+            Effect.sync(() => {
+              reconnectAuthenticationRejected = OpenCode2Server.isAuthenticationRejection(cause);
+            }),
+          ),
+          Effect.mapError((cause) =>
+            OpenCode2Server.isAuthenticationRejection(cause)
+              ? new OpenCodeRuntime.OpenCodeRuntimeError({
+                  operation: "event.subscribe",
+                  detail: "The OpenCode server rejected the server password.",
+                  cause,
+                  reason: "authenticationRejected",
+                })
+              : cause,
+          ),
+        );
+        return { next, stream };
       }).pipe(Effect.onError(() => Scope.close(scope, Exit.void)));
       const previous = currentScope;
       connection = next;
@@ -2564,9 +2598,25 @@ export const make = Effect.fn("OpenCode2Adapter.make")(function* (instanceId: Pr
       for (const state of threads.values()) state.mcp = undefined;
       yield* lock.withPermit(reconcile).pipe(Effect.timeout(RECONCILE_TIMEOUT));
       return stream;
-    }).pipe(
-      Effect.retry({ times: RECONNECT_ATTEMPTS - 1, schedule: Schedule.spaced(RECONNECT_DELAY) }),
-    );
+    });
+    const reconnect = Effect.gen(function* () {
+      for (let attempt = 1; attempt <= RECONNECT_ATTEMPTS; attempt += 1) {
+        const result = yield* Effect.exit(reconnectAttempt);
+        if (Exit.isSuccess(result)) return result.value;
+        const error = Cause.findErrorOption(result.cause);
+        reconnectAuthenticationRejected ||=
+          Option.isSome(error) && OpenCode2Server.isAuthenticationRejection(error.value);
+        if (
+          attempt === RECONNECT_ATTEMPTS ||
+          Option.isNone(error) ||
+          reconnectAuthenticationRejected
+        ) {
+          return yield* Effect.failCause(result.cause);
+        }
+        yield* Effect.sleep(RECONNECT_DELAY);
+      }
+      return yield* Effect.die("OpenCode reconnect attempts exhausted without an exit.");
+    });
 
     let currentScope = initial.scope;
     yield* Effect.addFinalizer(() => Scope.close(currentScope, Exit.void));
@@ -2576,8 +2626,21 @@ export const make = Effect.fn("OpenCode2Adapter.make")(function* (instanceId: Pr
       stream.pipe(
         Stream.runForEach((event) => lock.withPermit(handleEvent(event))),
         Effect.exit,
-        Effect.flatMap(() =>
+        Effect.flatMap((streamExit) =>
           Effect.gen(function* () {
+            const streamError = Exit.isFailure(streamExit)
+              ? Cause.findErrorOption(streamExit.cause)
+              : Option.none();
+            if (
+              Option.isSome(streamError) &&
+              OpenCode2Server.isAuthenticationRejection(streamError.value)
+            ) {
+              reconnectAuthenticationRejected = true;
+              return yield* failAll(
+                "The OpenCode server rejected its configured password while reconnecting. Update the server password, then retry the turn.",
+                "permission_error",
+              );
+            }
             streamFailure = "The OpenCode event stream was lost. Reconnecting.";
             yield* Effect.logWarning("Lost the OpenCode event stream; reconnecting.");
             // The last failure is kept for the log: it can carry the server's
@@ -2590,10 +2653,19 @@ export const make = Effect.fn("OpenCode2Adapter.make")(function* (instanceId: Pr
                   cause,
                 ).pipe(Effect.annotateLogs({ errorTag: causeErrorTag(cause) })),
               ),
-              Effect.option,
+              Effect.exit,
             );
-            if (next._tag === "None") {
-              return yield* failAll("The OpenCode event stream was lost and could not reconnect.");
+            if (Exit.isFailure(next)) {
+              const error = Cause.findErrorOption(next.cause);
+              const authenticationRejected =
+                reconnectAuthenticationRejected ||
+                (Option.isSome(error) && OpenCode2Server.isAuthenticationRejection(error.value));
+              return yield* failAll(
+                authenticationRejected
+                  ? "The OpenCode server rejected its configured password while reconnecting. Update the server password, then retry the turn."
+                  : "The OpenCode event stream was lost and could not reconnect.",
+                authenticationRejected ? "permission_error" : "transport_error",
+              );
             }
             streamFailure = undefined;
             const done = reconnected;
@@ -3134,6 +3206,14 @@ export const make = Effect.fn("OpenCode2Adapter.make")(function* (instanceId: Pr
             turn.providerTurn = { ...turn.providerTurn, nativeTurnRef: ref(wake.first, "weak") };
           }
           if (wake.running) state.unsettled = false;
+          if (wake.overflowed) {
+            discardWakes(state, [wake]);
+            yield* Effect.forkIn(stopStrays(state), sessionScope);
+            return yield* finishTurn(state, {
+              status: "failed",
+              failure: makeProviderFailure({ message: LOST_WAKE_EVENTS, class: "transport_error" }),
+            });
+          }
           yield* replay(wake);
         }),
       );
@@ -3632,6 +3712,14 @@ export const make = Effect.fn("OpenCode2Adapter.make")(function* (instanceId: Pr
             return;
           }
           turn.interrupted = true;
+          if (streamFailure !== undefined) {
+            yield* Deferred.await(reconnected).pipe(Effect.timeout(RECONNECT_WAIT), Effect.ignore);
+            if (state.active !== turn) return;
+            if (streamFailure !== undefined) {
+              markUnsettled(state);
+              return yield* lock.withPermit(finishTurn(state, { status: "interrupted" }));
+            }
+          }
           const reply = yield* client.session
             .interrupt({ sessionID: Session.ID.make(sessionId) })
             .pipe(
@@ -3935,7 +4023,7 @@ export const make = Effect.fn("OpenCode2Adapter.make")(function* (instanceId: Pr
       Effect.gen(function* () {
         const scope = yield* Scope.make();
         yield* Effect.addFinalizer((exit) => Scope.close(scope, exit));
-        const connection = yield* borrow.pipe(Effect.provideService(Scope.Scope, scope));
+        const connection = yield* borrow().pipe(Effect.provideService(Scope.Scope, scope));
         return yield* openSession(input, { connection, scope });
       }).pipe(
         Effect.mapError(

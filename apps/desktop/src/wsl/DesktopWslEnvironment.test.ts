@@ -193,7 +193,7 @@ describe("WSL runtime cache", () => {
     expect(script).toContain('mv -T "$runtime_root" "$runtime_stale"');
     expect(script).toContain('mktemp -d "$runtime_parent/.1.2.3-x64.tmp.XXXXXX"');
     // The release archive wraps everything in one `t3-<version>-linux-x64/`
-    // directory; stripping it puts the executable at `$runtime_root/t3`.
+    // directory; stripping it puts the executable at `$runtime_root/fd-code`.
     expect(script).toContain(
       "tar -xzf '/mnt/c/Program Files/FD CODE/wsl-runtime.tar.gz' -C \"$runtime_tmp\" --strip-components=1",
     );
@@ -262,7 +262,7 @@ describe("WSL runtime cache", () => {
       "b".repeat(64),
     );
 
-    expect(script).toContain('  [ -x "$1/t3" ] && "$1/t3" --version >/dev/null 2>&1');
+    expect(script).toContain('  [ -x "$1/fd-code" ] && "$1/fd-code" --version >/dev/null 2>&1');
 
     const entryCheckDefined = script.indexOf("runtime_entry_runs() {");
     const readinessDefined = script.indexOf("runtime_is_ready() {");
@@ -279,7 +279,7 @@ describe("WSL runtime cache", () => {
       "b".repeat(64),
     );
 
-    expect(script).toContain(`  sha256sum "$1/t3" 2>/dev/null | cut -d ' ' -f 1`);
+    expect(script).toContain(`  sha256sum "$1/fd-code" 2>/dev/null | cut -d ' ' -f 1`);
     expect(script).toContain(
       '    [ "$recorded_entry_digest" = "$(runtime_server_entry_digest "$runtime_root")" ]',
     );
@@ -383,8 +383,8 @@ describe.skipIf(posixShellRunner === null)("WSL runtime install script (executed
         "work=$(mktemp -d)",
         'stage="$work/stage/t3-0.0.0-linux-x64"',
         'mkdir -p "$stage/node_modules/node-pty/build/Release" "$work/home"',
-        `printf '%s' ${sh(SERVER_ENTRY_SOURCE)} > "$stage/t3"`,
-        'chmod +x "$stage/t3"',
+        `printf '%s' ${sh(SERVER_ENTRY_SOURCE)} > "$stage/fd-code"`,
+        'chmod +x "$stage/fd-code"',
         `printf '%s' 'pty-native-payload' > "$stage/node_modules/node-pty/build/Release/pty.node"`,
         `tar -czf "$work/wsl-runtime.tar.gz" -C "$work/stage" t3-0.0.0-linux-x64`,
         `printf 'work:%s\\n' "$work"`,
@@ -413,7 +413,7 @@ describe.skipIf(posixShellRunner === null)("WSL runtime install script (executed
       runtimeId,
       runtimeParent: `${work}/home/.fd-code/wsl-runtime`,
       runtimeRoot: `${work}/home/.fd-code/wsl-runtime/${runtimeId}`,
-      serverEntry: `${work}/home/.fd-code/wsl-runtime/${runtimeId}/t3`,
+      serverEntry: `${work}/home/.fd-code/wsl-runtime/${runtimeId}/fd-code`,
       installScript,
       install: (archive?: string, sha?: string) => runShell(installScript(archive, sha)),
     };
@@ -660,7 +660,7 @@ describe.skipIf(posixShellRunner === null)("WSL runtime install script (executed
         `runtime_root=${sh(fixture.runtimeRoot)}`,
         `runtime_parent=${sh(fixture.runtimeParent)}`,
         'rm "$runtime_root/.t3code-wsl-runtime-ready"',
-        holdRuntimeBusy('"$runtime_root/t3"'),
+        holdRuntimeBusy('"$runtime_root/fd-code"'),
         fixture.installScript(),
         'stale=$(find "$runtime_parent" -maxdepth 1 -type d -name ".sha256-*.stale.*" -print -quit)',
         'test -n "$stale"',
@@ -694,7 +694,7 @@ describe.skipIf(posixShellRunner === null)("WSL runtime install script (executed
         'touch -d "4 minutes ago" "$runtime_parent/sha256-active"',
         'touch -d "3 minutes ago" "$runtime_parent/sha256-old"',
         'touch -d "2 minutes ago" "$runtime_parent/sha256-locked"',
-        holdRuntimeBusy('"$runtime_parent/sha256-active/t3"'),
+        holdRuntimeBusy('"$runtime_parent/sha256-active/fd-code"'),
         holdInstallLock('"$runtime_parent/.sha256-locked.install.lock"'),
         `HOME="$home"`,
         "export HOME",

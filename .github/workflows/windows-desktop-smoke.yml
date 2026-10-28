@@ -1,0 +1,104 @@
+name: Windows desktop smoke
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/windows-desktop-smoke.yml"
+      - "apps/desktop/**"
+      - "apps/server/**"
+      - "packages/**"
+      - "scripts/build-desktop-artifact.ts"
+      - "scripts/build-desktop-artifact.test.ts"
+      - "package.json"
+      - "pnpm-lock.yaml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-desktop-smoke-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows-x64:
+    name: Windows x64 installer lifecycle
+    runs-on: windows-2025
+    timeout-minutes: 50
+    steps:
+      - name: Checkout
+        shell: bash
+        env:
+          CHECKOUT_REF: ${{ github.event.pull_request.head.sha || github.sha }}
+          GIT_TERMINAL_PROMPT: "0"
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=1 origin "$CHECKOUT_REF"
+          git sparse-checkout set --no-cone '/*' '!/.repos/'
+          git -c checkout.workers=0 checkout --detach FETCH_HEAD
+
+      - name: Setup Vite+
+        uses: voidzero-dev/setup-vp@250f29ce396baf5e8f24498e17c0dfdebabc26eb # v1
+        with:
+          node-version-file: package.json
+          cache: false
+          run-install: false
+
+      - name: Install dependencies
+        run: vp install --filter=@fdcode/desktop... --filter=fd-code... --filter=@fdcode/scripts...
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87 # stable
+        with:
+          toolchain: stable
+          targets: x86_64-pc-windows-msvc
+
+      - name: Install Spectre-mitigated MSVC libraries
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $installPath = & $vswhere -products * -latest -property installationPath
+          $setupExe = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\setup.exe"
+          $process = Start-Process -FilePath $setupExe `
+            -ArgumentList "modify", "--installPath", "`"$installPath`"", "--add", `
+            "Microsoft.VisualStudio.Component.VC.Runtimes.x86.x64.Spectre", "--quiet", "--norestart" `
+            -Wait -PassThru -NoNewWindow
+          if ($null -eq $process -or $process.ExitCode -ne 0) {
+            $code = if ($null -ne $process) { $process.ExitCode } else { 1 }
+            throw "Visual Studio Installer failed with exit code $code"
+          }
+
+      - name: Build unsigned Windows x64 installer
+        run: >-
+          node scripts/build-desktop-artifact.ts
+          --platform win
+          --target nsis
+          --arch x64
+          --build-version 0.0.0-preview.20261026.1
+          --verbose
+
+      - name: Install and smoke-test FD CODE
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $installers = @(Get-ChildItem release\FD-CODE-*-x64.exe)
+          if ($installers.Count -ne 1) {
+            throw "Expected one Windows x64 installer, found $($installers.Count)."
+          }
+          node apps/desktop/scripts/smoke-test-windows-installer.mjs `
+            --installer $installers[0].FullName | Tee-Object -FilePath windows-smoke-report.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Upload installer evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: windows-x64-installer-smoke
+          path: |
+            release/FD-CODE-*-x64.exe
+            windows-smoke-report.txt
+          if-no-files-found: warn
+          retention-days: 7

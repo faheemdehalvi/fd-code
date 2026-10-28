@@ -22,12 +22,16 @@ const runWith = (run: ProcessRunner.ProcessRunner["Service"]["run"], argv: Reado
     return yield* (yield* ArtsieCli.ArtsieCli).run(argv);
   }).pipe(
     Effect.provide(
-      ArtsieCli.layer.pipe(Layer.provide(Layer.succeed(ProcessRunner.ProcessRunner, { run }))),
-    ),
-    Effect.provide(NodePath.layer),
-    Effect.provide(
-      ConfigProvider.layer(
-        ConfigProvider.fromEnv({ env: { FD_CODE_ARTSIE_CLI: "/tmp/artsie-fixture" } }),
+      ArtsieCli.layer.pipe(
+        Layer.provide(
+          Layer.mergeAll(
+            Layer.succeed(ProcessRunner.ProcessRunner, { run }),
+            NodePath.layer,
+            ConfigProvider.layer(
+              ConfigProvider.fromEnv({ env: { FD_CODE_ARTSIE_CLI: "/tmp/artsie-fixture" } }),
+            ),
+          ),
+        ),
       ),
     ),
   );

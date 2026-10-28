@@ -7,6 +7,7 @@ import * as HttpClientResponse from "effect/http/HttpClientResponse";
 import { describe } from "vite-plus/test";
 
 import * as OpenCode2Client from "./OpenCode2Client.ts";
+import * as OpenCode2Server from "./OpenCode2Server.ts";
 
 const INFO_BODY = '{"version":"2.0.18","pid":4242,"urls":[],"paths":{"tmp":"/tmp"}}';
 
@@ -46,3 +47,34 @@ describe("OpenCode2Client authorization", () => {
     }),
   );
 });
+
+it.effect("classifies an event subscription 401 as authentication rejection", () =>
+  Effect.gen(function* () {
+    const opencode = yield* OpenCode2Client.OpenCode2Client;
+    const connected = yield* opencode.connect({ baseUrl: "http://test.invalid", password: "bad" });
+    const error = yield* connected.events.pipe(Effect.flip);
+    assert.equal(error._tag, "OpenCode2AuthenticationError");
+    assert.isTrue(OpenCode2Server.isAuthenticationRejection(error));
+  }).pipe(
+    Effect.provide(
+      OpenCode2Client.layer.pipe(
+        Layer.provide(
+          Layer.succeed(
+            HttpClient.HttpClient,
+            HttpClient.make((request) =>
+              Effect.succeed(
+                HttpClientResponse.fromWeb(
+                  request,
+                  new Response('{"_tag":"UnauthorizedError"}', {
+                    status: 401,
+                    headers: { "content-type": "application/json" },
+                  }),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+);

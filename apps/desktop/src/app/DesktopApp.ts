@@ -74,7 +74,7 @@ const { logInfo: logBootstrapInfo, logWarning: logBootstrapWarning } =
 const { logInfo: logStartupInfo, logError: logStartupError } =
   DesktopObservability.makeComponentLogger("desktop-startup");
 
-const resolveDesktopBackendPort = Effect.fn("resolveDesktopBackendPort")(function* (
+export const resolveDesktopBackendPort = Effect.fn("resolveDesktopBackendPort")(function* (
   configuredPort: Option.Option<number>,
 ) {
   if (Option.isSome(configuredPort)) {

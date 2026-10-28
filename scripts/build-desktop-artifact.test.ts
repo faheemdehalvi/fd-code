@@ -22,6 +22,11 @@ import {
   DesktopDmgBackgroundSourceMissingError,
   createStageWorkspaceConfig,
   createStagePatchedDependencies,
+  createStageLockfile,
+  installStagedProductionDependencies,
+  readRepoLockfile,
+  writeStageLockfile,
+  writeStageWorkspaceConfig,
   readWorkspaceConfig,
   createBuildConfig,
   DESKTOP_ELECTRON_LANGUAGES,
@@ -71,6 +76,7 @@ import {
   stageWslRuntimeArchive,
   bundlesWslRuntime,
   STAGE_INSTALL_ARGS,
+  STAGE_LOCKFILE_ARGS,
   ancestorNodeModulesPaths,
   copyDirectoryPreservingSymlinks,
   LinuxBrowserSecretHostError,
@@ -115,7 +121,7 @@ const makeLinuxCliArchiveFixture = Effect.fn("test.makeLinuxCliArchiveFixture")(
   const spawner = yield* ChildProcessSpawner.ChildProcessSpawner;
   const contentRoot = path.join(input.root, "content");
   const members = [
-    `${input.stem}/t3`,
+    `${input.stem}/fd-code`,
     `${input.stem}/client/index.html`,
     `${input.stem}/node_modules/node-pty/package.json`,
     `${input.stem}/node_modules/node-pty/build/Release/pty.node`,
@@ -468,7 +474,13 @@ it.layer(NodeServices.layer)("build-desktop-artifact", (it) => {
   });
 
   it("installs optional native dependencies for the target desktop architecture", () => {
-    assert.deepStrictEqual(STAGE_INSTALL_ARGS, ["install", "--prod"]);
+    assert.deepStrictEqual(STAGE_INSTALL_ARGS, ["install", "--prod", "--frozen-lockfile"]);
+    assert.deepStrictEqual(STAGE_LOCKFILE_ARGS, [
+      "install",
+      "--lockfile-only",
+      "--ignore-scripts",
+      "--no-frozen-lockfile",
+    ]);
     assert.deepStrictEqual(createStageWorkspaceConfig({ platform: "mac", arch: "x64" }), {
       supportedArchitectures: {
         os: ["darwin"],
@@ -581,6 +593,69 @@ it.layer(NodeServices.layer)("build-desktop-artifact", (it) => {
       },
     );
   });
+
+  it.effect(
+    "installs the patched node-pty version from the staged frozen lockfile",
+    () =>
+      Effect.gen(function* () {
+        const fs = yield* FileSystem.FileSystem;
+        const path = yield* Path.Path;
+        const stageDir = yield* fs.makeTempDirectoryScoped({ prefix: "t3-stage-install-test-" });
+        const repoRoot = path.join(import.meta.dirname, "..");
+        const dependencies = { "node-pty": "^1.2.0-beta.15" };
+        const { lockfile, importers } = yield* readRepoLockfile();
+        const stageLockfile = createStageLockfile({
+          lockfile,
+          importers: { "apps/server": importers["apps/server"] },
+          dependencies,
+        });
+        const hostPlatform = yield* HostProcess.Platform;
+        const hostArch = yield* HostProcess.Architecture;
+        const platform =
+          hostPlatform === "win32" ? "win" : hostPlatform === "darwin" ? "mac" : "linux";
+        const arch = hostArch === "arm64" ? "arm64" : "x64";
+
+        yield* fs.writeFileString(
+          path.join(stageDir, "package.json"),
+          `${JSON.stringify({
+            name: "t3-stage-install-test",
+            private: true,
+            packageManager: "pnpm@11.10.0",
+            dependencies,
+          })}\n`,
+        );
+        yield* writeStageWorkspaceConfig(
+          stageDir,
+          createStageWorkspaceConfig({
+            platform,
+            arch,
+            allowBuilds: { "node-pty": true },
+            patchedDependencies: {
+              "node-pty@1.2.0-beta.15": "patches/node-pty@1.2.0-beta.15.patch",
+            },
+          }),
+        );
+        yield* fs.makeDirectory(path.join(stageDir, "patches"));
+        yield* fs.copyFile(
+          path.join(repoRoot, "patches/node-pty@1.2.0-beta.15.patch"),
+          path.join(stageDir, "patches/node-pty@1.2.0-beta.15.patch"),
+        );
+        yield* writeStageLockfile(stageDir, stageLockfile);
+        yield* installStagedProductionDependencies(stageDir);
+
+        const installedPackage = JSON.parse(
+          yield* fs.readFileString(path.join(stageDir, "node_modules/node-pty/package.json")),
+        ) as { version: string };
+        assert.equal(installedPackage.version, "1.2.0-beta.15");
+        assert.include(
+          yield* fs.readFileString(
+            path.join(stageDir, "node_modules/node-pty/lib/windowsPtyAgent.js"),
+          ),
+          "WATCH_REPORT_DEPENDENCIES",
+        );
+      }),
+    120_000,
+  );
 
   it("limits Electron locales and excludes separately packaged resources", () => {
     assert.deepStrictEqual(DESKTOP_ELECTRON_LANGUAGES, ["en-US"]);
@@ -2217,8 +2292,10 @@ it.layer(NodeServices.layer)("build-desktop-artifact", (it) => {
 
   it("parses Windows bsdtar member listings with CRLF line endings", () => {
     assert.deepStrictEqual(
-      parseWslRuntimeArchiveMembers("./t3-1.2.3-linux-x64/t3\r\nt3-1.2.3-linux-x64/client/\r\n"),
-      ["t3-1.2.3-linux-x64/t3", "t3-1.2.3-linux-x64/client"],
+      parseWslRuntimeArchiveMembers(
+        "./t3-1.2.3-linux-x64/fd-code\r\nt3-1.2.3-linux-x64/client/\r\n",
+      ),
+      ["t3-1.2.3-linux-x64/fd-code", "t3-1.2.3-linux-x64/client"],
     );
   });
 

@@ -424,9 +424,9 @@ const signWindowsExecutable = Effect.fn("signWindowsExecutable")(function* (
   ].join(" ");
   yield* runCommand(
     ChildProcess.make("pwsh", ["-NoProfile", "-NonInteractive", "-Command", script]),
-    "Invoke-TrustedSigning t3.exe",
+    "Invoke-TrustedSigning fd-code.exe",
   );
-  yield* Effect.log("[cli-archive] Signed t3.exe (Azure Trusted Signing).");
+  yield* Effect.log("[cli-archive] Signed fd-code.exe (Azure Trusted Signing).");
 });
 
 const buildCliArchive = Effect.fn("buildCliArchive")(function* (input: {
@@ -441,13 +441,13 @@ const buildCliArchive = Effect.fn("buildCliArchive")(function* (input: {
   const repoRoot = yield* RepoRoot;
   const serverDir = path.join(repoRoot, "apps/server");
   const executableName = input.platform === "win" ? "fd-code.exe" : "fd-code";
-  // tsdown suffixes cross-built executables with their target (t3-darwin-x64);
-  // a host build is plain t3. Prefer the exact target when both exist.
+  // tsdown suffixes cross-built executables with their target (fd-code-darwin-x64);
+  // a host build is plain fd-code. Prefer the exact target when both exist.
   const targetKey = `${input.platform === "mac" ? "darwin" : input.platform}-${input.arch}`;
   const targetExecutable = path.join(
     serverDir,
     "dist-exe",
-    `t3-${targetKey}${input.platform === "win" ? ".exe" : ""}`,
+    `fd-code-${targetKey}${input.platform === "win" ? ".exe" : ""}`,
   );
   // The unsuffixed host build is only a valid stand-in when it was built for
   // this platform and architecture; otherwise a missing target must fail.

@@ -45,6 +45,15 @@ export class OpenCode2SilentStreamError extends Schema.TaggedError<OpenCode2Sile
   }
 }
 
+export class OpenCode2AuthenticationError extends Schema.TaggedError<OpenCode2AuthenticationError>()(
+  "OpenCode2AuthenticationError",
+  {},
+) {
+  override get message(): string {
+    return "The OpenCode server rejected the server password.";
+  }
+}
+
 export type OpenCode2StreamEvent =
   | OpenCodeEvent
   | OpenCode2UnreadableTerminal
@@ -61,7 +70,7 @@ export interface OpenCode2Api {
       OpenCode2StreamEvent,
       HttpClientError.HttpClientError | Sse.Retry | Sse.SseError | OpenCode2SilentStreamError
     >,
-    HttpClientError.HttpClientError
+    HttpClientError.HttpClientError | OpenCode2AuthenticationError
   >;
 }
 
@@ -124,6 +133,11 @@ const readEvents = HttpClient.get("/api/event", {
   headers: { accept: "text/event-stream" },
 }).pipe(
   Effect.flatMap(HttpClientResponse.filterStatusOk),
+  Effect.mapError((error) =>
+    error.reason._tag === "StatusCodeError" && error.response?.status === 401
+      ? new OpenCode2AuthenticationError()
+      : error,
+  ),
   Effect.map((response) =>
     response.stream.pipe(
       Stream.timeoutOrElse({

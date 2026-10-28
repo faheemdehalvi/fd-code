@@ -70,6 +70,19 @@ const WorkspaceConfig = Schema.Struct({
 });
 type WorkspaceConfig = typeof WorkspaceConfig.Type;
 
+const LockedDependency = Schema.Struct({
+  specifier: Schema.String,
+  version: Schema.String,
+});
+const LockfileImporter = Schema.Struct({
+  dependencies: Schema.optional(Schema.Record(Schema.String, LockedDependency)),
+  devDependencies: Schema.optional(Schema.Record(Schema.String, LockedDependency)),
+});
+const StageLockfileImporters = Schema.Struct({
+  "apps/desktop": LockfileImporter,
+  "apps/server": LockfileImporter,
+});
+
 const StageWorkspaceConfig = Schema.Struct({
   supportedArchitectures: Schema.Struct({
     os: Schema.Array(Schema.String),
@@ -110,6 +123,10 @@ const RepoRoot = Effect.service(Path.Path).pipe(
 const encodeJsonString = Schema.encodeEffect(Schema.fromJsonString(Schema.Unknown));
 const decodeWorkspaceConfig = Schema.decodeEffect(fromYaml(WorkspaceConfig));
 const encodeStageWorkspaceConfig = Schema.encodeEffect(fromYaml(StageWorkspaceConfig));
+const decodeLockfile = Schema.decodeEffect(fromYaml(Schema.Record(Schema.String, Schema.Unknown)));
+const decodeStageLockfileImporters = Schema.decodeUnknownEffect(StageLockfileImporters);
+const encodeLockfile = Schema.encodeEffect(fromYaml(Schema.Record(Schema.String, Schema.Unknown)));
+const decodeUnknownRecord = Schema.decodeUnknownSync(Schema.Record(Schema.String, Schema.Unknown));
 
 export const readWorkspaceConfig = Effect.fn("readWorkspaceConfig")(function* () {
   const fs = yield* FileSystem.FileSystem;
@@ -117,6 +134,17 @@ export const readWorkspaceConfig = Effect.fn("readWorkspaceConfig")(function* ()
   const repoRoot = yield* RepoRoot;
   const workspaceYaml = yield* fs.readFileString(path.join(repoRoot, "pnpm-workspace.yaml"));
   return yield* decodeWorkspaceConfig(workspaceYaml);
+});
+
+export const readRepoLockfile = Effect.fn("readRepoLockfile")(function* () {
+  const fs = yield* FileSystem.FileSystem;
+  const path = yield* Path.Path;
+  const repoRoot = yield* RepoRoot;
+  const lockfile = yield* decodeLockfile(
+    yield* fs.readFileString(path.join(repoRoot, "pnpm-lock.yaml")),
+  );
+  const importers = yield* decodeStageLockfileImporters(lockfile.importers);
+  return { lockfile, importers } as const;
 });
 
 interface DesktopBuildIconAssets {
@@ -559,6 +587,18 @@ export class MissingServerProductionDependenciesError extends Schema.TaggedError
   }
 }
 
+export class StageLockfileResolutionError extends Schema.TaggedError<StageLockfileResolutionError>()(
+  "StageLockfileResolutionError",
+  {
+    packageName: Schema.String,
+    cause: Schema.Defect(),
+  },
+) {
+  override get message(): string {
+    return `Could not resolve locked staged dependency '${this.packageName}'.`;
+  }
+}
+
 const DesktopBuildInputArtifact = Schema.Literals([
   "desktop-dist",
   "desktop-resources",
@@ -961,7 +1001,13 @@ interface StagePackageJson {
   };
 }
 
-export const STAGE_INSTALL_ARGS = ["install", "--prod"] as const;
+export const STAGE_INSTALL_ARGS = ["install", "--prod", "--frozen-lockfile"] as const;
+export const STAGE_LOCKFILE_ARGS = [
+  "install",
+  "--lockfile-only",
+  "--ignore-scripts",
+  "--no-frozen-lockfile",
+] as const;
 export const DESKTOP_ELECTRON_LANGUAGES = ["en-US"] as const;
 export const DESKTOP_FILE_EXCLUSIONS = [
   // Cursor finds platform assets by walking up from argv[1]. Keep them outside
@@ -1612,6 +1658,18 @@ export function createStageWorkspaceConfig(input: {
   };
 }
 
+export const writeStageWorkspaceConfig = Effect.fn("writeStageWorkspaceConfig")(function* (
+  stageDir: string,
+  config: StageWorkspaceConfig,
+) {
+  const fs = yield* FileSystem.FileSystem;
+  const path = yield* Path.Path;
+  yield* fs.writeFileString(
+    path.join(stageDir, "pnpm-workspace.yaml"),
+    yield* encodeStageWorkspaceConfig(config),
+  );
+});
+
 export function createStagePatchedDependencies(
   patchedDependencies: Record<string, string>,
   dependencies: Record<string, unknown>,
@@ -1622,6 +1680,56 @@ export function createStagePatchedDependencies(
     ),
   );
 }
+
+export function createStageLockfile(input: {
+  readonly lockfile: Record<string, unknown>;
+  readonly importers: Record<string, typeof LockfileImporter.Type>;
+  readonly dependencies: Record<string, string>;
+  readonly devDependencies?: Record<string, string>;
+}): Record<string, unknown> {
+  const sourceDependencies = Object.assign(
+    {},
+    ...Object.values(input.importers).map((importer) => ({
+      ...importer.dependencies,
+      ...importer.devDependencies,
+    })),
+  );
+  const packages = decodeUnknownRecord(input.lockfile.packages);
+  const resolve = (name: string, specifier: string) => {
+    const locked = sourceDependencies[name];
+    if (locked !== undefined) return { specifier, version: locked.version };
+    if (Object.hasOwn(packages, `${name}@${specifier}`)) return { specifier, version: specifier };
+    throw new Error(`No matching importer or package snapshot for ${name}@${specifier}`);
+  };
+  const importer = {
+    dependencies: Object.fromEntries(
+      Object.entries(input.dependencies).map(([name, specifier]) => [
+        name,
+        resolve(name, specifier),
+      ]),
+    ),
+    ...(input.devDependencies
+      ? {
+          devDependencies: Object.fromEntries(
+            Object.entries(input.devDependencies).map(([name, specifier]) => [
+              name,
+              resolve(name, specifier),
+            ]),
+          ),
+        }
+      : {}),
+  };
+  return { ...input.lockfile, importers: { ".": importer } };
+}
+
+export const writeStageLockfile = Effect.fn("writeStageLockfile")(function* (
+  stageDir: string,
+  lockfile: Record<string, unknown>,
+) {
+  const fs = yield* FileSystem.FileSystem;
+  const path = yield* Path.Path;
+  yield* fs.writeFileString(path.join(stageDir, "pnpm-lock.yaml"), yield* encodeLockfile(lockfile));
+});
 
 function getPatchedDependencyPackageName(patchKey: string): string {
   const versionSeparator = patchKey.lastIndexOf("@");
@@ -1792,6 +1900,27 @@ const runCommand = Effect.fn("runCommand")(function* (
     });
   }
 });
+
+export const installStagedProductionDependencies = Effect.fn("installStagedProductionDependencies")(
+  function* (stageDir: string, label = "vp install --prod", verbose = false) {
+    const lockfileCommand = yield* resolveSpawnCommand("vp", [...STAGE_LOCKFILE_ARGS]);
+    yield* runCommand(
+      ChildProcess.make(lockfileCommand.command, lockfileCommand.args, {
+        cwd: stageDir,
+        shell: lockfileCommand.shell,
+      }),
+      { label: "vp install --lockfile-only", verbose },
+    );
+    const installCommand = yield* resolveSpawnCommand("vp", [...STAGE_INSTALL_ARGS]);
+    yield* runCommand(
+      ChildProcess.make(installCommand.command, installCommand.args, {
+        cwd: stageDir,
+        shell: installCommand.shell,
+      }),
+      { label, verbose },
+    );
+  },
+);
 
 const desktopBuildProbeSucceeds = Effect.fn("desktopBuildProbeSucceeds")(function* (
   command: ChildProcess.Command,
@@ -3006,6 +3135,8 @@ export const stageWindowsServerSidecar = Effect.fn("stageWindowsServerSidecar")(
   readonly allowBuilds: Record<string, boolean>;
   readonly patchedDependencies: Record<string, string>;
   readonly overrides: Record<string, string>;
+  readonly lockfile: Record<string, unknown>;
+  readonly lockfileImporters: Record<string, typeof LockfileImporter.Type>;
   readonly asarPath: string;
   readonly verbose: boolean;
 }) {
@@ -3048,23 +3179,26 @@ export const stageWindowsServerSidecar = Effect.fn("stageWindowsServerSidecar")(
     // symlink/junction layout, so install a physical, hoisted node_modules.
     nodeLinker: "hoisted" as const,
   };
-  const sidecarWorkspaceConfigString = yield* encodeStageWorkspaceConfig(sidecarWorkspaceConfig);
-  yield* fs.writeFileString(
-    path.join(serverStageDir, "pnpm-workspace.yaml"),
-    sidecarWorkspaceConfigString,
-  );
+  yield* writeStageWorkspaceConfig(serverStageDir, sidecarWorkspaceConfig);
+  const sidecarLockfile = yield* Effect.try({
+    try: () =>
+      createStageLockfile({
+        lockfile: input.lockfile,
+        importers: input.lockfileImporters,
+        dependencies: sidecarDependencies,
+      }),
+    catch: (cause) => new StageLockfileResolutionError({ packageName: "<server-sidecar>", cause }),
+  });
+  yield* writeStageLockfile(serverStageDir, sidecarLockfile);
   if (Object.keys(sidecarPatchedDependencies).length > 0) {
     yield* fs.copy(path.join(input.repoRoot, "patches"), path.join(serverStageDir, "patches"));
   }
 
   yield* Effect.log("[desktop-artifact] Installing server sidecar runtime externals...");
-  const installCommand = yield* resolveSpawnCommand("vp", [...STAGE_INSTALL_ARGS]);
-  yield* runCommand(
-    ChildProcess.make(installCommand.command, installCommand.args, {
-      cwd: serverStageDir,
-      shell: installCommand.shell,
-    }),
-    { label: "vp install --prod (server sidecar)", verbose: input.verbose },
+  yield* installStagedProductionDependencies(
+    serverStageDir,
+    "vp install --prod (server sidecar)",
+    input.verbose,
   );
 
   yield* Effect.log("[desktop-artifact] Packing server.asar...");
@@ -3369,7 +3503,7 @@ export const validateWindowsPackagedPayload = Effect.fn(
     }
     const members = parseWslRuntimeArchiveMembers(listing.stdout);
     // A release archive unpacks to one directory named after its stem; the
-    // desktop app's WSL install script relies on that layout to find `t3`.
+    // desktop app's WSL install script relies on that layout to find `fd-code`.
     const stem = wslRuntimeArchiveStem(input.appVersion, input.targetArch);
     const topLevel = new Set(members.map((member) => member.split("/")[0]));
     if (topLevel.size !== 1 || !topLevel.has(stem)) {
@@ -3379,7 +3513,7 @@ export const validateWindowsPackagedPayload = Effect.fn(
         ),
       );
     }
-    const requiredMembers = [`${stem}/t3`, `${stem}/client`, `${stem}/node_modules`];
+    const requiredMembers = [`${stem}/fd-code`, `${stem}/client`, `${stem}/node_modules`];
     const missingMembers = requiredMembers.filter((member) => !members.includes(member));
     const ptyCandidates = [
       `${stem}/node_modules/node-pty/build/Release/pty.node`,
@@ -3460,6 +3594,7 @@ const buildDesktopArtifact = Effect.fn("buildDesktopArtifact")(function* (
   const workspaceOverrides = workspaceConfig.overrides ?? {};
   const workspacePatchedDependencies = workspaceConfig.patchedDependencies ?? {};
   const workspaceAllowBuilds = workspaceConfig.allowBuilds ?? {};
+  const { lockfile, importers: lockfileImporters } = yield* readRepoLockfile();
 
   const platformConfig = PLATFORM_CONFIG[options.platform];
   if (!platformConfig) {
@@ -3783,25 +3918,25 @@ const buildDesktopArtifact = Effect.fn("buildDesktopArtifact")(function* (
     patchedDependencies: stagePatchedDependencies,
     overrides: resolvedOverrides,
   });
-  const stageWorkspaceConfigString = yield* encodeStageWorkspaceConfig(stageWorkspaceConfig);
-  yield* fs.writeFileString(
-    path.join(stageAppDir, "pnpm-workspace.yaml"),
-    stageWorkspaceConfigString,
-  );
+  yield* writeStageWorkspaceConfig(stageAppDir, stageWorkspaceConfig);
+  const stageLockfile = yield* Effect.try({
+    try: () =>
+      createStageLockfile({
+        lockfile,
+        importers: lockfileImporters,
+        dependencies: stageDependencies,
+        devDependencies: { electron: electronVersion },
+      }),
+    catch: (cause) => new StageLockfileResolutionError({ packageName: "<desktop-stage>", cause }),
+  });
+  yield* writeStageLockfile(stageAppDir, stageLockfile);
 
   if (Object.keys(stagePatchedDependencies).length > 0) {
     yield* fs.copy(path.join(repoRoot, "patches"), path.join(stageAppDir, "patches"));
   }
 
   yield* Effect.log("[desktop-artifact] Installing staged production dependencies...");
-  const installCommand = yield* resolveSpawnCommand("vp", [...STAGE_INSTALL_ARGS]);
-  yield* runCommand(
-    ChildProcess.make(installCommand.command, installCommand.args, {
-      cwd: stageAppDir,
-      shell: installCommand.shell,
-    }),
-    { label: "vp install --prod", verbose: options.verbose },
-  );
+  yield* installStagedProductionDependencies(stageAppDir, "vp install --prod", options.verbose);
   yield* stageClerkPasskeyNativeBinaries(stageAppDir, options.platform, options.arch);
   yield* stageKeyringNativeBinaries(stageAppDir, options.platform, options.arch);
 
@@ -3817,6 +3952,8 @@ const buildDesktopArtifact = Effect.fn("buildDesktopArtifact")(function* (
       allowBuilds: workspaceAllowBuilds,
       patchedDependencies: workspacePatchedDependencies,
       overrides: resolvedOverrides,
+      lockfile,
+      lockfileImporters,
       asarPath: windowsServerAsarPath,
       verbose: options.verbose,
     });

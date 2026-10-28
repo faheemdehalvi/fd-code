@@ -488,6 +488,21 @@ jobs:
 
           vp run dist:desktop:artifact "${args[@]}"
 
+      - name: Smoke-test packaged macOS application
+        if: inputs.platform == 'mac' && inputs.arch == 'arm64'
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          dmg_files=(release/*.dmg)
+          if (( ${#dmg_files[@]} != 1 )); then
+            printf 'Expected one ARM64 DMG for lifecycle smoke testing, found %s.\n' "${#dmg_files[@]}" >&2
+            exit 1
+          fi
+          node apps/desktop/scripts/smoke-test-macos-dmg.mjs \
+            --dmg "${dmg_files[0]}" \
+            --expect-arch arm64
+
       # The single-executable is built with a Node that supports --build-sea
       # (25.7+); the repo itself stays on the engines.node version. It always
       # injects into the runner's own Node: tsdown's cross-target download path

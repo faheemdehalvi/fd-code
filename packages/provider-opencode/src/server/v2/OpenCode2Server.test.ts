@@ -72,6 +72,7 @@ describe("OpenCode2Server.verifyServer", () => {
         }),
       ).pipe(Effect.flip);
       assert.include(error.detail, "rejected the server password");
+      assert.equal(error.reason, "authenticationRejected");
     }),
   );
 
@@ -80,6 +81,7 @@ describe("OpenCode2Server.verifyServer", () => {
     Effect.gen(function* () {
       const error = yield* verify(layerServerReplying({ status: 401, body: "" })).pipe(Effect.flip);
       assert.include(error.detail, "rejected the server password");
+      assert.equal(error.reason, "authenticationRejected");
     }),
   );
 

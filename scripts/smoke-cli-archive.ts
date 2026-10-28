@@ -68,7 +68,7 @@ const smokeCliArchive = Effect.fn("smokeCliArchive")(function* (input: {
   const platform = yield* HostProcess.Platform;
   const spawner = yield* ChildProcessSpawner.ChildProcessSpawner;
   const scratch = yield* fs.makeTempDirectory({ prefix: "t3-cli-smoke-" });
-  // Windows can keep t3.exe locked (EBUSY) for a moment after the server
+  // Windows can keep fd-code.exe locked (EBUSY) for a moment after the server
   // exits. A leftover scratch directory on a CI runner is harmless, so
   // cleanup retries briefly and never fails a smoke test that passed.
   yield* Effect.addFinalizer(() =>

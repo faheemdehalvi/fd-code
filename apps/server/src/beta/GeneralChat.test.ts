@@ -225,8 +225,11 @@ const fixture = (
 
 const test = <A, E, R>(effect: Effect.Effect<A, E, R>) =>
   effect.pipe(
-    Effect.provide(Config.layerTest(process.cwd(), { prefix: "general-chat-test-" })),
-    Effect.provide(NodeServices.layer),
+    Effect.provide(
+      Config.layerTest(process.cwd(), { prefix: "general-chat-test-" }).pipe(
+        Layer.provideMerge(NodeServices.layer),
+      ),
+    ),
   );
 
 it.effect(

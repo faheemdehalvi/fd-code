@@ -37,6 +37,7 @@ import type * as ProviderAdapter from "@fdcode/provider-core/server/ProviderAdap
 import * as McpProviderSessions from "@fdcode/provider-core/server/McpProviderSessions";
 import * as IdAllocator from "@fdcode/provider-core/server/IdAllocator";
 import * as ProviderContinuationRequests from "@fdcode/provider-core/server/ProviderContinuationRequests";
+import * as OpenCodeRuntime from "@fdcode/provider-opencode/server/OpenCodeRuntime";
 import {
   OPENCODE_2_STILL_STOPPING,
   OPENCODE_PROVIDER,
@@ -304,6 +305,7 @@ const resumed = (
     readonly external?: boolean;
     readonly supervised?: boolean;
     readonly replayGate?: ProviderReplayGate;
+    readonly connectionFailures?: ReadonlyArray<OpenCodeRuntime.OpenCodeRuntimeError>;
   },
 ) =>
   Effect.gen(function* () {
@@ -326,6 +328,9 @@ const resumed = (
       {
         ...(options?.external === undefined ? {} : { external: options.external }),
         ...(options?.replayGate === undefined ? {} : { replayGate: options.replayGate }),
+        ...(options?.connectionFailures === undefined
+          ? {}
+          : { connectionFailures: options.connectionFailures }),
       },
     );
     const thread = yield* runtime.resumeThread({
@@ -2895,6 +2900,128 @@ it.layer(McpProviderSessions.layer)("OpenCode2 adapter", (it) => {
       event.type === "turn_item.updated" ? [`${event.turnItem.type}:${event.turnItem.status}`] : [],
     );
 
+  it.effect(
+    "recovers after bounded transient reconnect failures without resubmitting the prompt",
+    () =>
+      Effect.gen(function* () {
+        const { runtime, thread } = yield* resumed(
+          [
+            out("session.prompt", { sessionID: SESSION, id: PROMPT_ID, text: "<any>" }),
+            promptAccepted,
+            { type: "runtime_exit", status: "success" },
+            out("event.subscribe"),
+            out("session.active"),
+            replyData("session.active", { [SESSION]: { type: "running" } }),
+            out("message.list", { sessionID: SESSION, order: "desc", limit: "50" }),
+            reply("message.list", {
+              data: [{ id: PROMPT_ID, time: { created: 1 }, text: "hi", type: "user" }],
+              cursor: {},
+            }),
+            ...openRequests([]),
+            event("session.execution.succeeded", { sessionID: SESSION }),
+          ],
+          {
+            connectionFailures: [
+              new OpenCodeRuntime.OpenCodeRuntimeError({
+                operation: "server.info",
+                detail: "Could not reach the OpenCode server.",
+              }),
+              new OpenCodeRuntime.OpenCodeRuntimeError({
+                operation: "server.info",
+                detail: "Could not reach the OpenCode server.",
+              }),
+            ],
+          },
+        );
+        const terminal = yield* terminalOf(runtime).pipe(Effect.forkScoped);
+        yield* runtime.startTurn(turnInput(thread));
+        yield* TestClock.adjust("5 seconds");
+        assert.equal((yield* Fiber.join(terminal))?.status, "completed");
+      }).pipe(Effect.scoped, Effect.provide(TestClock.layer())),
+  );
+
+  it.effect("does not retry an authentication rejection during reconnection", () =>
+    Effect.gen(function* () {
+      const { runtime, thread } = yield* resumed(
+        [
+          out("session.prompt", { sessionID: SESSION, id: PROMPT_ID, text: "<any>" }),
+          promptAccepted,
+          { type: "runtime_exit", status: "success" },
+        ],
+        {
+          connectionFailures: [
+            new OpenCodeRuntime.OpenCodeRuntimeError({
+              operation: "server.info",
+              detail: "The OpenCode server rejected the server password.",
+              reason: "authenticationRejected",
+            }),
+          ],
+        },
+      );
+      const events = yield* runtime.events.pipe(Stream.runCollect, Effect.forkScoped);
+      const started = yield* runtime.startTurn(turnInput(thread)).pipe(Effect.forkScoped);
+      for (let index = 0; index < 20; index += 1) yield* Effect.yieldNow;
+      yield* TestClock.adjust("1 minute");
+      yield* Fiber.join(started);
+      const collected = yield* Fiber.join(events);
+      const terminal = collected.find((entry) => entry.type === "turn.terminal");
+      assert.equal(terminal?.status, "failed");
+      assert.equal(terminal?.threadDisposition, "broken");
+      assert.equal(terminal?.failure?.class, "permission_error");
+      assert.include(runtime.providerSession.lastError ?? "", "rejected its configured password");
+    }).pipe(Effect.scoped, Effect.provide(TestClock.layer())),
+  );
+
+  it.effect("keeps cancellation effective while the event stream reconnects", () =>
+    Effect.gen(function* () {
+      const { runtime, thread } = yield* resumed(
+        [
+          out("session.prompt", { sessionID: SESSION, id: PROMPT_ID, text: "<any>" }),
+          promptAccepted,
+          { type: "runtime_exit", status: "success" },
+          out("event.subscribe"),
+          out("session.active"),
+          replyData("session.active", { [SESSION]: { type: "running" } }),
+          out("message.list", { sessionID: SESSION, order: "desc", limit: "50" }),
+          reply("message.list", {
+            data: [{ id: PROMPT_ID, time: { created: 1 }, text: "hi", type: "user" }],
+            cursor: {},
+          }),
+          ...openRequests([]),
+          out("session.interrupt", { sessionID: SESSION }),
+          reply("session.interrupt", { interrupted: true }),
+          event("session.execution.interrupted", { sessionID: SESSION }),
+        ],
+        {
+          connectionFailures: [
+            new OpenCodeRuntime.OpenCodeRuntimeError({
+              operation: "server.info",
+              detail: "Could not reach the OpenCode server.",
+            }),
+          ],
+        },
+      );
+      const terminals = yield* runtime.events.pipe(
+        Stream.filter((entry) => entry.type === "turn.terminal"),
+        Stream.take(1),
+        Stream.runCollect,
+        Effect.forkScoped,
+      );
+      yield* runtime.startTurn(turnInput(thread));
+      for (let index = 0; index < 20; index += 1) yield* Effect.yieldNow;
+      const interrupt = yield* runtime
+        .interruptTurn({ providerThread: thread, providerTurnId: yield* providerTurnId })
+        .pipe(Effect.forkScoped);
+      yield* TestClock.adjust("3 seconds");
+      yield* Fiber.join(interrupt);
+      const collected = yield* Fiber.join(terminals);
+      assert.deepEqual(
+        [...collected].map((entry) => entry.type === "turn.terminal" && entry.status),
+        ["interrupted"],
+      );
+    }).pipe(Effect.scoped, Effect.provide(TestClock.layer())),
+  );
+
   it.effect("does not end a turn from an earlier turn's history when its prompt is not there", () =>
     Effect.gen(function* () {
       const { runtime, thread } = yield* resumed([
@@ -3170,6 +3297,31 @@ it.layer(McpProviderSessions.layer)("OpenCode2 adapter", (it) => {
       const request = yield* Fiber.join(requested);
       assert.equal(request?.nativeRequestRef?.nativeId, shellAsk.data.id);
       yield* runtime.respondToRuntimeRequest({ requestId: request!.id, decision: "accept" });
+      assert.equal((yield* Fiber.join(terminal))?.status, "completed");
+    }).pipe(Effect.scoped),
+  );
+
+  it.effect("restores a structured question asked while the stream was down", () =>
+    Effect.gen(function* () {
+      const { runtime, thread } = yield* resumed([
+        out("session.prompt", { sessionID: SESSION, id: PROMPT_ID, text: "<any>" }),
+        promptAccepted,
+        ...reconnected({ [SESSION]: { type: "running" } }),
+        ...openRequests([], [colorForm]),
+        out("session.form.reply", {
+          sessionID: SESSION,
+          formID: colorForm.id,
+          answer: { q0: "Blue" },
+        }),
+        reply("session.form.reply", null),
+        event("session.execution.succeeded", { sessionID: SESSION }),
+      ]);
+      const requested = yield* requestOf(runtime).pipe(Effect.forkScoped);
+      const terminal = yield* terminalOf(runtime).pipe(Effect.forkScoped);
+      yield* runtime.startTurn(turnInput(thread));
+      const request = yield* Fiber.join(requested);
+      assert.equal(request?.nativeRequestRef?.nativeId, colorForm.id);
+      yield* runtime.respondToRuntimeRequest({ requestId: request!.id, answers: { q0: "Blue" } });
       assert.equal((yield* Fiber.join(terminal))?.status, "completed");
     }).pipe(Effect.scoped),
   );
@@ -3772,6 +3924,88 @@ it.layer(McpProviderSessions.layer)("OpenCode2 adapter", (it) => {
         ["running", "ready"],
       );
     }).pipe(Effect.scoped),
+  );
+
+  it.effect(
+    "reconciles two active threads sharing the server without replaying either prompt",
+    () =>
+      Effect.gen(function* () {
+        const OTHER = "ses_f148ca2deffeReconnectOther0";
+        const promptInto = (
+          session: string,
+          recorded: string,
+        ): ReadonlyArray<ProviderReplayEntry> => [
+          out("session.prompt", { sessionID: session, id: recorded, text: "<any>" }),
+          replyData("session.prompt", {
+            id: recorded,
+            sessionID: session,
+            time: { created: 1 },
+            type: "user",
+            payload: { text: "hi" },
+            delivery: "steer",
+          }),
+        ];
+        const promptHistory = (id: string) => ({
+          data: [{ id, time: { created: 1 }, text: "hi", type: "user" }],
+          cursor: {},
+        });
+        const { runtime, thread } = yield* resumed([
+          out("session.get", { sessionID: OTHER }),
+          replyData("session.get", sessionInfo({ id: OTHER })),
+          out("permission.list", { sessionID: OTHER }),
+          replyData("permission.list", []),
+          out("session.form.list", { sessionID: OTHER }),
+          replyData("session.form.list", []),
+          ...promptInto(SESSION, "msg_shared_reconnect_a"),
+          out("session.instructions.entry.put", {
+            sessionID: OTHER,
+            key: "t3-code",
+            value: "<any>",
+          }),
+          reply("session.instructions.entry.put", null),
+          ...promptInto(OTHER, "msg_shared_reconnect_b"),
+          { type: "runtime_exit", status: "success" },
+          out("event.subscribe"),
+          out("session.active"),
+          replyData("session.active", {
+            [SESSION]: { type: "running" },
+            [OTHER]: { type: "running" },
+          }),
+          out("message.list", { sessionID: SESSION, order: "desc", limit: "50" }),
+          reply("message.list", promptHistory("msg_shared_reconnect_a")),
+          out("message.list", { sessionID: OTHER, order: "desc", limit: "50" }),
+          reply("message.list", promptHistory("msg_shared_reconnect_b")),
+          ...openRequests([]),
+          out("permission.list", { sessionID: OTHER }),
+          replyData("permission.list", []),
+          out("session.form.list", { sessionID: OTHER }),
+          replyData("session.form.list", []),
+          event("session.execution.succeeded", { sessionID: SESSION }),
+          event("session.execution.succeeded", { sessionID: OTHER }),
+        ]);
+        const other = {
+          ...thread,
+          id: ProviderThreadId.make("provider-thread:opencode2-adapter:reconnect-other"),
+          nativeThreadRef: {
+            driver: OPENCODE_PROVIDER,
+            nativeId: OTHER,
+            strength: "strong" as const,
+          },
+        };
+        yield* runtime.resumeThread({
+          providerThread: other,
+          threadId,
+          modelSelection: bigPickle,
+          runtimePolicy: policy(),
+        });
+        const ended = yield* terminals(runtime, 2);
+        yield* runtime.startTurn(turnInput(thread));
+        yield* runtime.startTurn(turnInput(other));
+        assert.deepEqual(
+          [...(yield* Fiber.join(ended))].map((terminal) => terminal.status),
+          ["completed", "completed"],
+        );
+      }).pipe(Effect.scoped),
   );
 
   it.effect.each([

@@ -109,14 +109,14 @@ export class OpenCodeRuntimeError extends Data.TaggedError(OPENCODE_RUNTIME_ERRO
   readonly operation: string;
   readonly cause?: unknown;
   readonly detail: string;
-  readonly reason?: OpenCodeStartupFailureReason;
+  readonly reason?: OpenCodeRuntimeFailureReason;
 }> {}
 
-export type OpenCodeStartupFailureReason = "databaseLocked";
+export type OpenCodeRuntimeFailureReason = "authenticationRejected" | "databaseLocked";
 
 // OpenCode reports a held opencode.db lock on stderr. Classify it once where the
 // exit is captured so callers branch on the category, not on diagnostic text.
-function classifyStartupExit(stderr: string): OpenCodeStartupFailureReason | undefined {
+function classifyStartupExit(stderr: string): OpenCodeRuntimeFailureReason | undefined {
   return /SQLITE_BUSY|database is locked/i.test(stderr) ? "databaseLocked" : undefined;
 }
 

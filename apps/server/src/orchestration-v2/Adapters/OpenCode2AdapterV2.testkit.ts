@@ -27,6 +27,7 @@ import {
   OpenCodeReplayTranscriptDecodeError,
 } from "./OpenCodeAdapterV2.testkit.ts";
 import * as OpenCode2Adapter from "@fdcode/provider-opencode/server/v2/adapter";
+import * as OpenCodeRuntime from "@fdcode/provider-opencode/server/OpenCodeRuntime";
 
 export const OPENCODE2_HTTP_PROTOCOL = "opencode2-http.sse" as const;
 const BASE_URL = "http://opencode2.replay";
@@ -189,6 +190,7 @@ export const replayServer = (
     readonly external?: boolean;
     readonly replayGate?: ProviderReplayGate;
     readonly borrowers?: { current: number };
+    readonly connectionFailures?: ReadonlyArray<OpenCodeRuntime.OpenCodeRuntimeError>;
   },
 ) =>
   Effect.gen(function* () {
@@ -212,9 +214,16 @@ export const replayServer = (
       external: options?.external ?? false,
     };
     const borrowers = options?.borrowers;
+    let connectionRequest = 0;
     return OpenCode2Server.OpenCode2Server.of({
-      withConnection: (use) =>
-        borrowers === undefined
+      withConnection: (use) => {
+        const failure =
+          connectionRequest === 0
+            ? undefined
+            : options?.connectionFailures?.[connectionRequest - 1];
+        connectionRequest += 1;
+        if (failure !== undefined) return Effect.fail(failure);
+        return borrowers === undefined
           ? use(connection)
           : Effect.acquireUseRelease(
               Effect.sync(() => {
@@ -225,7 +234,8 @@ export const replayServer = (
                 Effect.sync(() => {
                   borrowers.current -= 1;
                 }),
-            ),
+            );
+      },
     });
   });
 
@@ -235,6 +245,7 @@ const makeReplayAdapter = (
     readonly external?: boolean;
     readonly replayGate?: ProviderReplayGate;
     readonly borrowers?: { current: number };
+    readonly connectionFailures?: ReadonlyArray<OpenCodeRuntime.OpenCodeRuntimeError>;
   },
 ) =>
   Effect.gen(function* () {
@@ -263,6 +274,7 @@ export const openCode2ReplayRuntime = (
     readonly external?: boolean;
     readonly borrowers?: { current: number };
     readonly replayGate?: ProviderReplayGate;
+    readonly connectionFailures?: ReadonlyArray<OpenCodeRuntime.OpenCodeRuntimeError>;
   },
 ) =>
   Effect.gen(function* () {

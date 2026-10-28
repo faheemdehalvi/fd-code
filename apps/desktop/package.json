@@ -9,7 +9,9 @@
     "start": "node scripts/start-electron.mjs",
     "typecheck": "tsc-rs --noEmit",
     "test": "vp test run --passWithNoTests",
-    "smoke-test": "node scripts/smoke-test.mjs"
+    "smoke-test": "node scripts/smoke-test.mjs",
+    "smoke-test:mac-dmg": "node scripts/smoke-test-macos-dmg.mjs",
+    "smoke-test:windows-installer": "node scripts/smoke-test-windows-installer.mjs"
   },
   "dependencies": {
     "@clerk/electron": "catalog:",

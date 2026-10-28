@@ -70,6 +70,21 @@ const httpFailureOf = (cause: unknown): HttpClientError.HttpClientError | undefi
   return undefined;
 };
 
+export const isAuthenticationRejection = (cause: unknown): boolean =>
+  (OpenCodeRuntime.isOpenCodeRuntimeError(cause) && cause.reason === "authenticationRejected") ||
+  (typeof cause === "object" &&
+    cause !== null &&
+    "reason" in cause &&
+    cause.reason === "authenticationRejected") ||
+  P.isTagged(cause, "OpenCode2AuthenticationError") ||
+  P.isTagged(cause, "UnauthorizedError") ||
+  httpFailureOf(cause)?.response?.status === 401 ||
+  (typeof cause === "object" &&
+    cause !== null &&
+    "cause" in cause &&
+    cause.cause !== cause &&
+    isAuthenticationRejection(cause.cause));
+
 /**
  * Only a transport failure means the server is unreachable; a 401 without the
  * 2.x error body is still a rejected password (1.x sends it empty), and any
@@ -114,6 +129,7 @@ export const verifyServer = (client: OpenCodeClient) =>
             operation: "server.info",
             detail: "The OpenCode server rejected the server password.",
             cause,
+            reason: "authenticationRejected",
           }),
         ),
     }),
@@ -124,6 +140,9 @@ export const verifyServer = (client: OpenCodeClient) =>
             operation: "server.info",
             detail: describeInfoFailure(cause),
             cause,
+            ...(httpFailureOf(cause)?.response?.status === 401
+              ? { reason: "authenticationRejected" as const }
+              : {}),
           }),
     ),
     Effect.map((info) => info.version),
